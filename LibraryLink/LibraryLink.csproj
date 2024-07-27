@@ -77,7 +77,6 @@
     <Content Include="Assets\Lib\js\bootstrap.bundle.min.js" />
     <Content Include="Assets\Lib\js\bootstrap.js" />
     <Content Include="Assets\Lib\js\bootstrap.min.js" />
-    <Content Include="Assets\Pics\9a1f614c-5c13-4326-ad3c-3d73e50dc513.png" />
     <Content Include="Global.asax" />
     <Content Include="Views\Login.aspx" />
     <Content Include="Web.config" />
@@ -117,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Assets\Pics\" />
     <Folder Include="Models\" />
     <Folder Include="Views\Admin\" />
     <Folder Include="Views\Users\" />
