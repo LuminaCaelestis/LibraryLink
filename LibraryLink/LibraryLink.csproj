@@ -87,6 +87,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\Admin\Admin.Master.cs">
+      <DependentUpon>Admin.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Admin\Admin.Master.designer.cs">
+      <DependentUpon>Admin.Master</DependentUpon>
+    </Compile>
     <Compile Include="Views\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -107,6 +113,7 @@
     <Content Include="Assets\Lib\js\bootstrap.js.map" />
     <Content Include="Assets\Lib\js\bootstrap.min.js.map" />
     <None Include="packages.config" />
+    <Content Include="Views\Admin\Admin.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -118,7 +125,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Assets\Pics\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\Admin\" />
     <Folder Include="Views\Users\" />
   </ItemGroup>
   <PropertyGroup>

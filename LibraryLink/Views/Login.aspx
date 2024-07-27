@@ -14,13 +14,13 @@
         <div>
             <br /><br /><br /><br />
             <h1 style="font-size: 110px; font-family: 'Segoe UI'; text-align: center">Library <span></span>Link</h1>
-            <br /><br /><br />
-            <p style ="text-align:center; font-size: 30px">凡我无法创造的, 我便无法理解</p>
-            <br /><br /><br />
+            <br /><br />
+            <p style ="text-align:center; font-size: 30px; font-family:'Segoe UI'">凡我无法创造的, 我便无法理解</p>
+            <br /><br /><br /><br /><br />
         </div>
         <div class ="row">
             <div class ="col"></div>
-            <div class ="col">
+            <div class ="col-md-3">
                 <form id = "form1" runat = "server">
                     <div>
                         <input type= "text" placeholder = "用户名"
@@ -29,6 +29,9 @@
                     <div>
                         <input type= "password" placeholder = "密码"
                             autocomplete ="off" class ="form-control" style="min-width:300px;"/>
+                    </div>
+                    <div class ="mt-3 d-grid">
+                        <asp:Button Text="登录" runat="server" class="btn btn-primary btn-block" style="min-width:300px" />
                     </div>
                 </form>
             </div>
