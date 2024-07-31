@@ -26,41 +26,35 @@
 
         <!-- 输入框部分 -->
         <div class="row justify-content-center" style="margin-top: 70px;">
-
-            <!-- 登录区 -->
-            <div class="col-md-2 col-sm-5">
+            <div class="col-2 col-sm-2 col-md-4"></div>
+            <!-- 登录注册 -->
+            <div class="col-8 col-sm-8 col-md-4 col-lg-3" style="max-width:300px">
                 <form id="form1" runat="server">
-                    <div class="mb-1">
-                        <input type="text" placeholder="用户名" autocomplete="off" class="form-control" style="min-width:300px" />
+                    <div class="mb-1"> 
+                        <input type="text" id="Username_L" placeholder="用户名" autocomplete="off" class="form-control" runat="server"/>
                     </div>
                     <div class="mb-3">
-                        <input type="password" placeholder="密码" autocomplete="off" class="form-control" style="min-width:300px" />
+                        <input type="password" id="Password_L" placeholder="密码" autocomplete="off" class="form-control" runat="server"/>
                     </div>
                     <div class="mb-3 d-grid">
-                        <asp:Button Text="登录" runat="server" class="btn btn-primary btn-block" style="min-width:300px" />
+                        <button type="submit" runat="server" onserverclick="User_Login_Click" class="btn btn-primary btn-block">登录</button>
                     </div>
 
-                    <!-- 下拉选框和注册按钮 -->
-                    <div class="d-flex justify-content-between" style="min-width:300px">
+                    <!-- 用户组和注册按钮 -->
+                    <div class="d-flex justify-content-between">
                         <div class="flex-grow-1 me-2">
-                            <div class="input-group mb-3">
-                                <label class="input-group-text" for="inputGroupSelect01" style="width:80px">用户组：</label>
-                                <select class="form-select" id="inputGroupSelect01">
-                                    <option value="1">用户</option>
-                                    <option value="2">管理员</option>
-                                </select>
-                            </div>
+                            <a href="/Admin-Login" class="btn btn-outline-secondary">管理员登录</a>
                         </div>
                         <div>
-                             <button type="button" class="btn btn-outline-secondary">注册</button>
+                             <button type="button" class="btn btn-outline-secondary" onserverclick="User_Login_Click">没有账号？</button>
                         </div>
                     </div>
-                    <!-- 结束下拉选框和注册按钮 -->
+                    <!-- 结束用户组和注册按钮 -->
 
                 </form>
             </div>
-            <!-- 结束登录区 -->
-
+            <!-- 结束登录注册 -->
+            <div class="col-2 col-sm-2 col-md-4"></div>
         </div>
         <div class ="row"></div>
     </div> <!-- 结束容器 -->
