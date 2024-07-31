@@ -11,7 +11,7 @@ namespace LibraryLink.Views
 {
 
 
-    public partial class Login
+    public partial class AdminLogin
     {
 
         /// <summary>
