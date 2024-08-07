@@ -88,11 +88,12 @@
     <Content Include="Assets\Lib\js\bootstrap.min.js" />
     <Content Include="Assets\Lib\js\popper.min.js" />
     <Content Include="Global.asax" />
+    <Content Include="Test\style.css" />
+    <Content Include="Test\WebForm1.aspx" />
     <Content Include="Views\AdminLogin.aspx" />
-    <Content Include="Views\Admin\Users.aspx" />
     <Content Include="Views\Login.aspx" />
-    <Content Include="Views\TestPage.aspx" />
-    <Content Include="Views\WebForm1.aspx" />
+    <Content Include="Test\Test.aspx" />
+    <Content Include="Views\ViewBook.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +101,13 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Test\WebForm1.aspx.cs">
+      <DependentUpon>WebForm1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Test\WebForm1.aspx.designer.cs">
+      <DependentUpon>WebForm1.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\AdminLogin.aspx.cs">
       <DependentUpon>AdminLogin.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -114,13 +122,6 @@
     <Compile Include="Views\Admin\AdminMaster.Master.designer.cs">
       <DependentUpon>AdminMaster.Master</DependentUpon>
     </Compile>
-    <Compile Include="Views\Admin\Users.aspx.cs">
-      <DependentUpon>Users.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Admin\Users.aspx.designer.cs">
-      <DependentUpon>Users.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Views\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -128,26 +129,26 @@
     <Compile Include="Views\Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Views\TestPage.aspx.cs">
-      <DependentUpon>TestPage.aspx</DependentUpon>
+    <Compile Include="Test\Test.aspx.cs">
+      <DependentUpon>Test.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Views\TestPage.aspx.designer.cs">
-      <DependentUpon>TestPage.aspx</DependentUpon>
+    <Compile Include="Test\Test.aspx.designer.cs">
+      <DependentUpon>Test.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Views\Users\UserMaster.Master.cs">
-      <DependentUpon>UserMaster.Master</DependentUpon>
+    <Compile Include="Views\Reader\ReaderMaster.Master.cs">
+      <DependentUpon>ReaderMaster.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Views\Users\UserMaster.Master.designer.cs">
-      <DependentUpon>UserMaster.Master</DependentUpon>
+    <Compile Include="Views\Reader\ReaderMaster.Master.designer.cs">
+      <DependentUpon>ReaderMaster.Master</DependentUpon>
     </Compile>
-    <Compile Include="Views\WebForm1.aspx.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
+    <Compile Include="Views\ViewBook.aspx.cs">
+      <DependentUpon>ViewBook.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Views\WebForm1.aspx.designer.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
+    <Compile Include="Views\ViewBook.aspx.designer.cs">
+      <DependentUpon>ViewBook.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -175,9 +176,10 @@
     <Content Include="Assets\Lib\js\bootstrap.esm.min.js.map" />
     <Content Include="Assets\Lib\js\bootstrap.js.map" />
     <Content Include="Assets\Lib\js\bootstrap.min.js.map" />
+    <Content Include="Assets\Books\托马斯微积分第十版中文版.pdf" />
     <None Include="packages.config" />
     <Content Include="Views\Admin\AdminMaster.Master" />
-    <Content Include="Views\Users\UserMaster.Master" />
+    <Content Include="Views\Reader\ReaderMaster.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

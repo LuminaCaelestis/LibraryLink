@@ -46,7 +46,7 @@
                             <a href="/Admin-Login" class="btn btn-outline-secondary">管理员登录</a>
                         </div>
                         <div>
-                             <button type="button" class="btn btn-outline-secondary" onserverclick="User_Login_Click">没有账号？</button>
+                             <button type="button" class="btn btn-outline-secondary" onserverclick="Reader_Login_Click">没有账号？</button>
                         </div>
                     </div>
                     <!-- 结束用户组和注册按钮 -->

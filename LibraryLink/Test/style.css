@@ -1,0 +1,93 @@
+/*	全局定义　*/
+body, td, div, input
+{
+	color:			#222222;
+	font-family:	Tahoma;
+	font-size:		12px;
+	line-height:	16px;
+}
+input
+{
+	border:			1px #C9D2BB solid;
+}
+
+input{ height:20px}
+body	{
+	
+	text-align:			center;
+	/*在页面的中间显示内容*/
+	
+	background-color: #ECF3F6
+}
+a	{
+	color:          #003366;
+	text-decoration:none;
+}
+
+a:link
+{
+    color:			#003366;
+	text-decoration:none;
+	/*点击后的连接不显示已点击过的颜色*/
+}
+
+
+.cursor	{
+	cursor:			hand;
+}
+
+
+/* 左边的框边 */
+.LFramebg
+{
+    background-color :#cdcdcd;
+    width: 1px;
+}
+/* 右边的框边 */
+.RFramebg
+{
+    background-color :#bcbcbc;
+    width: 1px;
+}
+/* 下边的框边 */
+.XFramebg
+{
+    background-color :#bcbcbc;
+    height: 1px;
+}
+/* 正文背景 */
+.ZWenbg
+{
+    background-color :#fafafa;
+}
+
+/* 栏目背景 */
+.LMubg
+{
+    background-color :#f5f5f5;
+}
+
+
+
+/*	[可选项]顶层外框，标记在page_header中	*/
+#main	{
+	width:			98%;
+	background:		white;
+}
+
+
+
+/*	[必须项]提示文本颜色  */
+.t1	{
+	color:			#ff6600;
+}
+/*	[必须项]醒目文本颜色  */
+.t2	{
+	color:			red;
+}
+/*	[必须项]灰调文本颜色  */
+.t3	{
+	color:			#gray;
+}
+
+

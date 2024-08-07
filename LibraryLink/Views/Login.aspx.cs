@@ -14,7 +14,7 @@ namespace LibraryLink.Views
 
         }
 
-        protected void User_Login_Click(object sender, EventArgs e)
+        protected void Reader_Login_Click(object sender, EventArgs e)
         {
             string username = Username_L.Value;
             string password = Password_L.Value;
