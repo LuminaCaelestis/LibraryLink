@@ -90,6 +90,7 @@
     <Content Include="Global.asax" />
     <Content Include="Test\style.css" />
     <Content Include="Test\WebForm1.aspx" />
+    <Content Include="Test\WebForm2.aspx" />
     <Content Include="Views\AdminLogin.aspx" />
     <Content Include="Views\Login.aspx" />
     <Content Include="Test\Test.aspx" />
@@ -107,6 +108,13 @@
     </Compile>
     <Compile Include="Test\WebForm1.aspx.designer.cs">
       <DependentUpon>WebForm1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Test\WebForm2.aspx.cs">
+      <DependentUpon>WebForm2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Test\WebForm2.aspx.designer.cs">
+      <DependentUpon>WebForm2.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\AdminLogin.aspx.cs">
       <DependentUpon>AdminLogin.aspx</DependentUpon>

@@ -37,7 +37,7 @@
                         <input type="password" id="Password_L" placeholder="密码" autocomplete="off" class="form-control" runat="server"/>
                     </div>
                     <div class="mb-3 d-grid">
-                        <button type="submit" runat="server" onserverclick="User_Login_Click" class="btn btn-primary btn-block">登录</button>
+                        <button type="submit" runat="server" onserverclick="Reader_Login_Click" class="btn btn-primary btn-block">登录</button>
                     </div>
 
                     <!-- 用户组和注册按钮 -->
