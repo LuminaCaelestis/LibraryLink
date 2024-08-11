@@ -24,9 +24,15 @@ namespace LibraryLink
             );
 
             routes.MapPageRoute(
-                "UserLogin", // 路由名称
-                "User-Login", // URL 模式
-                "~/Views/Login.aspx" // 物理文件路径
+                "ReaderLogin",
+                "Reader-Login",
+                "~/Views/Login.aspx"
+            );
+
+            routes.MapPageRoute(
+                "ReaderRegister",
+                "Reader-Register",
+                "~/Views/Register.aspx"
             );
 
         }

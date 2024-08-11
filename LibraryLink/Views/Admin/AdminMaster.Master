@@ -39,7 +39,7 @@
                                 </li>
                             </ul>
                             <div class="btn btn-light ms-auto" style="white-space: nowrap;">
-                                    <a class="nav-link fs-5" style="color:#782a18" href="/User-Login/">退出</a>
+                                    <a class="nav-link fs-5" style="color:#782a18" href="/Reader-Login/">退出</a>
                             </div>
                         </div>
                     </div>
