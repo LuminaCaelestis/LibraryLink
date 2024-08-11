@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data.SqlClient;
+using LibraryLink.Models;
+using static LibraryLink.Models.DatabaseInterface;
 
 namespace LibraryLink.Views
 {
@@ -16,16 +19,20 @@ namespace LibraryLink.Views
 
         protected void Admin_Login_Click(object sender, EventArgs e)
         {
-            string username = Request.Form["Username_L"];
-            string password = Request.Form["Password_L"];
+            string username = Request.Form["Username_Admin_Login"];
+            string password = Request.Form["Password_Admin_Login"];
 
-            if (username == "admin" && password == "123456")
+            string connectStr= DatabaseConfig.ConnectionString;
+
+            if (Is_Admin_Exists(username, connectStr) && Login_Check(username, password, connectStr))
             {
-                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('欢迎管理员！但是这个页面还没做出来');", true);
+                Session["username"] = username;
+                Session["privilege"] = 1;
+                Response.Write("<script>alert('欢迎管理员'); window.location.href='#';</script>");
             }
             else
             {
-                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('无效凭证');", true);
+                Response.Write("<script>alert('管理员用户名或密码错误');</script>");
             }
         }
     }

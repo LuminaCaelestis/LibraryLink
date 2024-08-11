@@ -5,7 +5,7 @@ using System.Web;
 
 namespace LibraryLink.Models
 {
-    public class DatabaseConfig
+    public static class DatabaseConfig
     {
         // 公开的只读属性，保存连接字段
         public static string ConnectionString { get; } = "server=localhost; Database=LibraryLinkDB; Integrated Security=True;";

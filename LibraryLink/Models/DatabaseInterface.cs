@@ -6,7 +6,7 @@ using System.Web;
 
 namespace LibraryLink.Models
 {
-    public class DatabaseInterface
+    public static class DatabaseInterface
     {
         /// <summary>
         /// 检查数据库中是否存在给定的记录。
@@ -53,9 +53,6 @@ namespace LibraryLink.Models
                     byte[] storedHashedPassword = (byte[])reader["Password"];
                     byte[] inputHashedPassword = Hash.HashPassword(password, salt);
                     // 比较计算出的哈希值和数据库中的哈希值
-                    Console.WriteLine($"stored password: {storedHashedPassword}");
-                    Console.WriteLine($"input password: {inputHashedPassword}");
-                    Console.WriteLine($"stored salt: {salt}");
                     if (inputHashedPassword.SequenceEqual(storedHashedPassword))
                     {
                         return true;
@@ -99,6 +96,27 @@ namespace LibraryLink.Models
                 }
             }
         }
+
+        /// <summary>
+        /// 管理员控制台登录
+        /// </summary>
+        /// <param name="username">用户名</param>
+        /// <param name="connStr">数据库连接字符串</param>
+        /// <returns>如果存在该管理员，返回true；否则返回false。</returns>
+        public static bool Is_Admin_Exists(string username, string connStr)
+        {
+            string query = "SELECT COUNT(*) FROM Users WHERE Username = @Username AND PrivilegeID = '1'";
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Username", username);
+                conn.Open();
+                int count = (int)cmd.ExecuteScalar();
+                conn.Close();
+                return count > 0;
+            }
+        }
+
     }
 }
 

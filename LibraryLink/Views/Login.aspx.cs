@@ -28,7 +28,10 @@ namespace LibraryLink.Views
             }
             else
             {
+                Session["username"] = username;
+                Session["privilege"] = 0;
                 Response.Write("<script>alert('登陆成功');</script>");
+                
             }
         }
 
