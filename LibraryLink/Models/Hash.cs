@@ -9,7 +9,11 @@ namespace LibraryLink.Models
 {
     public class Hash
     {
-
+        /// <summary>
+        /// 生成随机盐
+        /// </summary>
+        /// <param name="length">指定盐值的长度</param>
+        /// <returns>返回随机盐值</returns>
         public static string GenerateSalt(int length)
         {
             const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -26,7 +30,12 @@ namespace LibraryLink.Models
             return new string(saltChars);
         }
 
-        // 接收明文和盐值，返回哈希后的字节数组
+        /// <summary>
+        /// 接收明文密码和盐，返回哈希值
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="salt"></param>
+        /// <returns></returns>
         public static byte[] HashPassword(string password, string salt)
         {
             using (SHA256 sha256 = SHA256.Create())

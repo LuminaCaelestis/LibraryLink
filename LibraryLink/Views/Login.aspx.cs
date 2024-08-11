@@ -22,14 +22,13 @@ namespace LibraryLink.Views
             string username = Username_L.Value;
             string password = Password_L.Value;
 
-            if(DatabaseInterface.Login_Check(username, password, DatabaseConfig.ConnectionString))
+            if(!DatabaseInterface.Login_Check(username, password, DatabaseConfig.ConnectionString))
             {
-                Session["Username"] = username;
-                Response.Write("<script>alert('Login successful!');</script>");
+                Response.Write("<script>alert('用户名或密码错误');</script>");
             }
             else
             {
-                Response.Write("<script>alert('用户名或密码错误');</script>");
+                Response.Write("<script>alert('登陆成功');</script>");
             }
         }
 
