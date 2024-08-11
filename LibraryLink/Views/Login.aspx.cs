@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Microsoft.Win32;
+using LibraryLink.Models;
+
 
 namespace LibraryLink.Views
 {
@@ -19,16 +22,16 @@ namespace LibraryLink.Views
             string username = Username_L.Value;
             string password = Password_L.Value;
 
-            if (username == "admin" && password == "123456")
+            if(DatabaseInterface.Login_Check(username, password, DatabaseConfig.ConnectionString))
             {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('欢迎！但是这个页面还没做出来');", true);
+                Session["Username"] = username;
+                Response.Write("<script>alert('Login successful!');</script>");
             }
             else
             {
-                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('无效凭证');", true);
+                Response.Write("<script>alert('用户名或密码错误');</script>");
             }
         }
-
 
     }
 }

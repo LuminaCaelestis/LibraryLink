@@ -29,6 +29,12 @@ namespace LibraryLink
                 "~/Views/Login.aspx"
             );
 
+            routes.MapPageRoute(
+                "ReaderRegister",
+                "Reader-Register",
+                "~/Views/Register.aspx"
+            );
+
         }
 
     }

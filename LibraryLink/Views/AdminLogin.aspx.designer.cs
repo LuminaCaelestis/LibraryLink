@@ -24,21 +24,21 @@ namespace LibraryLink.Views
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
-        /// Username_L 控件。
+        /// Username_Admin_Login 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText Username_L;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText Username_Admin_Login;
 
         /// <summary>
-        /// Password_L 控件。
+        /// Password_Admin_Login 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputPassword Password_L;
+        protected global::System.Web.UI.HtmlControls.HtmlInputPassword Password_Admin_Login;
     }
 }

@@ -94,6 +94,7 @@
     <Content Include="Views\AdminLogin.aspx" />
     <Content Include="Views\Login.aspx" />
     <Content Include="Test\Test.aspx" />
+    <Content Include="Views\Register.aspx" />
     <Content Include="Views\ViewBook.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -101,6 +102,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DatabaseConfig.cs" />
+    <Compile Include="Models\DatabaseInterface.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test\WebForm1.aspx.cs">
       <DependentUpon>WebForm1.aspx</DependentUpon>
@@ -151,6 +154,13 @@
     <Compile Include="Views\Reader\ReaderMaster.Master.designer.cs">
       <DependentUpon>ReaderMaster.Master</DependentUpon>
     </Compile>
+    <Compile Include="Views\Register.aspx.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Register.aspx.designer.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\ViewBook.aspx.cs">
       <DependentUpon>ViewBook.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -198,7 +208,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Assets\Pics\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

@@ -16,7 +16,9 @@ namespace LibraryLink.Views
 
         protected void btnChangePassword_Click(object sender, EventArgs e)
         {
-            lblMessage.Text = "后台代码已执行";
+            //弹出窗口说成功
+            Response.Write("<script>alert('密码修改成功！')</script>");
+            
         }
 
     }
