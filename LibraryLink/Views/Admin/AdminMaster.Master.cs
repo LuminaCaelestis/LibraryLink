@@ -13,14 +13,14 @@ namespace LibraryLink.Views.Admin
         {
             if (Session["privilege"] == null || Convert.ToInt32(Session["privilege"]) != 1)
             {
-                Response.Redirect("/Reader-Login/");
+                //Response.Redirect("/Admin-Login/");
             }
         }
 
         protected void Logout_Click(object sender, EventArgs e)
         {
             Session.Clear();
-            Response.Redirect("/Reader-Login/");
+            Response.Redirect("/Admin-Login/");
         }
     }
 }

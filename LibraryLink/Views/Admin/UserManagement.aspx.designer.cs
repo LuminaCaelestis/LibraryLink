@@ -60,13 +60,13 @@ namespace LibraryLink.Views.Admin
         protected global::System.Web.UI.WebControls.TextBox Email;
 
         /// <summary>
-        /// BlanceTip 控件。
+        /// BalanceTip 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl BlanceTip;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl BalanceTip;
 
         /// <summary>
         /// Balance 控件。
@@ -112,6 +112,51 @@ namespace LibraryLink.Views.Admin
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button DeleteUser;
+
+        /// <summary>
+        /// FilterUserId 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox FilterUserId;
+
+        /// <summary>
+        /// FilterUsername 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox FilterUsername;
+
+        /// <summary>
+        /// FilterEmail 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox FilterEmail;
+
+        /// <summary>
+        /// FilterUserGroup 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList FilterUserGroup;
+
+        /// <summary>
+        /// FilterButton 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button FilterButton;
 
         /// <summary>
         /// UserGridView 控件。

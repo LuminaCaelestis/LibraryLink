@@ -63,7 +63,7 @@ namespace LibraryLink.Views.Admin
             // 非负decimal(10,2)的正则验证
             if (!Regex.IsMatch(Balance.Text, @"^\d{1,8}(\.\d{1,2})?$"))
             {
-                BlanceTip.InnerHtml = "请输入正确的金额";
+                BalanceTip.InnerHtml = "请输入正确的金额";
                 return;
             }
 
@@ -124,6 +124,58 @@ namespace LibraryLink.Views.Admin
             UserGroup.SelectedIndex = -1;
             DateJoined.Text = string.Empty;
         }
+
+        // 过滤功能，动态构建SQL
+        protected void FilterButton_Click(object sender, EventArgs e)
+        {
+            string filterQuery = "SELECT UserID, Username, Email, Balance, PrivilegeID AS UserGroup, DateJoined FROM Users WHERE 1=1";
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            if (!string.IsNullOrEmpty(FilterUserId.Text))
+            {
+                filterQuery += " AND UserID = @UserID";
+                parameters.Add(new SqlParameter("@UserID", FilterUserId.Text));
+            }
+
+            if (!string.IsNullOrEmpty(FilterUsername.Text))
+            {
+                filterQuery += " AND Username LIKE @Username";
+                parameters.Add(new SqlParameter("@Username", "%" + FilterUsername.Text + "%"));
+            }
+
+            if (!string.IsNullOrEmpty(FilterEmail.Text))
+            {
+                filterQuery += " AND Email LIKE @Email";
+                parameters.Add(new SqlParameter("@Email", "%" + FilterEmail.Text + "%"));
+            }
+
+            if (!string.IsNullOrEmpty(FilterUserGroup.SelectedValue))
+            {
+                filterQuery += " AND PrivilegeID = @UserGroup";
+                parameters.Add(new SqlParameter("@UserGroup", FilterUserGroup.SelectedValue));
+            }
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                SqlCommand cmd = new SqlCommand(filterQuery, conn);
+                cmd.Parameters.AddRange(parameters.ToArray());
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                UserGridView.DataSource = dt;
+                UserGridView.DataBind();
+            }
+        }
+
+        // 翻页
+        protected void UserGridView_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            UserGridView.PageIndex = e.NewPageIndex;
+            BindUserGridView();
+        }
+
+
     }
 
 }
