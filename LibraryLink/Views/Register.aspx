@@ -84,19 +84,19 @@
                 <div class="col-12 form-container">
                     <div class="mb-3">
                         <label for="Username_R" class="form-label">用户名 <span id="UsernameTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
-                        <input type="text" id="Username_R" placeholder="" autocomplete="off" class="form-control" runat="server" />
+                        <input type="text" id="Username_R" maxlength="30" placeholder="" autocomplete="off" class="form-control" runat="server" />
                     </div>
                     <div class="mb-3">
                         <label for="Email_R" class="form-label">Email <span id="EmailTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
-                        <input type="email" id="Email_R" placeholder="example@domain.com" autocomplete="off" class="form-control" runat="server" />
+                        <input type="email" maxlength="50" id="Email_R" placeholder="example@domain.com" autocomplete="off" class="form-control" runat="server" />
                     </div>
                     <div class="mb-3">
                         <label for="Password_R" class="form-label">密码 <span id="PasswordTip" class="text-danger" style="font-size: smaller;"></span></label>
-                        <input type="password" id="Password_R" placeholder="至少6位字符" autocomplete="off" class="form-control" runat="server" />
+                        <input type="password" maxlength="30" id="Password_R" placeholder="至少6位字符" autocomplete="off" class="form-control" runat="server" />
                     </div>
                     <div class="mb-3">
                         <label for="ConfirmPassword_R" class="form-label">确认密码 <span id="ConfirmPasswordTip" class="text-danger" style="font-size: smaller;"></span></label>
-                        <input type="password" id="ConfirmPassword_R" placeholder="再次输入密码" autocomplete="off" class="form-control" runat="server" />
+                        <input type="password" maxlength="30" id="ConfirmPassword_R" placeholder="再次输入密码" autocomplete="off" class="form-control" runat="server" />
                     </div>
                     <div class="mb-3">
                         <!-- class="btn btn-primary btn-block"-->

@@ -28,7 +28,7 @@ namespace LibraryLink.Views
             {
                 Session["username"] = username;
                 Session["privilege"] = 1;
-                Response.Write("<script>alert('欢迎管理员'); window.location.href='#';</script>");
+                Response.Write("<script>alert('欢迎管理员'); window.location.href='/UsersManagement/';</script>");
             }
             else
             {

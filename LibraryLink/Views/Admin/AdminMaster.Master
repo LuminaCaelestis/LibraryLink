@@ -5,57 +5,136 @@
 <html>
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title></title>
-    <asp:ContentPlaceHolder ID="head" runat="server">
-    </asp:ContentPlaceHolder>
+    <title>管理后台-LibraryLink</title>
+    <link rel="stylesheet" type="text/css" href="../../Assets/Lib/css/bootstrap.min.css" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
 
-    <link rel="stylesheet" tyle="text/css" href="../../Assets/Lib/css/bootstrap.min.css" />
+        .header {
+            height: 60px;
+            background-color: #343a40;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header .logo {
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        .header .admin-text {
+            margin-left: 20px;
+            font-size: 23px;
+        }
+
+        .header .logout {
+            margin-right: 22px;
+        }
+
+        .sidebar {
+            height: calc(100vh - 60px);
+            background-color: #343a40;
+            padding-top: 20px;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 200px;
+        }
+
+        .sidebar .nav-link {
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            display: block;
+            font-size: 18px;
+        }
+
+        .sidebar .nav-link:hover, .sidebar .nav-link:focus {
+            background-color: #495057;
+        }
+
+        .sidebar .nav-item .nav-link {
+            padding-left: 30px;
+        }
+
+        .content {
+            margin-left: 220px;
+            margin-top: 60px;
+            padding: 20px;
+        }
+
+        .content h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
-
 <body>
-    <form id="form1" runat="server">
-
-        <div class="container-fluid">
-            <!-- 导航 -->
-            <div class="row">
-                <nav class="navbar navbar-expand-sm bg-body-tertiary navbar-s " data-bs-theme="dark">
-                    <div class="container-fluid">
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-
-                        <a class="navbar-brand fs-3" href="#" style="color:#9765e0">控制台</a>
-
-                        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li class="nav-item" style="white-space: nowrap;">
-                                    <a class="nav-link active fs-5" href="#users" data-bs-toggle="tab">用户</a>
-                                </li>
-                                <li class="nav-item" style="white-space: nowrap;">
-                                    <a class="nav-link fs-5 " href="#books" data-bs-toggle="tab">书籍</a>
-                                </li>
-                                <li class="nav-item" style="white-space: nowrap;">
-                                    <a class="nav-link fs-5" href="#data" data-bs-toggle="tab">数据</a>
-                                </li>
-                            </ul>
-                            <div class="btn btn-light ms-auto" style="white-space: nowrap;">
-                                    <a class="nav-link fs-5" style="color:#782a18" href="/Reader-Login/">退出</a>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-            </div>
+    <form runat="server">
+        <!-- 顶部标题栏 -->
+        <div class="header">
+            <div class="logo">LibraryLink</div>
+            <div class="admin-text">管 理 后 台</div>
+            <asp:Button runat="server" Text="退出" OnClick="Logout_Click" href="#" class="btn btn-outline-light logout"></asp:Button>
         </div>
 
+        <!-- 左侧导航栏 -->
+        <div class="sidebar">
+            <nav class="nav flex-column">
+                <div class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#userSubmenu" role="button">
+                        用户管理
+                    </a>
+                    <div class="collapse" id="userSubmenu">
+                        <a class="nav-link" href="/UsersManagement" style="font-size: 13px">用户管理面板</a>
+                        <a class="nav-link" href="#" style="font-size: 13px"></a>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#bookSubmenu" role="button" aria-expanded="false" aria-controls="bookSubmenu">
+                        书籍管理
+                    </a>
+                    <div class="collapse" id="bookSubmenu">
+                        <a class="nav-link" href="BookAdd.aspx" style="font-size: 13px">新增书籍</a>
+                        <a class="nav-link" href="BookSearch.aspx" style="font-size: 13px">检索书籍</a>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#tagSubmenu" role="button" aria-expanded="false" aria-controls="tagSubmenu">
+                        标签管理
+                    </a>
+                    <div class="collapse" id="tagSubmenu">
+                        <a class="nav-link" href="TagAdd.aspx" style="font-size: 13px">新增标签</a>
+                        <a class="nav-link" href="TagSearch.aspx" style="font-size: 13px">检索标签</a>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#transactionSubmenu" role="button" aria-expanded="false" aria-controls="transactionSubmenu">
+                        交易管理
+                    </a>
+                    <div class="collapse" id="transactionSubmenu">
+                        <a class="nav-link" href="TransactionOverview.aspx" style="font-size: 13px">交易概览</a>
+                        <a class="nav-link" href="TransactionSearch.aspx" style="font-size: 13px">检索交易</a>
+                    </div>
+                </div>
+                <asp:ContentPlaceHolder ID="SidebarContent" runat="server">
+                </asp:ContentPlaceHolder>
+            </nav>
+        </div>
 
-
-        <div>
-            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
-
+        <!-- 右侧内容区 -->
+        <div class="content">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+                <!-- 子页内容加载到这里 -->
             </asp:ContentPlaceHolder>
         </div>
-
-
     </form>
+
+    <script src="../Assets/Lib/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

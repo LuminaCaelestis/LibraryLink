@@ -35,6 +35,12 @@ namespace LibraryLink
                 "~/Views/Register.aspx"
             );
 
+            routes.MapPageRoute(
+                "UsersManagement",
+                "UsersManagement",
+                "~/Views/Admin/UserManagement.aspx"
+            );  
+
         }
 
     }

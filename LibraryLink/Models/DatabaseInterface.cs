@@ -11,15 +11,16 @@ namespace LibraryLink.Models
         /// <summary>
         /// 检查数据库中是否存在给定的记录。
         /// </summary>
+        /// <param name="tableName">表名</param>
         /// <param name="columnName">列名</param>
         /// <param name="value">值</param>
         /// <param name="connStr">数据库连接字符串</param>
         /// <returns>如果记录存在，返回true；否则返回false。</returns>
-        public static bool Is_Record_Exists(string columnName, string value, string connStr)
+        public static bool Is_Record_Exists(string tableName, string columnName, string value, string connStr)
         {
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = $"SELECT COUNT(*) FROM Users WHERE {columnName} = @{columnName}";
+                string query = $"SELECT COUNT(*) FROM {tableName} WHERE {columnName} = @{columnName}";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue($"@{columnName}", value);
                 conn.Open();
@@ -105,7 +106,7 @@ namespace LibraryLink.Models
         /// <returns>如果存在该管理员，返回true；否则返回false。</returns>
         public static bool Is_Admin_Exists(string username, string connStr)
         {
-            string query = "SELECT COUNT(*) FROM Users WHERE Username = @Username AND PrivilegeID = '1'";
+            string query = "SELECT COUNT(*) FROM Users WHERE Username = @Username AND PrivilegeID = 1";
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 SqlCommand cmd = new SqlCommand(query, conn);
