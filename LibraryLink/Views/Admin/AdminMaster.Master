@@ -90,16 +90,16 @@
             <nav class="nav flex-column">
                 <div class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#userSubmenu" role="button">
-                        用户管理
+                        用户
                     </a>
                     <div class="collapse" id="userSubmenu">
-                        <a class="nav-link" href="/UsersManagement" style="font-size: 13px">用户管理面板</a>
+                        <a class="nav-link" href="/UsersManagement" style="font-size: 13px">控制面板</a>
                         <a class="nav-link" href="#" style="font-size: 13px"></a>
                     </div>
                 </div>
                 <div class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#bookSubmenu" role="button" aria-expanded="false" aria-controls="bookSubmenu">
-                        书籍管理
+                        书籍
                     </a>
                     <div class="collapse" id="bookSubmenu">
                         <a class="nav-link" href="BookAdd.aspx" style="font-size: 13px">新增书籍</a>
@@ -108,7 +108,7 @@
                 </div>
                 <div class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#tagSubmenu" role="button" aria-expanded="false" aria-controls="tagSubmenu">
-                        标签管理
+                        标签
                     </a>
                     <div class="collapse" id="tagSubmenu">
                         <a class="nav-link" href="TagAdd.aspx" style="font-size: 13px">新增标签</a>
@@ -117,7 +117,7 @@
                 </div>
                 <div class="nav-item">
                     <a class="nav-link" data-bs-toggle="collapse" href="#transactionSubmenu" role="button" aria-expanded="false" aria-controls="transactionSubmenu">
-                        交易管理
+                        交易
                     </a>
                     <div class="collapse" id="transactionSubmenu">
                         <a class="nav-link" href="TransactionOverview.aspx" style="font-size: 13px">交易概览</a>
@@ -137,6 +137,6 @@
         </div>
     </form>
 
-    <script src="../Assets/Lib/js/bootstrap.bundle.min.js"></script>
+    <script src="../../Assets/Lib/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

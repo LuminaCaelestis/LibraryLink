@@ -21,7 +21,7 @@ namespace LibraryLink.Views.Admin
             }
         }
 
-        string connStr = DatabaseConfig.ConnectionString;
+        private readonly string connStr = DatabaseConfig.ConnectionString;
 
         private void BindUserGridView()
         {
@@ -43,7 +43,7 @@ namespace LibraryLink.Views.Admin
             Username.Text = row.Cells[1].Text;
             Email.Text = row.Cells[2].Text;
             Balance.Text = row.Cells[3].Text;
-            UserGroup.SelectedValue = row.Cells[4].Text == "Admin" ? "1" : "0";
+            UserGroup.SelectedValue = row.Cells[4].Text == "1" ? "1" : "0";
             DateJoined.Text = row.Cells[5].Text;
         }
 
@@ -51,20 +51,34 @@ namespace LibraryLink.Views.Admin
         {
             if (!Regex.IsMatch(Username.Text, @"^[a-zA-Z]\w{5,29}$"))
             {
-                UsernameTip.InnerHtml = "用户名只能包含字母、数字、下划线";
+                UsernameTip.InnerHtml = " 用户名只能包含字母、数字、下划线";
                 return;
             }
+            else
+            {
+                UsernameTip.InnerHtml = "";
+            }
+
             if (!Regex.IsMatch(Email.Text, @"^[\w-_]+\@[\w-_]+\.{1}[\w-_]{2,8}$") || Email.Text.Length > 50)
             {
-                EmailTip.InnerHtml = "example@domin.com";
+                EmailTip.InnerHtml = " example@domin.com";
                 return;
             }
+            else
+            {
+                EmailTip.InnerHtml = "";
+            }
+ 
 
             // 非负decimal(10,2)的正则验证
             if (!Regex.IsMatch(Balance.Text, @"^\d{1,8}(\.\d{1,2})?$"))
             {
-                BalanceTip.InnerHtml = "请输入正确的金额";
+                BalanceTip.InnerHtml = " 请输入正确的金额";
                 return;
+            }
+            else
+            {
+                BalanceTip.InnerHtml = "";
             }
 
             using (SqlConnection conn = new SqlConnection(connStr))
@@ -99,7 +113,6 @@ namespace LibraryLink.Views.Admin
                 Response.Write("<script>alert('未选择用户');</script>");
                 return;
             }
-
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 string query = "DELETE FROM Users WHERE UserID=@UserID";
@@ -131,7 +144,7 @@ namespace LibraryLink.Views.Admin
             string filterQuery = "SELECT UserID, Username, Email, Balance, PrivilegeID AS UserGroup, DateJoined FROM Users WHERE 1=1";
             List<SqlParameter> parameters = new List<SqlParameter>();
 
-            if (!string.IsNullOrEmpty(FilterUserId.Text))
+            if (!string.IsNullOrEmpty(FilterUserId.Text) && Regex.IsMatch(FilterUserId.Text, @"^\d+$"))
             {
                 filterQuery += " AND UserID = @UserID";
                 parameters.Add(new SqlParameter("@UserID", FilterUserId.Text));

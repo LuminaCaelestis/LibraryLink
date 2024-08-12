@@ -90,7 +90,7 @@
         <!-- 用户列表 -->
         <div class="row">
             <div class="col-12">
-                <asp:GridView ID="UserGridView" runat="server" AllowPaging="True" PageSize="7" 
+                <asp:GridView ID="UserGridView" runat="server" AllowPaging="True" PageSize="6" 
                     CssClass="table table-bordered table-hover"
                     AutoGenerateColumns="False" OnSelectedIndexChanged="UserGridView_SelectedIndexChanged"
                     OnPageIndexChanging="UserGridView_PageIndexChanging">
@@ -139,6 +139,11 @@
             var email = document.getElementById('<%= Email.ClientID %>');
             var balance = document.getElementById('<%= Balance.ClientID %>');
             var update = document.getElementById('<%= UpdateUser.ClientID %>')
+            console.log("addEventListener DOMContentLoaded");
+
+            var usernameTip = document.getElementById('<%= UsernameTip.ClientID %>');
+            var emailTip = document.getElementById('<%= EmailTip.ClientID %>');
+            var balanceTip = document.getElementById('<%= BalanceTip.ClientID %>');
 
             update.addEventListener('click', function (event) {
                 if (!(ValidEmail() && ValidUsername() && ValidBalance())) {
@@ -152,13 +157,15 @@
             balance.addEventListener('change', ValidBalance);
 
             function ValidUsername() {
+
                 var regex = /^[a-zA-Z]\w{5,29}$/;
+
                 if (regex.test(username.value)) {
-                    document.getElementById('UsernameTip').innerHTML = "";
+                    usernameTip.innerHTML = "";
                     return true;
                 }
                 else {
-                    document.getElementById('UsernameTip').innerHTML = "至少6个字符，以字母开头，只含字母、数字、下划线";
+                    usernameTip.innerHTML = "至少6个字符，以字母开头，只含字母、数字、下划线";
                     return false;
                 }
             }
@@ -166,11 +173,11 @@
             function ValidEmail() {
                 var regex = /^[\w-_]+@[\w-_]+\.{1}[\w-_]{2,8}$/
                 if (regex.test(email.value)) {
-                    document.getElementById('EmailTip').innerHTML = "";
+                    emailTip.innerHTML = "";
                     return true;
                 }
                 else {
-                    document.getElementById('EmailTip').innerHTML = "邮箱格式不正确";
+                    emailTip.innerHTML = "邮箱格式不正确";
                     return false;
                 }
             }
@@ -178,11 +185,11 @@
             function ValidBalance() {
                 var regex = /^\d{1,8}(\.\d{1,2})?$/
                 if (regex.test(balance.value)) {
-                    document.getElementById('BalanceTip').innerHTML = "";
+                    balanceTip.innerHTML = "";
                     return true;
                 }
                 else {
-                    document.getElementById('BalanceTip').innerHTML = "金额错误";
+                    balanceTip.innerHTML = "金额错误";
                     return false;
                 }
             }

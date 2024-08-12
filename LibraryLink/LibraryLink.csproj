@@ -92,7 +92,7 @@
     <Content Include="Test\WebForm1.aspx" />
     <Content Include="Views\AdminLogin.aspx" />
     <Content Include="Views\Admin\UserManagement.aspx" />
-    <Content Include="Views\Admin\WebForm1.aspx" />
+    <Content Include="Views\Admin\TagsManagement.aspx" />
     <Content Include="Views\Login.aspx" />
     <Content Include="Test\Test.aspx" />
     <Content Include="Views\Register.aspx" />
@@ -142,12 +142,12 @@
     <Compile Include="Views\Admin\UserManagement.aspx.designer.cs">
       <DependentUpon>UserManagement.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Views\Admin\WebForm1.aspx.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
+    <Compile Include="Views\Admin\TagsManagement.aspx.cs">
+      <DependentUpon>TagsManagement.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Views\Admin\WebForm1.aspx.designer.cs">
-      <DependentUpon>WebForm1.aspx</DependentUpon>
+    <Compile Include="Views\Admin\TagsManagement.aspx.designer.cs">
+      <DependentUpon>TagsManagement.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
