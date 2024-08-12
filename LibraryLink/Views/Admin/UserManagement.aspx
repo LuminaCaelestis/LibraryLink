@@ -90,7 +90,7 @@
         <!-- 用户列表 -->
         <div class="row">
             <div class="col-12">
-                <asp:GridView ID="UserGridView" runat="server" AllowPaging="True" PageSize="3" 
+                <asp:GridView ID="UserGridView" runat="server" AllowPaging="True" PageSize="7" 
                     CssClass="table table-bordered table-hover"
                     AutoGenerateColumns="False" OnSelectedIndexChanged="UserGridView_SelectedIndexChanged"
                     OnPageIndexChanging="UserGridView_PageIndexChanging">
@@ -109,6 +109,25 @@
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
+
+                    <PagerTemplate>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <asp:LinkButton runat="server" CommandName="Page" CommandArgument="First" CssClass="btn btn-outline-primary btn-sm m-1">First</asp:LinkButton>
+                            <asp:LinkButton runat="server" CommandName="Page" CommandArgument="Prev" CssClass="btn btn-outline-primary btn-sm m-1">Previous</asp:LinkButton>
+            
+
+                            <span class="m-1">第 <%= UserGridView.PageIndex + 1 %> 页，共 <%= UserGridView.PageCount %> 页</span>
+            
+
+                            <span class="m-1">跳转到:</span>
+                            <asp:TextBox ID="txtJumpToPage" runat="server" CssClass="form-control form-control-sm" AutoCompleteType="Disabled" Style="width: 100px; display: inline-block;" />
+                            <asp:Button ID="btnJumpToPage" runat="server" Text="Go" CssClass="btn btn-primary btn-sm" OnClick="btnJumpToPage_Click" />
+
+                            <asp:LinkButton runat="server" CommandName="Page" CommandArgument="Next" CssClass="btn btn-outline-primary btn-sm m-1">Next</asp:LinkButton>
+                            <asp:LinkButton runat="server" CommandName="Page" CommandArgument="Last" CssClass="btn btn-outline-primary btn-sm m-1">Last</asp:LinkButton>
+                        </div>
+                    </PagerTemplate>
+
                 </asp:GridView>
             </div>
         </div>

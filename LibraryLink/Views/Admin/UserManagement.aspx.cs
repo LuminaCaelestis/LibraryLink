@@ -171,9 +171,47 @@ namespace LibraryLink.Views.Admin
         // 翻页
         protected void UserGridView_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-            UserGridView.PageIndex = e.NewPageIndex;
+            int newPageIndex = e.NewPageIndex;
+            if (newPageIndex < 0)
+            {
+                newPageIndex = 0;
+            }
+            else if (newPageIndex >= UserGridView.PageCount)
+            {
+                newPageIndex = UserGridView.PageCount - 1;
+            }
+            UserGridView.PageIndex = newPageIndex;
             BindUserGridView();
         }
+
+        protected void btnJumpToPage_Click(object sender, EventArgs e)
+        {
+            // 通过 FindControl 获取 PagerTemplate 中的控件， 不然找不到名称
+            TextBox txtJumpToPage = (TextBox)UserGridView.BottomPagerRow.FindControl("txtJumpToPage");
+
+            if (txtJumpToPage != null)
+            {
+                int pageNumber;
+                if (int.TryParse(txtJumpToPage.Text.Trim(), out pageNumber))
+                {
+                    // 后端从0数数的
+                    pageNumber = pageNumber - 1;
+
+                    if (pageNumber < 0)
+                    {
+                        pageNumber = 0;
+                    }
+                    else if (pageNumber >= UserGridView.PageCount)
+                    {
+                        pageNumber = UserGridView.PageCount - 1;
+                    }
+                    UserGridView.PageIndex = pageNumber;
+                    BindUserGridView();
+                }
+            }
+        }
+
+
 
 
     }
