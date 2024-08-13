@@ -7,11 +7,11 @@ using System.Web.UI.WebControls;
 
 namespace LibraryLink.Views.Admin
 {
-    public partial class Books_CP : System.Web.UI.Page
+    public partial class BooksManagement : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-        }
 
+        }
     }
 }

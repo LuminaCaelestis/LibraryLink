@@ -5,7 +5,7 @@
 
         <div class="container">
         <div class="row mb-4">
-            <!-- 操作区 - 角色卡部分 -->
+            <!-- 操作区 -->
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
@@ -57,7 +57,7 @@
             </div>
         </div>
 
-        <!-- 用户列表 -->
+        <!-- 列表 -->
         <div class="row">
             <div class="col-12">
                 <asp:GridView ID="TagsGridView" runat="server" AllowPaging="True" PageSize="6" 
