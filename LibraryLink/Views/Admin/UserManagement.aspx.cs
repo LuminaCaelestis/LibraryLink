@@ -43,7 +43,7 @@ namespace LibraryLink.Views.Admin
             Username.Text = row.Cells[1].Text;
             Email.Text = row.Cells[2].Text;
             Balance.Text = row.Cells[3].Text;
-            UserGroup.SelectedValue = row.Cells[4].Text == "1" ? "1" : "0";
+            UserGroup.SelectedValue = row.Cells[4].Text;
             DateJoined.Text = row.Cells[5].Text;
         }
 
@@ -68,8 +68,6 @@ namespace LibraryLink.Views.Admin
             {
                 EmailTip.InnerHtml = "";
             }
- 
-
             // 非负decimal(10,2)的正则验证
             if (!Regex.IsMatch(Balance.Text, @"^\d{1,8}(\.\d{1,2})?$"))
             {
@@ -101,7 +99,6 @@ namespace LibraryLink.Views.Admin
                 cmd.ExecuteNonQuery();
                 conn.Close();
 
-                // 更新完成后重新绑定数据
                 BindUserGridView();
             }
         }
@@ -223,9 +220,6 @@ namespace LibraryLink.Views.Admin
                 }
             }
         }
-
-
-
 
     }
 

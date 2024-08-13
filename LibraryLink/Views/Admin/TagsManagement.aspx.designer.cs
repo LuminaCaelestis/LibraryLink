@@ -11,143 +11,80 @@ namespace LibraryLink.Views.Admin
 {
 
 
-    public partial class WebForm1
+    public partial class TagsManagement
     {
 
         /// <summary>
-        /// UserId 控件。
+        /// txtTagID 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox UserId;
+        protected global::System.Web.UI.WebControls.TextBox txtTagID;
 
         /// <summary>
-        /// UsernameTip 控件。
+        /// a 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl UsernameTip;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl a;
 
         /// <summary>
-        /// Username 控件。
+        /// txtTagName 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Username;
+        protected global::System.Web.UI.WebControls.TextBox txtTagName;
 
         /// <summary>
-        /// EmailTip 控件。
+        /// CreateTag 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl EmailTip;
+        protected global::System.Web.UI.WebControls.Button CreateTag;
 
         /// <summary>
-        /// Email 控件。
+        /// UpdateTag 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Email;
+        protected global::System.Web.UI.WebControls.Button UpdateTag;
 
         /// <summary>
-        /// BalanceTip 控件。
+        /// DeleteTag 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl BalanceTip;
+        protected global::System.Web.UI.WebControls.Button DeleteTag;
 
         /// <summary>
-        /// Balance 控件。
+        /// FilterTagId 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Balance;
+        protected global::System.Web.UI.WebControls.TextBox FilterTagId;
 
         /// <summary>
-        /// UserGroup 控件。
+        /// FilterTagName 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList UserGroup;
-
-        /// <summary>
-        /// DateJoined 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox DateJoined;
-
-        /// <summary>
-        /// UpdateUser 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button UpdateUser;
-
-        /// <summary>
-        /// DeleteUser 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button DeleteUser;
-
-        /// <summary>
-        /// FilterUserId 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox FilterUserId;
-
-        /// <summary>
-        /// FilterUsername 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox FilterUsername;
-
-        /// <summary>
-        /// FilterEmail 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox FilterEmail;
-
-        /// <summary>
-        /// FilterUserGroup 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList FilterUserGroup;
+        protected global::System.Web.UI.WebControls.TextBox FilterTagName;
 
         /// <summary>
         /// FilterButton 控件。
@@ -159,12 +96,12 @@ namespace LibraryLink.Views.Admin
         protected global::System.Web.UI.WebControls.Button FilterButton;
 
         /// <summary>
-        /// UserGridView 控件。
+        /// TagsGridView 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView UserGridView;
+        protected global::System.Web.UI.WebControls.GridView TagsGridView;
     }
 }

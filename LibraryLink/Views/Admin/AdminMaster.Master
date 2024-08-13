@@ -111,8 +111,7 @@
                         标签
                     </a>
                     <div class="collapse" id="tagSubmenu">
-                        <a class="nav-link" href="TagAdd.aspx" style="font-size: 13px">新增标签</a>
-                        <a class="nav-link" href="TagSearch.aspx" style="font-size: 13px">检索标签</a>
+                        <a class="nav-link" href="/TagsManagement/" style="font-size: 13px">标签管理</a>
                     </div>
                 </div>
                 <div class="nav-item">
@@ -120,8 +119,8 @@
                         交易
                     </a>
                     <div class="collapse" id="transactionSubmenu">
-                        <a class="nav-link" href="TransactionOverview.aspx" style="font-size: 13px">交易概览</a>
-                        <a class="nav-link" href="TransactionSearch.aspx" style="font-size: 13px">检索交易</a>
+                        <a class="nav-link" href="TransactionOverview.aspx" style="font-size: 13px">概览</a>
+                        <a class="nav-link" href="TransactionSearch.aspx" style="font-size: 13px">检索</a>
                     </div>
                 </div>
                 <asp:ContentPlaceHolder ID="SidebarContent" runat="server">

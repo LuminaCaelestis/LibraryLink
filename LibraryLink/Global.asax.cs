@@ -39,7 +39,13 @@ namespace LibraryLink
                 "UsersManagement",
                 "UsersManagement",
                 "~/Views/Admin/UserManagement.aspx"
-            );  
+            );
+
+            routes.MapPageRoute(
+                "TagsManagement",
+                "TagsManagement",
+                "~/Views/Admin/TagsManagement.aspx"
+            );
 
         }
 
