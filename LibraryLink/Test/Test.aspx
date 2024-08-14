@@ -1,52 +1,58 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Test.aspx.cs" Inherits="LibraryLink.Views.Test" %>
+﻿<%<%@ Page Title="书籍上传" Language="C#" AutoEventWireup="true" CodeBehind="BookUpload.aspx.cs" Inherits="LibraryLink.Views.Admin.BookUpload" MasterPageFile="~/Views/Admin/AdminMaster.Master" %>
 
-<!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="../../Assets/Lib/css/bootstrap.min.css" />
-</head>
-<body>
-    <form id="form1" runat="server">
-        <div>
-            <asp:TextBox ID="txtNewPassword" runat="server" TextMode="Password" Placeholder="新密码"></asp:TextBox>
-            <asp:TextBox ID="txtConfirmPassword" runat="server" TextMode="Password" Placeholder="确认新密码" ></asp:TextBox>
-            <asp:Button ID="btnChangePassword" runat="server" Text="重置密码" OnClick="btnChangePassword_Click" />
-            <asp:Label ID="lblMessage" runat="server" Text="" ForeColor="#cc0000"></asp:Label>
+<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        书籍上传
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="txtBookName" class="form-label">书籍名称</label>
+                            <asp:TextBox ID="txtBookName" runat="server" CssClass="form-control"></asp:TextBox>
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtAuthor" class="form-label">作者</label>
+                            <asp:TextBox ID="txtAuthor" runat="server" CssClass="form-control"></asp:TextBox>
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtPublisher" class="form-label">出版社</label>
+                            <asp:TextBox ID="txtPublisher" runat="server" CssClass="form-control"></asp:TextBox>
+                        </div>
+                        <div class="mb-3">
+                            <label for="calPublicationDate" class="form-label">出版日期</label>
+                            <asp:TextBox ID="calPublicationDate" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtDescription" class="form-label">书籍描述</label>
+                            <asp:TextBox ID="txtDescription" runat="server" CssClass="form-control" TextMode="MultiLine"></asp:TextBox>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ddlTags" class="form-label">标签</label>
+                            <asp:CheckBoxList ID="ddlTags" runat="server" CssClass="form-control"></asp:CheckBoxList>
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtPrice" class="form-label">价格</label>
+                            <asp:TextBox ID="txtPrice" runat="server" CssClass="form-control" TextMode="Number"></asp:TextBox>
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtISBN" class="form-label">ISBN</label>
+                            <asp:TextBox ID="txtISBN" runat="server" CssClass="form-control"></asp:TextBox>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fuCoverImage" class="form-label">封面图片</label>
+                            <asp:FileUpload ID="fuCoverImage" runat="server" CssClass="form-control"></asp:FileUpload>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fuBookFile" class="form-label">书籍文件 (PDF)</label>
+                            <asp:FileUpload ID="fuBookFile" runat="server" CssClass="form-control"></asp:FileUpload>
+                        </div>
+                        <asp:Button ID="btnSubmit" runat="server" Text="提交" CssClass="btn btn-primary btn-block" OnClick="btnSubmit_Click" />
+                    </div>
+                </div>
+            </div>
         </div>
-    </form>
-
-    <script type="text/javascript">
-        document.addEventListener(
-            "DOMContentLoaded", function () {
-                var txtNewPassword = document.getElementById('<%= txtNewPassword.ClientID %>');
-                var txtConfirmPassword = document.getElementById('<%= txtConfirmPassword.ClientID %>');
-                var lblMessage = document.getElementById('<%= lblMessage.ClientID %>');
-                var btnChangePassword = document.getElementById('<%= btnChangePassword.ClientID %>');
-
-            function validatePasswords() {
-                if (txtNewPassword.value !== txtConfirmPassword.value) {
-                    lblMessage.innerText = "两次输入不一致";
-                    return false;
-                } else {
-                    lblMessage.innerText = "";
-                    return true;
-                }
-            }
-
-            txtNewPassword.addEventListener('input', validatePasswords);
-            txtConfirmPassword.addEventListener('input', validatePasswords);
-
-            btnChangePassword.addEventListener('click', function (event) {
-                if (!validatePasswords()) {
-                    event.preventDefault();
-                }
-            });
-        });
-    </script>
-
-    <script src="../../Assets/Lib/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    </div>
+</asp:Content>

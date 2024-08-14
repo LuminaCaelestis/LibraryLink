@@ -27,6 +27,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
+                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="Balance" class="form-label">余额<span id="BalanceTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
                                     <asp:TextBox ID="Balance" runat="server" CssClass="form-control"></asp:TextBox>
