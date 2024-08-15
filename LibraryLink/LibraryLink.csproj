@@ -53,6 +53,8 @@
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\lib\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -95,15 +97,22 @@
     <Content Include="Assets\Lib\js\bootstrap.min.js" />
     <Content Include="Assets\Lib\js\popper.min.js" />
     <Content Include="Global.asax" />
-    <Content Include="Test\style.css" />
-    <Content Include="Test\BookUpload.aspx" />
+    <Content Include="Models\DatabaseModel\LibraryLinkDB.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>LibraryLinkDB.edmx</DependentUpon>
+      <LastGenOutput>LibraryLinkDB.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\DatabaseModel\LibraryLinkDB.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>LibraryLinkDB.edmx</DependentUpon>
+      <LastGenOutput>LibraryLinkDB.cs</LastGenOutput>
+    </Content>
     <Content Include="Views\AdminLogin.aspx" />
     <Content Include="Views\Admin\BooksManagement.aspx" />
     <Content Include="Views\Admin\BookUpload.aspx" />
     <Content Include="Views\Admin\UserManagement.aspx" />
     <Content Include="Views\Admin\TagsManagement.aspx" />
     <Content Include="Views\Login.aspx" />
-    <Content Include="Test\Test.aspx" />
     <Content Include="Views\Register.aspx" />
     <Content Include="Views\ViewBook.aspx" />
     <Content Include="Web.config" />
@@ -114,23 +123,56 @@
     </Compile>
     <Compile Include="Models\DatabaseConfig.cs" />
     <Compile Include="Models\DatabaseInterface.cs" />
+    <Compile Include="Models\DatabaseModel\Authors.cs">
+      <DependentUpon>LibraryLinkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\BookManagementView.cs">
+      <DependentUpon>LibraryLinkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\Books.cs">
+      <DependentUpon>LibraryLinkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\LibraryLinkDB.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LibraryLinkDB.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\LibraryLinkDB.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LibraryLinkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\LibraryLinkDB.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LibraryLinkDB.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\Privileges.cs">
+      <DependentUpon>LibraryLinkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\Publication.cs">
+      <DependentUpon>LibraryLinkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\Publisher.cs">
+      <DependentUpon>LibraryLinkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\Purchase.cs">
+      <DependentUpon>LibraryLinkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\Rate.cs">
+      <DependentUpon>LibraryLinkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\sysdiagrams.cs">
+      <DependentUpon>LibraryLinkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\Tags.cs">
+      <DependentUpon>LibraryLinkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\Users.cs">
+      <DependentUpon>LibraryLinkDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Hash.cs" />
-    <Compile Include="Models\LibraryLinkDBContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Test\Site1.Master.cs">
-      <DependentUpon>Site1.Master</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Test\Site1.Master.designer.cs">
-      <DependentUpon>Site1.Master</DependentUpon>
-    </Compile>
-    <Compile Include="Test\BookUpload.aspx.cs">
-      <DependentUpon>BookUpload.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Test\BookUpload.aspx.designer.cs">
-      <DependentUpon>BookUpload.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Views\AdminLogin.aspx.cs">
       <DependentUpon>AdminLogin.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -180,13 +222,6 @@
     <Compile Include="Views\Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Test\Test.aspx.cs">
-      <DependentUpon>Test.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Test\Test.aspx.designer.cs">
-      <DependentUpon>Test.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Views\Reader\ReaderMaster.Master.cs">
       <DependentUpon>ReaderMaster.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -234,11 +269,16 @@
     <Content Include="Assets\Lib\js\bootstrap.esm.min.js.map" />
     <Content Include="Assets\Lib\js\bootstrap.js.map" />
     <Content Include="Assets\Lib\js\bootstrap.min.js.map" />
-    <Content Include="Assets\Books\托马斯微积分第十版中文版.pdf" />
+    <EntityDeploy Include="Models\DatabaseModel\LibraryLinkDB.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>LibraryLinkDB.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\DatabaseModel\LibraryLinkDB.edmx.diagram">
+      <DependentUpon>LibraryLinkDB.edmx</DependentUpon>
+    </Content>
     <None Include="packages.config" />
     <Content Include="Views\Admin\AdminMaster.Master" />
     <Content Include="Views\Reader\ReaderMaster.Master" />
-    <Content Include="Test\Site1.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -249,9 +289,13 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Assets\Pics\" />
+    <Folder Include="Assets\Resource\BookFiles\" />
+    <Folder Include="Assets\Resource\CoverImages\" />
+    <Folder Include="Test\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
