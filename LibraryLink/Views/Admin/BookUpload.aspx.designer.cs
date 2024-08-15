@@ -15,156 +15,210 @@ namespace LibraryLink.Views.Admin
     {
 
         /// <summary>
-        /// UserId 控件。
+        /// BookNameTip 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox UserId;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl BookNameTip;
 
         /// <summary>
-        /// UsernameTip 控件。
+        /// txtBookName 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl UsernameTip;
+        protected global::System.Web.UI.WebControls.TextBox txtBookName;
 
         /// <summary>
-        /// Username 控件。
+        /// ISBNTip 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Username;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl ISBNTip;
 
         /// <summary>
-        /// EmailTip 控件。
+        /// txtISBN 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl EmailTip;
+        protected global::System.Web.UI.WebControls.TextBox txtISBN;
 
         /// <summary>
-        /// Email 控件。
+        /// PriceTip 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Email;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl PriceTip;
 
         /// <summary>
-        /// BalanceTip 控件。
+        /// txtPrice 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl BalanceTip;
+        protected global::System.Web.UI.WebControls.TextBox txtPrice;
 
         /// <summary>
-        /// Balance 控件。
+        /// AuthorTip 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Balance;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl AuthorTip;
 
         /// <summary>
-        /// UserGroup 控件。
+        /// txtAuthor 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList UserGroup;
+        protected global::System.Web.UI.WebControls.TextBox txtAuthor;
 
         /// <summary>
-        /// DateJoined 控件。
+        /// NationalityTip 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox DateJoined;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl NationalityTip;
 
         /// <summary>
-        /// UpdateUser 控件。
+        /// txtAuthorNationality 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button UpdateUser;
+        protected global::System.Web.UI.WebControls.TextBox txtAuthorNationality;
 
         /// <summary>
-        /// DeleteUser 控件。
+        /// PublisherTip 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button DeleteUser;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl PublisherTip;
 
         /// <summary>
-        /// FilterUserId 控件。
+        /// txtPublisher 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox FilterUserId;
+        protected global::System.Web.UI.WebControls.TextBox txtPublisher;
 
         /// <summary>
-        /// FilterUsername 控件。
+        /// PublicationDateTip 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox FilterUsername;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl PublicationDateTip;
 
         /// <summary>
-        /// FilterEmail 控件。
+        /// calPublicationDate 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox FilterEmail;
+        protected global::System.Web.UI.WebControls.TextBox calPublicationDate;
 
         /// <summary>
-        /// FilterUserGroup 控件。
+        /// CoverImageTip 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList FilterUserGroup;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl CoverImageTip;
 
         /// <summary>
-        /// FilterButton 控件。
+        /// fuCoverImage 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button FilterButton;
+        protected global::System.Web.UI.WebControls.FileUpload fuCoverImage;
 
         /// <summary>
-        /// UserGridView 控件。
+        /// BookFileTip 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView UserGridView;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl BookFileTip;
+
+        /// <summary>
+        /// fuBookFile 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload fuBookFile;
+
+        /// <summary>
+        /// TagTip 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TagTip;
+
+        /// <summary>
+        /// txtTags 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtTags;
+
+        /// <summary>
+        /// DescriptionTip 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl DescriptionTip;
+
+        /// <summary>
+        /// txtDescription 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDescription;
+
+        /// <summary>
+        /// btnSubmit 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSubmit;
     }
 }

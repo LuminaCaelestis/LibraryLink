@@ -27,7 +27,6 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="Balance" class="form-label">余额<span id="BalanceTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
                                     <asp:TextBox ID="Balance" runat="server" CssClass="form-control"></asp:TextBox>
@@ -44,48 +43,48 @@
                                     <asp:TextBox ID="DateJoined" runat="server" CssClass="form-control" ReadOnly="True"></asp:TextBox>
                                 </div>
                             </div>
-                        </div>
-                        <div class="d-grid gap-2" style="margin-top: 40px">
-                            <asp:Button ID="UpdateUser" runat="server" CssClass="btn btn-primary" Text="确认修改" OnClick="UpdateUser_Click" />
-                            <asp:Button ID="DeleteUser" runat="server" CssClass="btn btn-danger" Text="删除用户" OnClick="DeleteUser_Click" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 筛选区 -->
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        筛选用户
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="FilterUserId" class="form-label">用户ID</label>
-                            <asp:TextBox ID="FilterUserId" runat="server" CssClass="form-control"></asp:TextBox>
-                        </div>
-                        <div class="mb-3">
-                            <label for="FilterUsername" class="form-label">用户名</label>
-                            <asp:TextBox ID="FilterUsername" runat="server" CssClass="form-control"></asp:TextBox>
-                        </div>
-                        <div class="mb-3">
-                            <label for="FilterEmail" class="form-label">Email</label>
-                            <asp:TextBox ID="FilterEmail" runat="server" CssClass="form-control"></asp:TextBox>
-                        </div>
-                        <div class="mb-3">
-                            <label for="FilterUserGroup" class="form-label">用户组</label>
-                            <asp:DropDownList ID="FilterUserGroup" runat="server" CssClass="form-control">
-                                <asp:ListItem Text="All" Value=""></asp:ListItem>
-                                <asp:ListItem Text="Reader" Value="0"></asp:ListItem>
-                                <asp:ListItem Text="Admin" Value="1"></asp:ListItem>
-                            </asp:DropDownList>
-                        </div>
-                        <div class="d-grid gap-2">
-                            <asp:Button ID="FilterButton" runat="server" CssClass="btn btn-secondary" Text="筛选" OnClick="FilterButton_Click" />
+                            <div class="d-grid gap-2" style="margin-top: 40px">
+                                <asp:Button ID="UpdateUser" runat="server" CssClass="btn btn-primary" Text="确认修改" OnClick="UpdateUser_Click" />
+                                <asp:Button ID="DeleteUser" runat="server" CssClass="btn btn-danger" Text="删除用户" OnClick="DeleteUser_Click" />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+             </div>
+                <!-- 筛选区 -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            筛选用户
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="FilterUserId" class="form-label">用户ID</label>
+                                <asp:TextBox ID="FilterUserId" runat="server" CssClass="form-control"></asp:TextBox>
+                            </div>
+                            <div class="mb-3">
+                                <label for="FilterUsername" class="form-label">用户名</label>
+                                <asp:TextBox ID="FilterUsername" runat="server" CssClass="form-control"></asp:TextBox>
+                            </div>
+                            <div class="mb-3">
+                                <label for="FilterEmail" class="form-label">Email</label>
+                                <asp:TextBox ID="FilterEmail" runat="server" CssClass="form-control"></asp:TextBox>
+                            </div>
+                            <div class="mb-3">
+                                <label for="FilterUserGroup" class="form-label">用户组</label>
+                                <asp:DropDownList ID="FilterUserGroup" runat="server" CssClass="form-control">
+                                    <asp:ListItem Text="All" Value=""></asp:ListItem>
+                                    <asp:ListItem Text="Reader" Value="0"></asp:ListItem>
+                                    <asp:ListItem Text="Admin" Value="1"></asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <asp:Button ID="FilterButton" runat="server" CssClass="btn btn-secondary" Text="筛选" OnClick="FilterButton_Click" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
         </div>
 
         <!-- 用户列表 -->

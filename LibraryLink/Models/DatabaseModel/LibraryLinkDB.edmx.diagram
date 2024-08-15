@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="7e95b5245c9d47139998902a2ef43d3d" Name="Diagram1">
+        <EntityTypeShape EntityType="LibraryLinkDBModel.Authors" Width="1.5" PointX="0.75" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibraryLinkDBModel.Books" Width="1.5" PointX="3" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibraryLinkDBModel.Privileges" Width="1.5" PointX="6" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibraryLinkDBModel.Publication" Width="1.5" PointX="5.25" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibraryLinkDBModel.Publisher" Width="1.5" PointX="3" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibraryLinkDBModel.Purchase" Width="1.5" PointX="5.25" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibraryLinkDBModel.Rate" Width="1.5" PointX="5.25" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibraryLinkDBModel.sysdiagrams" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibraryLinkDBModel.Tags" Width="1.5" PointX="5.25" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LibraryLinkDBModel.Users" Width="1.5" PointX="8.25" PointY="7.125" IsExpanded="true" />
+        <AssociationConnector Association="LibraryLinkDBModel.FK__Publishes__BookI__70DDC3D8" ManuallyRouted="false" />
+        <AssociationConnector Association="LibraryLinkDBModel.FK__Purchase__BookID__656C112C" ManuallyRouted="false" />
+        <AssociationConnector Association="LibraryLinkDBModel.FK__Rate__BookID__5FB337D6" ManuallyRouted="false" />
+        <AssociationConnector Association="LibraryLinkDBModel.FK__Users__Privilege__59FA5E80" ManuallyRouted="false" />
+        <AssociationConnector Association="LibraryLinkDBModel.FK__Publishes__Publi__6FE99F9F" ManuallyRouted="false" />
+        <AssociationConnector Association="LibraryLinkDBModel.FK__Purchase__UserID__6477ECF3" ManuallyRouted="false" />
+        <AssociationConnector Association="LibraryLinkDBModel.FK__Rate__UserID__5EBF139D" ManuallyRouted="false" />
+        <AssociationConnector Association="LibraryLinkDBModel.Favorite" ManuallyRouted="false" />
+        <AssociationConnector Association="LibraryLinkDBModel.HasTag" ManuallyRouted="false" />
+        <AssociationConnector Association="LibraryLinkDBModel.Writes" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

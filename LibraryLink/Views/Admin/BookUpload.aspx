@@ -1,135 +1,174 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Admin/AdminMaster.Master" AutoEventWireup="true" CodeBehind="BookUpload.aspx.cs" Inherits="LibraryLink.Views.Admin.BookUpload" %>
-<asp:Content ID="Content1" ContentPlaceHolderID="SidebarContent" runat="server">
-</asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+﻿<%@ Page Title="书籍上传" Language="C#" AutoEventWireup="true" CodeBehind="BookUpload.aspx.cs" Inherits="LibraryLink.Views.Admin.BookUpload" MasterPageFile="~/Views/Admin/AdminMaster.Master" %>
 
-    <div class="container">
+<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="container mt-5">
         <div class="row mb-4">
-            <!-- 操作区  -->
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        用户信息
+                        书籍上传
                     </div>
                     <div class="card-body">
-                        <div class="row">
+   
+                        <div class="row mb-3">
                             <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="UserId" class="form-label">用户ID</label>
-                                    <asp:TextBox ID="UserId" runat="server" CssClass="form-control" ReadOnly="True"></asp:TextBox>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="Username" class="form-label">用户名<span id="UsernameTip" class="text-danger" style="font-size: smaller;" runat="server"></span> </label>
-                                    <asp:TextBox ID="Username" MaxLength="30" runat="server" CssClass="form-control"></asp:TextBox>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="Email" class="form-label">Email<span id="EmailTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
-                                    <asp:TextBox ID="Email" MaxLength="50" runat="server" CssClass="form-control"></asp:TextBox>
-                                </div>
+                                <label for="txtBookName" class="form-label">书籍名称 <span id="BookNameTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
+                                <asp:TextBox ID="txtBookName" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="Balance" class="form-label">余额<span id="BalanceTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
-                                    <asp:TextBox ID="Balance" runat="server" CssClass="form-control"></asp:TextBox>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="UserGroup" class="form-label">用户组</label>
-                                    <asp:DropDownList ID="UserGroup" runat="server" CssClass="form-control">
-                                        <asp:ListItem Text="Reader" Value="0"></asp:ListItem>
-                                        <asp:ListItem Text="Admin" Value="1"></asp:ListItem>
-                                    </asp:DropDownList>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="DateJoined" class="form-label">注册日期</label>
-                                    <asp:TextBox ID="DateJoined" runat="server" CssClass="form-control" ReadOnly="True"></asp:TextBox>
-                                </div>
+                            <div class="col-md-3">
+                                <label for="txtISBN" class="form-label">ISBN <span id="ISBNTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
+                                <asp:TextBox ID="txtISBN" runat="server" CssClass="form-control"></asp:TextBox>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="txtPrice" class="form-label">价格 <span id="PriceTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
+                                <asp:TextBox ID="txtPrice" runat="server" CssClass="form-control" TextMode="Number"></asp:TextBox>
                             </div>
                         </div>
-                        <div class="d-grid gap-2" style="margin-top: 40px">
-                            <asp:Button ID="UpdateUser" runat="server" CssClass="btn btn-primary" Text="确认修改" OnClick="UpdateUser_Click" />
-                            <asp:Button ID="DeleteUser" runat="server" CssClass="btn btn-danger" Text="删除用户" OnClick="DeleteUser_Click" />
+
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label for="txtAuthor" class="form-label">作者 <span id="AuthorTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
+                                <asp:TextBox ID="txtAuthor" runat="server" CssClass="form-control"></asp:TextBox>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="txtAuthorNationality" class="form-label">作者国籍 <span id="NationalityTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
+                                <asp:TextBox ID="txtAuthorNationality" runat="server" CssClass="form-control"></asp:TextBox>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="txtPublisher" class="form-label">出版社 <span id="PublisherTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
+                                <asp:TextBox ID="txtPublisher" runat="server" CssClass="form-control"></asp:TextBox>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="calPublicationDate" class="form-label">出版日期 <span id="PublicationDateTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
+                                <asp:TextBox ID="calPublicationDate" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                            </div>
                         </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="fuCoverImage" class="form-label">封面图片 <span id="CoverImageTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
+                                <asp:FileUpload ID="fuCoverImage" runat="server" CssClass="form-control"></asp:FileUpload>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="fuBookFile" class="form-label">书籍文件 (PDF) <span id="BookFileTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
+                                <asp:FileUpload ID="fuBookFile" runat="server" CssClass="form-control"></asp:FileUpload>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="txtTags" class="form-label">标签 <span id="TagTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
+                                <<asp:TextBox ID="txtTags" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="1"></asp:TextBox>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="txtDescription" class="form-label">书籍描述 <span id="DescriptionTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
+                                <asp:TextBox ID="txtDescription" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="9"></asp:TextBox>
+                            </div>
+                        </div>
+
+                        <asp:Button ID="btnSubmit" runat="server" Text="提交" CssClass="btn btn-primary btn-block" OnClick="btnSubmit_Click" />
                     </div>
                 </div>
-            </div>
-
-            <!-- 筛选区 -->
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        筛选用户
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="FilterUserId" class="form-label">用户ID</label>
-                            <asp:TextBox ID="FilterUserId" runat="server" CssClass="form-control"></asp:TextBox>
-                        </div>
-                        <div class="mb-3">
-                            <label for="FilterUsername" class="form-label">用户名</label>
-                            <asp:TextBox ID="FilterUsername" runat="server" CssClass="form-control"></asp:TextBox>
-                        </div>
-                        <div class="mb-3">
-                            <label for="FilterEmail" class="form-label">Email</label>
-                            <asp:TextBox ID="FilterEmail" runat="server" CssClass="form-control"></asp:TextBox>
-                        </div>
-                        <div class="mb-3">
-                            <label for="FilterUserGroup" class="form-label">用户组</label>
-                            <asp:DropDownList ID="FilterUserGroup" runat="server" CssClass="form-control">
-                                <asp:ListItem Text="All" Value=""></asp:ListItem>
-                                <asp:ListItem Text="Reader" Value="0"></asp:ListItem>
-                                <asp:ListItem Text="Admin" Value="1"></asp:ListItem>
-                            </asp:DropDownList>
-                        </div>
-                        <div class="d-grid gap-2">
-                            <asp:Button ID="FilterButton" runat="server" CssClass="btn btn-secondary" Text="筛选" OnClick="FilterButton_Click" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 列表 -->
-        <div class="row">
-            <div class="col-12">
-                <asp:GridView ID="UserGridView" runat="server" AllowPaging="True" PageSize="6" 
-                    CssClass="table table-bordered table-hover"
-                    AutoGenerateColumns="False" OnSelectedIndexChanged="UserGridView_SelectedIndexChanged"
-                    OnPageIndexChanging="UserGridView_PageIndexChanging">
-                    <Columns>
-                        <asp:BoundField DataField="UserID" HeaderText="用户ID" ReadOnly="True" />
-                        <asp:BoundField DataField="Username" HeaderText="用户名" />
-                        <asp:BoundField DataField="Email" HeaderText="Email" />
-                        <asp:BoundField DataField="Balance" HeaderText="余额" />
-                        <asp:BoundField DataField="UserGroup" HeaderText="用户组" />
-                        <asp:BoundField DataField="DateJoined" HeaderText="注册日期" />
-                        <asp:TemplateField>
-                            <ItemTemplate>
-                                <div class="text-center">
-                                    <asp:Button ID="SelectButton" runat="server" Text="选择" CommandName="Select" CssClass="btn btn-primary btn-sm" />
-                                </div>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                    </Columns>
-
-                    <PagerTemplate>
-                        <div class="d-flex justify-content-center align-items-center">
-                            <asp:LinkButton runat="server" CommandName="Page" CommandArgument="First" CssClass="btn btn-outline-primary btn-sm m-1">First</asp:LinkButton>
-                            <asp:LinkButton runat="server" CommandName="Page" CommandArgument="Prev" CssClass="btn btn-outline-primary btn-sm m-1">Previous</asp:LinkButton>
-
-                            <span class="m-1">第 <%= UserGridView.PageIndex + 1 %> 页，共 <%= UserGridView.PageCount %> 页</span>
-                            <span class="m-1">跳转到:</span>
-                            <asp:TextBox ID="txtJumpToPage" runat="server" CssClass="form-control form-control-sm" AutoCompleteType="Disabled" Style="width: 100px; display: inline-block;" />
-                            <asp:Button ID="btnJumpToPage" runat="server" Text="Go" CssClass="btn btn-primary btn-sm" OnClick="btnJumpToPage_Click" />
-
-                            <asp:LinkButton runat="server" CommandName="Page" CommandArgument="Next" CssClass="btn btn-outline-primary btn-sm m-1">Next</asp:LinkButton>
-                            <asp:LinkButton runat="server" CommandName="Page" CommandArgument="Last" CssClass="btn btn-outline-primary btn-sm m-1">Last</asp:LinkButton>
-                        </div>
-                    </PagerTemplate>
-
-                </asp:GridView>
             </div>
         </div>
     </div>
 
+<script>
+    // 验证函数，匹配后端的验证规则
+    function validInput() {
+        let hasError = false;
+
+        // 书籍名称验证
+        const bookName = document.getElementById('<%= txtBookName.ClientID %>').value.trim();
+        if (!/^[a-zA-Z\u4e00-\u9fa5][\sa-zA-Z0-9\u4e00-\u9fa5]+$/.test(bookName) || bookName === '') {
+            document.getElementById('<%= BookNameTip.ClientID %>').innerText = "中英文开头，包含字母、阿拉伯数字、汉字、空格";
+            hasError = true;
+        } else {
+            document.getElementById('<%= BookNameTip.ClientID %>').innerText = "";
+        }
+
+        // ISBN验证
+        const isbn = document.getElementById('<%= txtISBN.ClientID %>').value.trim();
+        if (!/^(97(8|9))?\d{9}(\d|X)$/.test(isbn) || isbn === '') {
+            document.getElementById('<%= ISBNTip.ClientID %>').innerText = "ISBN必须为13位纯数字";
+            hasError = true;
+        } else {
+            document.getElementById('<%= ISBNTip.ClientID %>').innerText = "";
+        }
+
+        // 作者姓名验证
+        const author = document.getElementById('<%= txtAuthor.ClientID %>').value.trim();
+        if (!/^[a-zA-Z\u4e00-\u9fa5][a-zA-Z\u4e00-\u9fa5\s]+$/.test(author) || author === '') {
+            document.getElementById('<%= AuthorTip.ClientID %>').innerText = "汉字、英文字母开头，英文空格分割";
+            hasError = true;
+        } else {
+            document.getElementById('<%= AuthorTip.ClientID %>').innerText = "";
+        }
+
+        // 国籍验证
+        const nationality = document.getElementById('<%= txtAuthorNationality.ClientID %>').value.trim();
+        if (!/^[\u4e00-\u9fa5]+$/.test(nationality) || nationality === '') {
+            document.getElementById('<%= NationalityTip.ClientID %>').innerText = "国籍仅允许汉字";
+            hasError = true;
+        } else {
+            document.getElementById('<%= NationalityTip.ClientID %>').innerText = "";
+        }
+
+        // 出版社验证
+        const publisher = document.getElementById('<%= txtPublisher.ClientID %>').value.trim();
+        if (!/^[a-zA-Z\u4e00-\u9fa5][a-zA-Z\u4e00-\u9fa5\s]+$/.test(publisher) || publisher === '') {
+            document.getElementById('<%= PublisherTip.ClientID %>').innerText = "汉字、英文字母开头，单词以空格分割";
+            hasError = true;
+        } else {
+            document.getElementById('<%= PublisherTip.ClientID %>').innerText = "";
+        }
+
+        // 价格验证
+        const price = document.getElementById('<%= txtPrice.ClientID %>').value.trim();
+        if (price === '' || isNaN(price) || parseFloat(price) < 0 || parseFloat(price) > 99999999.99) {
+            document.getElementById('<%= PriceTip.ClientID %>').innerText = "介于0~99999999.99间的阿拉伯数字";
+            hasError = true;
+        } else {
+            document.getElementById('<%= PriceTip.ClientID %>').innerText = "";
+        }
+
+        // 标签验证
+        const tags = document.getElementById('<%= txtTags.ClientID %>').value.trim().split(/\s+/);
+        for (let tag of tags) {
+            if (!/^[a-zA-Z0-9\u4e00-\u9fa5]+$/.test(tag)) {
+                document.getElementById('<%= TagTip.ClientID %>').innerText = "标签只能包含中文、英文";
+                hasError = true;
+                break;
+            } else {
+                document.getElementById('<%= TagTip.ClientID %>').innerText = "";
+            }
+        }
+
+        // 书籍描述验证
+        const description = document.getElementById('<%= txtDescription.ClientID %>').value.trim();
+        if (description.length > 2000) {
+            document.getElementById('<%= DescriptionTip.ClientID %>').innerText = "书籍描述不能超过2000字符";
+            hasError = true;
+        } else {
+            document.getElementById('<%= DescriptionTip.ClientID %>').innerText = "";
+        }
+
+        return !hasError; // 返回false表示阻止提交
+    }
+
+    // 为所有输入框绑定oninput事件
+    window.onload = function () {
+        const inputs = document.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+            input.oninput = validInput;
+        });
+    };
+</script>
+
+
 
 </asp:Content>
+
