@@ -126,9 +126,6 @@
     <Compile Include="Models\DatabaseModel\Authors.cs">
       <DependentUpon>LibraryLinkDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DatabaseModel\BookManagementView.cs">
-      <DependentUpon>LibraryLinkDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\DatabaseModel\Books.cs">
       <DependentUpon>LibraryLinkDB.tt</DependentUpon>
     </Compile>

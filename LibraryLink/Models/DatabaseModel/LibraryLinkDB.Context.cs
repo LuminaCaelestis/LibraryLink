@@ -16,7 +16,7 @@ namespace LibraryLink.Models.DatabaseModel
     public partial class LibraryLinkDBEntities : DbContext
     {
         public LibraryLinkDBEntities()
-            : base("name=LibraryLinkDBEntities")
+            : base("name=Entities")
         {
         }
     
@@ -35,6 +35,5 @@ namespace LibraryLink.Models.DatabaseModel
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<Tags> Tags { get; set; }
         public virtual DbSet<Users> Users { get; set; }
-        public virtual DbSet<BookManagementView> BookManagementView { get; set; }
     }
 }

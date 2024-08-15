@@ -15,12 +15,27 @@ namespace LibraryLink.Views.Admin
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (!IsPostBack)
+            {
+                txtBookName.Attributes.Add("oninput", "validateInput();");
+                txtISBN.Attributes.Add("oninput", "validateInput();");
+                txtAuthor.Attributes.Add("oninput", "validateInput();");
+                txtAuthorNationality.Attributes.Add("oninput", "validateInput();");
+                txtPublisher.Attributes.Add("oninput", "validateInput();");
+                txtPrice.Attributes.Add("oninput", "validateInput();");
+                txtTags.Attributes.Add("oninput", "validateInput();");
+                txtDescription.Attributes.Add("oninput", "validateInput();");
+            }
         }
 
-        // ORM！ ！！！！LINQ！！！！ 咋那么方便呢
+        #region 按钮事件处理
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
+            if (!IsValidInfo())
+            {
+                return;
+            }
+
             string bookName = txtBookName.Text.Trim();
             string isbn = txtISBN.Text.Trim();
 
@@ -29,7 +44,7 @@ namespace LibraryLink.Views.Admin
 
             string publisherName = txtPublisher.Text.Trim();
             DateTime publicationDate = DateTime.Parse(calPublicationDate.Text);
-            
+
             decimal price = decimal.Parse(txtPrice.Text.Trim());
 
             string description = txtDescription.Text.Trim();
@@ -39,6 +54,23 @@ namespace LibraryLink.Views.Admin
             string coverImagePath = SaveFile(fuCoverImage, "~/Assets/Resource/CoverImages/");
             string bookFilePath = SaveFile(fuBookFile, "~/Assets/Resource/BookFiles/");
 
+            bool uploadSuccess = true;
+
+            if(string.IsNullOrEmpty(coverImagePath))
+            {
+                CoverImageTip.InnerText = "未选择封面图片";
+                uploadSuccess = false;
+            }
+            if (string.IsNullOrEmpty(bookFilePath))
+            {
+                BookFileTip.InnerText = "未选择上传文件";
+                uploadSuccess = false;
+            }
+            if (!uploadSuccess)
+            {
+                return;
+            }
+
             // LINQ
             using (var db = new LibraryLinkDBEntities())
             {
@@ -47,7 +79,7 @@ namespace LibraryLink.Views.Admin
                 {
                     try
                     {
-                        // 先插入书籍信息
+                        #region 书信息   
                         var book = db.Books.FirstOrDefault(b => b.ISBN == isbn);
                         if (book == null)
                         {
@@ -68,8 +100,9 @@ namespace LibraryLink.Views.Admin
                         {
                             Response.Write("<script>alert('书籍已存在！')</script>");
                         }
+                        #endregion 书信息
 
-                        // 作者
+                        #region 作者信息    
                         var author = db.Authors.FirstOrDefault
                         (
                             a => a.AuthorName == authorName && a.Nationality == authorNationality
@@ -85,9 +118,9 @@ namespace LibraryLink.Views.Admin
                         }
                         book.Authors.Add(author);
                         db.SaveChanges();
+                        #endregion 作者信息
 
-
-                        // 出版社
+                        #region 出版社
                         var publisher = db.Publisher.FirstOrDefault(p => p.PublisherName == publisherName);
                         if (publisher == null)
                         {
@@ -98,8 +131,9 @@ namespace LibraryLink.Views.Admin
                             db.Publisher.Add(publisher);
                         }
                         db.SaveChanges();
+                        #endregion 出版社
 
-                        // 出版信息
+                        #region 出版信息
                         var publication = db.Publication.FirstOrDefault
                         (
                             p => p.BookID == book.BookID && p.PublisherID == publisher.PublisherID
@@ -115,8 +149,9 @@ namespace LibraryLink.Views.Admin
                         }
                         db.Publication.Add(publication);
                         // 这里没有立刻产生自增ID的需求，所以暂时不用SaveChanges()
+                        #endregion 出版信息
 
-                        // 标签
+                        #region 标签
                         var newTags = new List<Tags>();
                         foreach (string tag in tags)
                         {
@@ -137,7 +172,11 @@ namespace LibraryLink.Views.Admin
                             }
                         }
                         db.Tags.AddRange(newTags);
+                        #endregion 标签      
+                        
                         db.SaveChanges();
+                        trans.Commit();
+                        Response.Write("<script>alert('上传成功！')</script>");
                     }
                     catch (Exception ex)
                     {
@@ -145,74 +184,123 @@ namespace LibraryLink.Views.Admin
                         Response.Write("<script>alert('上传失败！" + ex.Message + "')</script>");
                     }
                 }
-                Response.Write("<script>alert('上传成功！')</script>");
             }
 
             //Response.Redirect("BookManagement.aspx");
         }
+        #endregion 按钮事件处理
 
-        // 验证功能还没完成
-        private byte IsValidInfo()
+        #region 验证信息
+        private bool IsValidInfo()
         {
-            byte ValidCondition = 255;
+            bool hasError = false;
 
-            if (!Regex.IsMatch(txtBookName.Text.Trim(), @"^[a-zA-Z0-9\u4e00-\u9fa5]+$"))
+            if (!Regex.IsMatch(txtBookName.Text.Trim(), @"^[a-zA-Z\u4e00-\u9fa5\(\)][\sa-zA-Z0-9\u4e00-\u9fa5]+$") ||
+                txtBookName.Text.Trim() == string.Empty
+            )
             {
-                ValidCondition -= 128;
-                // 可以在这里添加错误信息或提示用户输入无效
+                BookNameTip.InnerText = "中英文开头，包含字母、数字、汉字、空格、括号";
+                hasError = true;
             }
 
             // 验证ISBN - 假设ISBN为13位数字或带有连接符的格式
-            if (!Regex.IsMatch(txtISBN.Text.Trim(), @"^(97(8|9))?\d{9}(\d|X)$"))
+            if (!Regex.IsMatch(txtISBN.Text.Trim(), @"^(97(8|9))?\d{9}(\d|X)$") ||
+                txtISBN.Text.Trim() == string.Empty
+            )
             {
-                ValidCondition -= 64;
+                ISBNTip.InnerText = "ISBN必须为13位纯数字";
+                hasError = true;
             }
 
-            // 验证作者姓名 - 允许中文、英文，且非空
-            if (!Regex.IsMatch(txtAuthor.Text.Trim(), @"^[a-zA-Z\u4e00-\u9fa5\s]+$"))
+
+
+            //if (!IsValidISBN(txtISBN.Text.Trim()))
+            //{
+            //    ISBNTip.InnerText += " ISBN校验码不正确";
+            //    hasError = true;
+            //}
+
+            // 验证姓名 - 允许中英文，且非空
+            if (!Regex.IsMatch(txtAuthor.Text.Trim(), @"^[a-zA-Z\u4e00-\u9fa5][a-zA-Z\u4e00-\u9fa5\s]+$") ||
+                txtAuthor.Text.Trim() == string.Empty
+            )
             {
-                ValidCondition -= 32;
+                AuthorTip.InnerText = "汉字、字母开头，英文以空格分割";
+                hasError = true;
             }
 
-            // 验证作者国籍 - 允许中文、英文，且非空
-            if (!Regex.IsMatch(txtAuthorNationality.Text.Trim(), @"^[a-zA-Z\u4e00-\u9fa5\s]+$"))
+            // 国名，允许汉字
+            if (!Regex.IsMatch(txtAuthorNationality.Text.Trim(), @"^[\u4e00-\u9fa5]+$") ||
+                txtAuthorNationality.Text.Trim() == string.Empty
+            )
             {
-                ValidCondition -= 16;
+                NationalityTip.InnerHtml = "国籍仅允许中文译名";
+                hasError = true;
             }
 
             // 验证出版社名称 - 允许中文、英文，且非空
-            if (!Regex.IsMatch(txtPublisher.Text.Trim(), @"^[a-zA-Z\u4e00-\u9fa5\s]+$"))
+            if (!Regex.IsMatch(txtPublisher.Text.Trim(), @"^[a-zA-Z\u4e00-\u9fa5][a-zA-Z\u4e00-\u9fa5\s]+$") ||
+                txtPublisher.Text.Trim() == string.Empty
+            )
             {
-                ValidCondition -= 8;
+                PublisherTip.InnerText = "汉字、英文字母开头，单词以空格分割";
+                hasError = true;
             }
 
-            // 验证出版日期 - 检查是否是有效的日期
-            if (!DateTime.TryParse(calPublicationDate.Text, out _))
+            // 如果没有选择出版日期，则显示提示信息
+            if (string.IsNullOrEmpty(calPublicationDate.Text.Trim()))
             {
-                ValidCondition -= 4;
+                PublicationDateTip.InnerText = "请选择出版日期";
+                hasError = true;
             }
+
 
             // 验证价格 - 检查是否是正数
-            if (!decimal.TryParse(txtPrice.Text.Trim(), out decimal price) || price <= 0)
+            if (txtPrice.Text.Trim() == string.Empty ||
+                !decimal.TryParse(txtPrice.Text.Trim(), out decimal price) || 
+                price < 0m || price > 99999999.99m)
             {
-                ValidCondition -= 2;
+                PriceTip.InnerText = "介于0~99999999.99间的阿拉伯数字";
+                hasError = true;
             }
 
-            // 验证书籍描述 - 描述长度是否在合理范围内（假设最多2000字符）
+            // 验证书籍描述 - 最多2000字符
             if (txtDescription.Text.Trim().Length > 2000)
             {
-                ValidCondition -= 1;
+                DescriptionTip.InnerText = "书籍描述不能超过2000字符";
+                hasError = true;
             }
 
-            // 验证标签 - 检查每个标签是否合法，允许的字符可以是中文、英文、数字、逗号
-            string[] tags = txtTags.Text.Trim().Split(',');
+            // 验证标签 - 中英文
+            string[] tags = txtTags.Text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string tag in tags)
             {
                 if (!Regex.IsMatch(tag.Trim(), @"^[a-zA-Z0-9\u4e00-\u9fa5]+$"))
                 {
+                    TagTip.InnerText = "标签只能包含中文、英文";
+                    hasError = true;
+                    break;
                 }
             }
-            return ValidCondition;
+            return !hasError;
+        }
+        #endregion 验证信息
+
+        private static bool IsValidISBN(string isbn)
+        {
+            // 验证ISBN的末尾校验码，假设ISBN为13位数字
+            // 根据ISBN13的规则
+            // ISBN的末尾校验码是通过取前12位，偶数位乘3，然后求和，最后取余10，用10减去余数，结果应该等于最后一位数字
+            int[] isbnArray = isbn.Take(12).Select(c => int.Parse(c.ToString())).ToArray();
+            for (int i = 0; i != 12; ++i)
+            {
+                if (i % 2 != 0)
+                {
+                    isbnArray[i] *= 3;
+                }
+            }
+            // 最后一位数字没有进入数组，所以原字符串末尾元素减'0'处理一下
+            return 10 - (isbnArray.Sum() % 10) == isbn.Last() - '0'; 
         }
 
         private string SaveFile(FileUpload fileUpload, string folderPath)

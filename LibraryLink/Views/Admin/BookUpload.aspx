@@ -12,59 +12,59 @@
    
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="txtBookName" class="form-label">书籍名称</label>
+                                <label for="txtBookName" class="form-label">书籍名称 <span id="BookNameTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
                                 <asp:TextBox ID="txtBookName" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
                             <div class="col-md-3">
-                                <label for="txtISBN" class="form-label">ISBN</label>
+                                <label for="txtISBN" class="form-label">ISBN <span id="ISBNTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
                                 <asp:TextBox ID="txtISBN" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
                             <div class="col-md-3">
-                                <label for="txtPrice" class="form-label">价格</label>
+                                <label for="txtPrice" class="form-label">价格 <span id="PriceTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
                                 <asp:TextBox ID="txtPrice" runat="server" CssClass="form-control" TextMode="Number"></asp:TextBox>
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-3">
-                                <label for="txtAuthor" class="form-label">作者</label>
+                                <label for="txtAuthor" class="form-label">作者 <span id="AuthorTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
                                 <asp:TextBox ID="txtAuthor" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
                             <div class="col-md-3">
-                                <label for="txtAuthorNationality" class="form-label">作者国籍</label>
+                                <label for="txtAuthorNationality" class="form-label">作者国籍 <span id="NationalityTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
                                 <asp:TextBox ID="txtAuthorNationality" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
                             <div class="col-md-3">
-                                <label for="txtPublisher" class="form-label">出版社</label>
+                                <label for="txtPublisher" class="form-label">出版社 <span id="PublisherTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
                                 <asp:TextBox ID="txtPublisher" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
                             <div class="col-md-3">
-                                <label for="calPublicationDate" class="form-label">出版日期</label>
+                                <label for="calPublicationDate" class="form-label">出版日期 <span id="PublicationDateTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
                                 <asp:TextBox ID="calPublicationDate" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="fuCoverImage" class="form-label">封面图片</label>
+                                <label for="fuCoverImage" class="form-label">封面图片 <span id="CoverImageTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
                                 <asp:FileUpload ID="fuCoverImage" runat="server" CssClass="form-control"></asp:FileUpload>
                             </div>
                             <div class="col-md-6">
-                                <label for="fuBookFile" class="form-label">书籍文件 (PDF)</label>
+                                <label for="fuBookFile" class="form-label">书籍文件 (PDF) <span id="BookFileTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
                                 <asp:FileUpload ID="fuBookFile" runat="server" CssClass="form-control"></asp:FileUpload>
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-12">
-                                <label for="txtTags" class="form-label">标签</label>
+                                <label for="txtTags" class="form-label">标签 <span id="TagTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
                                 <<asp:TextBox ID="txtTags" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="1"></asp:TextBox>
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-12">
-                                <label for="txtDescription" class="form-label">书籍描述</label>
+                                <label for="txtDescription" class="form-label">书籍描述 <span id="DescriptionTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
                                 <asp:TextBox ID="txtDescription" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="9"></asp:TextBox>
                             </div>
                         </div>
@@ -75,5 +75,100 @@
             </div>
         </div>
     </div>
+
+<script>
+    // 验证函数，匹配后端的验证规则
+    function validInput() {
+        let hasError = false;
+
+        // 书籍名称验证
+        const bookName = document.getElementById('<%= txtBookName.ClientID %>').value.trim();
+        if (!/^[a-zA-Z\u4e00-\u9fa5][\sa-zA-Z0-9\u4e00-\u9fa5]+$/.test(bookName) || bookName === '') {
+            document.getElementById('<%= BookNameTip.ClientID %>').innerText = "中英文开头，包含字母、阿拉伯数字、汉字、空格";
+            hasError = true;
+        } else {
+            document.getElementById('<%= BookNameTip.ClientID %>').innerText = "";
+        }
+
+        // ISBN验证
+        const isbn = document.getElementById('<%= txtISBN.ClientID %>').value.trim();
+        if (!/^(97(8|9))?\d{9}(\d|X)$/.test(isbn) || isbn === '') {
+            document.getElementById('<%= ISBNTip.ClientID %>').innerText = "ISBN必须为13位纯数字";
+            hasError = true;
+        } else {
+            document.getElementById('<%= ISBNTip.ClientID %>').innerText = "";
+        }
+
+        // 作者姓名验证
+        const author = document.getElementById('<%= txtAuthor.ClientID %>').value.trim();
+        if (!/^[a-zA-Z\u4e00-\u9fa5][a-zA-Z\u4e00-\u9fa5\s]+$/.test(author) || author === '') {
+            document.getElementById('<%= AuthorTip.ClientID %>').innerText = "汉字、英文字母开头，英文空格分割";
+            hasError = true;
+        } else {
+            document.getElementById('<%= AuthorTip.ClientID %>').innerText = "";
+        }
+
+        // 国籍验证
+        const nationality = document.getElementById('<%= txtAuthorNationality.ClientID %>').value.trim();
+        if (!/^[\u4e00-\u9fa5]+$/.test(nationality) || nationality === '') {
+            document.getElementById('<%= NationalityTip.ClientID %>').innerText = "国籍仅允许汉字";
+            hasError = true;
+        } else {
+            document.getElementById('<%= NationalityTip.ClientID %>').innerText = "";
+        }
+
+        // 出版社验证
+        const publisher = document.getElementById('<%= txtPublisher.ClientID %>').value.trim();
+        if (!/^[a-zA-Z\u4e00-\u9fa5][a-zA-Z\u4e00-\u9fa5\s]+$/.test(publisher) || publisher === '') {
+            document.getElementById('<%= PublisherTip.ClientID %>').innerText = "汉字、英文字母开头，单词以空格分割";
+            hasError = true;
+        } else {
+            document.getElementById('<%= PublisherTip.ClientID %>').innerText = "";
+        }
+
+        // 价格验证
+        const price = document.getElementById('<%= txtPrice.ClientID %>').value.trim();
+        if (price === '' || isNaN(price) || parseFloat(price) < 0 || parseFloat(price) > 99999999.99) {
+            document.getElementById('<%= PriceTip.ClientID %>').innerText = "介于0~99999999.99间的阿拉伯数字";
+            hasError = true;
+        } else {
+            document.getElementById('<%= PriceTip.ClientID %>').innerText = "";
+        }
+
+        // 标签验证
+        const tags = document.getElementById('<%= txtTags.ClientID %>').value.trim().split(/\s+/);
+        for (let tag of tags) {
+            if (!/^[a-zA-Z0-9\u4e00-\u9fa5]+$/.test(tag)) {
+                document.getElementById('<%= TagTip.ClientID %>').innerText = "标签只能包含中文、英文";
+                hasError = true;
+                break;
+            } else {
+                document.getElementById('<%= TagTip.ClientID %>').innerText = "";
+            }
+        }
+
+        // 书籍描述验证
+        const description = document.getElementById('<%= txtDescription.ClientID %>').value.trim();
+        if (description.length > 2000) {
+            document.getElementById('<%= DescriptionTip.ClientID %>').innerText = "书籍描述不能超过2000字符";
+            hasError = true;
+        } else {
+            document.getElementById('<%= DescriptionTip.ClientID %>').innerText = "";
+        }
+
+        return !hasError; // 返回false表示阻止提交
+    }
+
+    // 为所有输入框绑定oninput事件
+    window.onload = function () {
+        const inputs = document.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+            input.oninput = validInput;
+        });
+    };
+</script>
+
+
+
 </asp:Content>
 

@@ -125,28 +125,6 @@
         </EntityType>
         <!--生成过程中发现错误:
 警告 6002: 表/视图“LibraryLinkDB.dbo.BookManagementView”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
-        <EntityType Name="BookManagementView">
-          <Key>
-            <PropertyRef Name="BookID" />
-            <PropertyRef Name="BookName" />
-            <PropertyRef Name="BookRating" />
-            <PropertyRef Name="Price" />
-            <PropertyRef Name="FilePath" />
-            <PropertyRef Name="ISBN" />
-          </Key>
-          <Property Name="BookID" Type="bigint" Nullable="false" />
-          <Property Name="BookName" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="Description" Type="nvarchar" MaxLength="2000" />
-          <Property Name="BookRating" Type="tinyint" Nullable="false" />
-          <Property Name="Price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="CoverImagePath" Type="nvarchar" MaxLength="255" />
-          <Property Name="FilePath" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="ISBN" Type="nvarchar" MaxLength="20" Nullable="false" />
-          <Property Name="AuthorName" Type="nvarchar" MaxLength="100" />
-          <Property Name="PublisherName" Type="varchar" MaxLength="50" />
-          <Property Name="Tags" Type="nvarchar" MaxLength="4000" />
-          <Property Name="PublicationDate" Type="date" />
-        </EntityType>
         <Association Name="FK__Favorite__BookID__693CA210">
           <End Role="Books" Type="Self.Books" Multiplicity="1" />
           <End Role="Favorite" Type="Self.Favorite" Multiplicity="*" />
@@ -317,22 +295,6 @@
           <EntitySet Name="Tags" EntityType="Self.Tags" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Writes" EntityType="Self.Writes" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="BookManagementView" EntityType="Self.BookManagementView" store:Type="Views" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [BookManagementView].[BookID] AS [BookID], 
-    [BookManagementView].[BookName] AS [BookName], 
-    [BookManagementView].[Description] AS [Description], 
-    [BookManagementView].[BookRating] AS [BookRating], 
-    [BookManagementView].[Price] AS [Price], 
-    [BookManagementView].[CoverImagePath] AS [CoverImagePath], 
-    [BookManagementView].[FilePath] AS [FilePath], 
-    [BookManagementView].[ISBN] AS [ISBN], 
-    [BookManagementView].[AuthorName] AS [AuthorName], 
-    [BookManagementView].[PublisherName] AS [PublisherName], 
-    [BookManagementView].[Tags] AS [Tags], 
-    [BookManagementView].[PublicationDate] AS [PublicationDate]
-    FROM [dbo].[BookManagementView] AS [BookManagementView]</DefiningQuery>
-          </EntitySet>
           <AssociationSet Name="FK__Favorite__BookID__693CA210" Association="Self.FK__Favorite__BookID__693CA210">
             <End Role="Books" EntitySet="Books" />
             <End Role="Favorite" EntitySet="Favorite" />
@@ -505,28 +467,6 @@
           <NavigationProperty Name="Rate" Relationship="Self.FK__Rate__UserID__5EBF139D" FromRole="Users" ToRole="Rate" />
           <NavigationProperty Name="Books" Relationship="Self.Favorite" FromRole="Users" ToRole="Books" />
         </EntityType>
-        <EntityType Name="BookManagementView">
-          <Key>
-            <PropertyRef Name="BookID" />
-            <PropertyRef Name="BookName" />
-            <PropertyRef Name="BookRating" />
-            <PropertyRef Name="Price" />
-            <PropertyRef Name="FilePath" />
-            <PropertyRef Name="ISBN" />
-          </Key>
-          <Property Name="BookID" Type="Int64" Nullable="false" />
-          <Property Name="BookName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
-          <Property Name="BookRating" Type="Byte" Nullable="false" />
-          <Property Name="Price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="CoverImagePath" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="FilePath" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ISBN" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="AuthorName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="PublisherName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Tags" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
-          <Property Name="PublicationDate" Type="DateTime" Precision="0" />
-        </EntityType>
         <Association Name="FK__Publishes__BookI__70DDC3D8">
           <End Role="Books" Type="Self.Books" Multiplicity="1" />
           <End Role="Publication" Type="Self.Publication" Multiplicity="*" />
@@ -634,7 +574,6 @@
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
           <EntitySet Name="Tags" EntityType="Self.Tags" />
           <EntitySet Name="Users" EntityType="Self.Users" />
-          <EntitySet Name="BookManagementView" EntityType="Self.BookManagementView" />
           <AssociationSet Name="FK__Publishes__BookI__70DDC3D8" Association="Self.FK__Publishes__BookI__70DDC3D8">
             <End Role="Books" EntitySet="Books" />
             <End Role="Publication" EntitySet="Publication" />
@@ -780,24 +719,6 @@
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Balance" ColumnName="Balance" />
                 <ScalarProperty Name="PrivilegeID" ColumnName="PrivilegeID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="BookManagementView">
-            <EntityTypeMapping TypeName="LibraryLinkDBModel.BookManagementView">
-              <MappingFragment StoreEntitySet="BookManagementView">
-                <ScalarProperty Name="BookID" ColumnName="BookID" />
-                <ScalarProperty Name="BookName" ColumnName="BookName" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="BookRating" ColumnName="BookRating" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="CoverImagePath" ColumnName="CoverImagePath" />
-                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
-                <ScalarProperty Name="ISBN" ColumnName="ISBN" />
-                <ScalarProperty Name="AuthorName" ColumnName="AuthorName" />
-                <ScalarProperty Name="PublisherName" ColumnName="PublisherName" />
-                <ScalarProperty Name="Tags" ColumnName="Tags" />
-                <ScalarProperty Name="PublicationDate" ColumnName="PublicationDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -139,8 +139,6 @@ namespace LibraryLink.Views.Admin
             }
         }
 
-        
-
         protected void UpdateTag_Click(object sender, EventArgs e)
         {
             if (!IsTagNameValid(txtTagName.Text.Trim()))
@@ -232,9 +230,6 @@ namespace LibraryLink.Views.Admin
                 TagsGridView.DataSource = dt;
                 TagsGridView.DataBind();
             }
-
         }
-
-
     }
 }
