@@ -13,10 +13,10 @@ namespace LibraryLink.Models.DatabaseModel
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class LibraryLinkDBEntities : DbContext
+    public partial class LibraryLinkDBContext : DbContext
     {
-        public LibraryLinkDBEntities()
-            : base("name=Entities")
+        public LibraryLinkDBContext()
+            : base("name=LibraryLinkDBContext")
         {
         }
     

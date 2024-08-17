@@ -8,6 +8,8 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using LibraryLink.Models;
 using System.Text.RegularExpressions;
+using LibraryLink.Models.DatabaseModel;
+using System.Data.Entity;
 
 namespace LibraryLink.Views.Admin
 {
@@ -34,21 +36,6 @@ namespace LibraryLink.Views.Admin
                 TagsGridView.DataSource = dt;
                 TagsGridView.DataBind();
             }
-        }
-
-        private bool IsTagNameValid(string tagName)
-        {
-            if (string.IsNullOrEmpty(tagName))
-            {
-                Response.Write("<script>alert('标签名不能为空！');</script>");
-                return false;
-            }
-            if (!Regex.IsMatch(tagName, @"^[\u4e00-\u9fa5A-Za-z]+$"))
-            {
-                Response.Write("<script>alert('标签仅支持汉字与英文，不能包含空格、数字、特殊字符！');</script>");
-                return false;
-            }
-            return true;
         }
 
         private void ClearForm()
@@ -106,6 +93,22 @@ namespace LibraryLink.Views.Admin
             txtTagName.Text = row.Cells[1].Text;
         }
 
+        private bool IsTagNameValid(string tagName)
+        {
+            if (string.IsNullOrEmpty(tagName))
+            {
+                Response.Write("<script>alert('标签名不能为空！');</script>");
+                return false;
+            }
+            if (!Regex.IsMatch(tagName, @"^[\u4e00-\u9fa5A-Za-z]+$"))
+            {
+                Response.Write("<script>alert('标签仅支持汉字与英文，不能包含空格、数字、特殊字符！');</script>");
+                return false;
+            }
+            return true;
+        }
+
+
         protected void CreateTag_Click(object sender, EventArgs e)
         {
             string tagName = txtTagName.Text.Trim();
@@ -113,123 +116,134 @@ namespace LibraryLink.Views.Admin
             {
                 return;
             }
-            if (DatabaseInterface.Is_Record_Exists("Tags", "TagName", tagName, connStr))
-            {
-                Response.Write("<script>alert('该标签已存在！');</script>");
-                return;
-            }
 
-            using (SqlConnection conn = new SqlConnection(connStr))
+            using (var dbContext = new LibraryLinkDBContext())
             {
-                string query = "INSERT INTO Tags (TagName) VALUES (@TagName)";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@TagName", tagName);
-                conn.Open();
-                int affectedRows = cmd.ExecuteNonQuery();
-                conn.Close();
-                if (affectedRows > 0)
+                if (dbContext.Tags.Any(t => t.TagName == tagName))
                 {
-                    Response.Write("<script>alert('标签创建成功！');</script>");
-                    BindTagsGridView();
+                    Response.Write("<script>alert('该标签已存在！');</script>");
+                    return;
                 }
-                else
+
+                using (var trans = dbContext.Database.BeginTransaction())
                 {
-                    Response.Write("<script>alert('标签创建失败！');</script>");
+                    try
+                    {
+                        var newTag = new Tags { TagName = tagName };
+                        dbContext.Tags.Add(newTag);
+                        dbContext.SaveChanges();
+                        trans.Commit();
+                        Response.Write("<script>alert('标签创建成功！');</script>");
+                        BindTagsGridView();
+                    }
+                    catch (Exception)
+                    {
+                        trans.Rollback();
+                    }
                 }
             }
         }
 
         protected void UpdateTag_Click(object sender, EventArgs e)
         {
-            if (!IsTagNameValid(txtTagName.Text.Trim()))
+            string tagName = txtTagName.Text.Trim();
+            int tagId = int.Parse(txtTagID.Text.Trim());
+
+            if (!IsTagNameValid(tagName))
             {
-                return;
-            }
-            if(!DatabaseInterface.Is_Record_Exists("Tags", "TagID", txtTagID.Text.Trim(), connStr))
-            {
-                Response.Write("<script>alert('无法修改不存在的标签');</script>");
                 return;
             }
 
-            using (SqlConnection conn = new SqlConnection(connStr))
+            using (var dbContext = new LibraryLinkDBContext())
             {
-                string query = "UPDATE Tags SET TagName = @TagName WHERE TagID = @TagID";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@TagName", txtTagName.Text.Trim());
-                cmd.Parameters.AddWithValue("@TagID", txtTagID.Text.Trim());
-                conn.Open();
-                int affectedRows = cmd.ExecuteNonQuery();
-                conn.Close();
-                if (affectedRows > 0)
+                var existingTag = dbContext.Tags.FirstOrDefault(t => t.TagID == tagId);
+                if (existingTag == null)
                 {
-                    Response.Write("<script>alert('标签修改成功！');</script>");
-                    ClearForm();
-                    BindTagsGridView();
+                    Response.Write("<script>alert('无法修改不存在的标签');</script>");
+                    return;
                 }
-                else
+
+                using (var trans = dbContext.Database.BeginTransaction())
                 {
-                    Response.Write("<script>alert('标签修改失败！');</script>");
+                    try
+                    {
+                        existingTag.TagName = tagName;
+                        dbContext.SaveChanges();
+                        trans.Commit();
+                        Response.Write("<script>alert('标签修改成功！');</script>");
+                    }
+                    catch (Exception)
+                    {
+                        trans.Rollback();
+                        Response.Write("<script>alert('标签修改失败！');</script>");
+                    }
                 }
+                ClearForm();
+                BindTagsGridView();
             }
         }
 
         protected void DeleteTag_Click(object sender, EventArgs e)
         {
-            if(!DatabaseInterface.Is_Record_Exists("Tags", "TagID", txtTagID.Text.Trim(), connStr))
-            {
-                Response.Write("<script>alert('未找到标签');</script>");
-                return;
-            }
+            int tagId = int.Parse(txtTagID.Text.Trim());
 
-            using (SqlConnection conn = new SqlConnection(connStr))
+            using (var context = new LibraryLinkDBContext())
             {
-                string query = "DELETE FROM Tags WHERE TagID = @TagID";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@TagID", txtTagID.Text.Trim());
-                conn.Open();
-                int affectedRows = cmd.ExecuteNonQuery();
-                conn.Close();
-                if (affectedRows > 0)
+                var tagToDelete = context.Tags
+                                         .Include(t => t.Books)  // 加载关联的书籍
+                                         .FirstOrDefault(t => t.TagID == tagId);
+
+                if (tagToDelete == null)
                 {
-                    Response.Write("<script>alert('标签删除成功！');</script>");
-                    ClearForm();
-                    BindTagsGridView();
+                    Response.Write("<script>alert('未找到标签');</script>");
+                    return;
                 }
-                else
+
+                using (var trans = context.Database.BeginTransaction())
                 {
-                    Response.Write("<script>alert('标签删除失败！');</script>");
+                    try
+                    {
+                        tagToDelete.Books.Clear();
+                        context.Tags.Remove(tagToDelete);
+                        context.SaveChanges();
+                        trans.Commit();
+                        Response.Write("<script>alert('标签删除成功！');</script>");
+                    }
+                    catch (Exception)
+                    {
+                        trans.Rollback();
+                        Response.Write("<script>alert('标签删除失败！');</script>");
+                        return;
+                    }
                 }
             }
+            ClearForm();
+            BindTagsGridView();
         }
 
         protected void FilterButton_Click(object sender, EventArgs e)
         {
-            string filterQuery = "SELECT TagID, TagName FROM Tags WHERE 1=1";
-            List<SqlParameter> parameters = new List<SqlParameter>();
-
-            if (!string.IsNullOrEmpty(FilterTagName.Text))
+            using (var context = new LibraryLinkDBContext())
             {
-                filterQuery += " AND TagName LIKE @FilterTagName";
-                parameters.Add(new SqlParameter("@FilterTagName", "%" + FilterTagName.Text + "%"));
+                var query = context.Tags.AsQueryable();
 
-            }
-            if (!string.IsNullOrEmpty(FilterTagId.Text))
-            {
-                filterQuery += " AND TagID = @FilterTagId";
-                parameters.Add(new SqlParameter("@FilterTagId", FilterTagId.Text));
-            }
+                if (!string.IsNullOrEmpty(FilterTagId.Text))
+                {
+                    int filterTagId = int.Parse(FilterTagId.Text.Trim());
+                    query = query.Where(t => t.TagID == filterTagId);
+                }
 
-            using (SqlConnection conn = new SqlConnection(connStr))
-            {
-                SqlCommand cmd = new SqlCommand(filterQuery, conn);
-                cmd.Parameters.AddRange(parameters.ToArray());
+                if (!string.IsNullOrEmpty(FilterTagName.Text))
+                {
+                    string filterTagName = FilterTagName.Text.Trim();
+                    query = query.Where(t => t.TagName.Contains(filterTagName));
+                }
 
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                TagsGridView.DataSource = dt;
+                TagsGridView.DataSource = query.ToList();
                 TagsGridView.DataBind();
             }
         }
+
+
     }
 }

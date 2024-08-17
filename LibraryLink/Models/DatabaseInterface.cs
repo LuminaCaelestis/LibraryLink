@@ -90,11 +90,14 @@ namespace LibraryLink.Models
                     conn.Close();
                     return true;
                 }
-                catch (SqlException ex)
+                catch (SqlException)
                 {
                     conn.Close();
                     return false;
                 }
+                // 不管是否成功，都执行的块：
+
+
             }
         }
 

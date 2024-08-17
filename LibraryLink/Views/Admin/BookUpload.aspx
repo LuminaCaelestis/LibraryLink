@@ -58,7 +58,7 @@
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <label for="txtTags" class="form-label">标签 <span id="TagTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
-                                <<asp:TextBox ID="txtTags" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="1"></asp:TextBox>
+                                <asp:TextBox ID="txtTags" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="1"></asp:TextBox>
                             </div>
                         </div>
 

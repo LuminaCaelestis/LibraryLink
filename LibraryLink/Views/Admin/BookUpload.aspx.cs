@@ -48,7 +48,7 @@ namespace LibraryLink.Views.Admin
             decimal price = decimal.Parse(txtPrice.Text.Trim());
 
             string description = txtDescription.Text.Trim();
-            string[] tags = txtTags.Text.Trim().Split(',');
+            string[] tags = txtTags.Text.Trim().Split(' ');
 
             // 上传文件路径管理
             string coverImagePath = SaveFile(fuCoverImage, "~/Assets/Resource/CoverImages/");
@@ -72,7 +72,7 @@ namespace LibraryLink.Views.Admin
             }
 
             // LINQ
-            using (var db = new LibraryLinkDBEntities())
+            using (var db = new LibraryLinkDBContext())
             {
                 // 事务包裹整个操作，方便回滚
                 using (var trans = db.Database.BeginTransaction())
@@ -178,15 +178,13 @@ namespace LibraryLink.Views.Admin
                         trans.Commit();
                         Response.Write("<script>alert('上传成功！')</script>");
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         trans.Rollback();
-                        Response.Write("<script>alert('上传失败！" + ex.Message + "')</script>");
+                        Response.Write("<script>alert('上传失败')</script>");
                     }
                 }
             }
-
-            //Response.Redirect("BookManagement.aspx");
         }
         #endregion 按钮事件处理
 
@@ -291,16 +289,19 @@ namespace LibraryLink.Views.Admin
             // 验证ISBN的末尾校验码，假设ISBN为13位数字
             // 根据ISBN13的规则
             // ISBN的末尾校验码是通过取前12位，偶数位乘3，然后求和，最后取余10，用10减去余数，结果应该等于最后一位数字
-            int[] isbnArray = isbn.Take(12).Select(c => int.Parse(c.ToString())).ToArray();
+            int sum = 0;
             for (int i = 0; i != 12; ++i)
             {
-                if (i % 2 != 0)
+                if(i % 2 == 0)
                 {
-                    isbnArray[i] *= 3;
+                    sum += (isbn[i] - '0') * 3;
+                }
+                else
+                {
+                    sum += isbn[i] - '0';
                 }
             }
-            // 最后一位数字没有进入数组，所以原字符串末尾元素减'0'处理一下
-            return 10 - (isbnArray.Sum() % 10) == isbn.Last() - '0'; 
+            return (10 - (sum % 10)) == (isbn[12] - '0');
         }
 
         private string SaveFile(FileUpload fileUpload, string folderPath)
