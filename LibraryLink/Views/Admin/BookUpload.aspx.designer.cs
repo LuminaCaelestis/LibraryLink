@@ -87,24 +87,6 @@ namespace LibraryLink.Views.Admin
         protected global::System.Web.UI.WebControls.TextBox txtAuthor;
 
         /// <summary>
-        /// NationalityTip 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl NationalityTip;
-
-        /// <summary>
-        /// txtAuthorNationality 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtAuthorNationality;
-
-        /// <summary>
         /// PublisherTip 控件。
         /// </summary>
         /// <remarks>
@@ -150,13 +132,13 @@ namespace LibraryLink.Views.Admin
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl CoverImageTip;
 
         /// <summary>
-        /// fuCoverImage 控件。
+        /// CoverImageUploader 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.FileUpload fuCoverImage;
+        protected global::System.Web.UI.WebControls.FileUpload CoverImageUploader;
 
         /// <summary>
         /// BookFileTip 控件。
@@ -168,13 +150,13 @@ namespace LibraryLink.Views.Admin
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl BookFileTip;
 
         /// <summary>
-        /// fuBookFile 控件。
+        /// BookFileUploader 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.FileUpload fuBookFile;
+        protected global::System.Web.UI.WebControls.FileUpload BookFileUploader;
 
         /// <summary>
         /// TagTip 控件。

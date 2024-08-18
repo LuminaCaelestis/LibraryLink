@@ -27,13 +27,13 @@ namespace LibraryLink.Views.Admin
 
         protected void BindBooksSearchView()
         {
-            var query = "SELECT BookName, ISBN, STRING_AGG(a.AuthorName, ', ') AS AuthorName, PublisherName, Price " +
+            var query = "SELECT b.BookID, BookName, ISBN, STRING_AGG(a.AuthorName, ', ') AS AuthorName, PublisherName, Price " +
                         "FROM Books b " +
                         "INNER JOIN Writes w ON b.BookID = w.BookID " +
                         "INNER JOIN Authors a ON w.AuthorID = a.AuthorID " +
                         "INNER JOIN Publication p ON b.BookID = p.BookID " +
                         "INNER JOIN Publisher per ON p.PublisherID = per.PublisherID " +
-                        "GROUP BY BookName, ISBN, PublisherName, Price;";
+                        "GROUP BY b.BookID, BookName, ISBN, PublisherName, Price;";
 
             using (SqlConnection conn = new SqlConnection(Models.DatabaseConfig.ConnectionString))
             {
@@ -51,7 +51,7 @@ namespace LibraryLink.Views.Admin
         {
             var connectionString = Models.DatabaseConfig.ConnectionString;
 
-            var query = "SELECT BookName, ISBN, STRING_AGG(a.AuthorName, ', ') AS AuthorName, PublisherName, Price " +
+            var query = "SELECT BookID, BookName, ISBN, STRING_AGG(a.AuthorName, ', ') AS AuthorName, PublisherName, Price " +
                         "FROM Books b " +
                         "INNER JOIN Writes w ON b.BookID = w.BookID " +
                         "INNER JOIN Authors a ON w.AuthorID = a.AuthorID " +
@@ -117,7 +117,27 @@ namespace LibraryLink.Views.Admin
         }
 
 
+        protected void BookSearchView_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Details")
+            {
+                long bookId = Convert.ToInt32(e.CommandArgument);  // 获取 BookID
+                Response.Redirect($"BookDetails.aspx?BookID={bookId}");  // 重定向到详细信息页面
+            }
+            else if (e.CommandName == "Delete")
+            {
+                DeleteBook(Convert.ToInt32(e.CommandArgument));
+            }
 
+        }
+
+        protected void DeleteBook(long bookID)
+        {
+            using(var context = new LibraryLinkDBContext())
+            {
+
+            }
+        }
 
         // 翻页
         protected void BooksSearchView_PageIndexChanging(object sender, GridViewPageEventArgs e)

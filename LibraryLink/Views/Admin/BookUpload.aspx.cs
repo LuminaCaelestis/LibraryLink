@@ -13,6 +13,30 @@ namespace LibraryLink.Views.Admin
 {
     public partial class BookUpload : System.Web.UI.Page
     {
+
+        private string CoverImageFolder { get; } = "~/Assets/Resource/CoverImages/";
+        private string BookFolder { get; } = "~/Assets/Resource/BookFiles/";
+        private string CoverImageFullPath { get; set; } = string.Empty;
+        private string BookFullPath { get; set; } = string.Empty;
+        private int MaxImageSize { get; } = 1024 * 1024 * 2;
+        private int MaxBookSize { get; } = 1024 * 1024 * 400; // 400mb
+        private string[] ValidImageExtensions { get; } = { ".jpg", ".jpeg", ".png" };
+        private string[] ValidBookExtensions { get; } = { ".pdf"};
+
+        Dictionary<string, string[]> ValidMimeTypes { get; } = new Dictionary<string, string[]>
+        {
+            { ".jpg", new[] { "image/jpeg", "image/jpg" } },
+            { ".jpeg", new[] { "image/jpeg", "image/jpg" } },
+            { ".png", new[] { "image/png" } },
+            { ".pdf", new[] { "application/pdf" } }
+        };
+
+        struct ValidFileInfo
+        {
+            public string[] FileExtensions { get; set; }
+            public int MaxSize { get; set; }
+        }
+        
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -20,7 +44,6 @@ namespace LibraryLink.Views.Admin
                 txtBookName.Attributes.Add("oninput", "validateInput();");
                 txtISBN.Attributes.Add("oninput", "validateInput();");
                 txtAuthor.Attributes.Add("oninput", "validateInput();");
-                txtAuthorNationality.Attributes.Add("oninput", "validateInput();");
                 txtPublisher.Attributes.Add("oninput", "validateInput();");
                 txtPrice.Attributes.Add("oninput", "validateInput();");
                 txtTags.Attributes.Add("oninput", "validateInput();");
@@ -36,45 +59,40 @@ namespace LibraryLink.Views.Admin
                 return;
             }
 
-            string bookName = txtBookName.Text.Trim();
-            string isbn = txtISBN.Text.Trim();
-
-            string authorName = txtAuthor.Text.Trim();
-            string authorNationality = txtAuthorNationality.Text.Trim();
-
-            string publisherName = txtPublisher.Text.Trim();
-            DateTime publicationDate = DateTime.Parse(calPublicationDate.Text);
-
-            decimal price = decimal.Parse(txtPrice.Text.Trim());
-
-            string description = txtDescription.Text.Trim();
-            string[] tags = txtTags.Text.Trim().Split(' ');
-
-            // 上传文件路径管理
-            string coverImagePath = SaveFile(fuCoverImage, "~/Assets/Resource/CoverImages/");
-            string bookFilePath = SaveFile(fuBookFile, "~/Assets/Resource/BookFiles/");
-
-            bool uploadSuccess = true;
-
-            if(string.IsNullOrEmpty(coverImagePath))
+            string coverImagePath = GetFullPath(CoverImageFolder, BookFileUploader.FileName);
+            string bookFilePath = GetFullPath(BookFolder, BookFileUploader.FileName);
+            ValidFileInfo validInfo = new ValidFileInfo
             {
-                CoverImageTip.InnerText = "未选择封面图片";
-                uploadSuccess = false;
-            }
-            if (string.IsNullOrEmpty(bookFilePath))
+                FileExtensions = ValidBookExtensions,
+                MaxSize = MaxBookSize,
+            };
+
+            string errorMsg = string.Empty;
+            if (!FileCheck(BookFileUploader, validInfo, bookFilePath,out errorMsg))
             {
-                BookFileTip.InnerText = "未选择上传文件";
-                uploadSuccess = false;
-            }
-            if (!uploadSuccess)
-            {
+                BookFileTip.InnerText = errorMsg;
                 return;
             }
+            validInfo.FileExtensions = ValidImageExtensions;
+            validInfo.MaxSize = MaxImageSize;
+            if (!FileCheck(CoverImageUploader, validInfo, coverImagePath, out errorMsg))
+            {
+                CoverImageTip.InnerText = errorMsg;
+                return;
+            }
+            
 
-            // LINQ
+            string bookName = txtBookName.Text.Trim();
+            string isbn = txtISBN.Text.Trim();
+            string authorInfoList = txtAuthor.Text.Trim();
+            string publisherName = txtPublisher.Text.Trim();
+            DateTime publicationDate = DateTime.Parse(calPublicationDate.Text);
+            decimal price = decimal.Parse(txtPrice.Text.Trim());
+            string description = txtDescription.Text.Trim();
+            string tags = txtTags.Text.Trim();
+
             using (var db = new LibraryLinkDBContext())
             {
-                // 事务包裹整个操作，方便回滚
                 using (var trans = db.Database.BeginTransaction())
                 {
                     try
@@ -94,30 +112,43 @@ namespace LibraryLink.Views.Admin
                                 FilePath = bookFilePath,
                             };
                             db.Books.Add(book);
-                            db.SaveChanges(); // 提前保存，生成ID
                         }
                         else
                         {
                             Response.Write("<script>alert('书籍已存在！')</script>");
+                            return;
                         }
                         #endregion 书信息
 
                         #region 作者信息    
-                        var author = db.Authors.FirstOrDefault
-                        (
-                            a => a.AuthorName == authorName && a.Nationality == authorNationality
-                        );
-                        if (author == null)
-                        {
-                            author = new Authors
+                        { // 进入局部作用域
+
+                            // 提取，去重
+                            var authInfoProcessed = AuthorsInfoPreprocess(authorInfoList);
+
+                            var existingAuth = db.Authors
+                                .Where
+                                (a => authInfoProcessed
+                                    .Any(auth => auth.name == a.AuthorName && auth.nation == a.Nationality)
+                                )
+                                .ToList();
+                            // DB操作
+                            List<Authors> newAuthors = new List<Authors>();
+
+                            foreach (var (name, nation) in authInfoProcessed)
                             {
-                                AuthorName = authorName,
-                                Nationality = authorNationality,
-                            };
-                            db.Authors.Add(author);
+                                var author = existingAuth.FirstOrDefault(a => a.AuthorName == name && a.Nationality == nation);
+                                if (author == null)
+                                {
+                                    author = new Authors { AuthorName = name, Nationality = nation };
+                                    newAuthors.Add(author);
+                                }
+                                if (!book.Authors.Contains(author)) 
+                                {
+                                    book.Authors.Add(author);
+                                }
+                            }
                         }
-                        book.Authors.Add(author);
-                        db.SaveChanges();
                         #endregion 作者信息
 
                         #region 出版社
@@ -130,7 +161,6 @@ namespace LibraryLink.Views.Admin
                             };
                             db.Publisher.Add(publisher);
                         }
-                        db.SaveChanges();
                         #endregion 出版社
 
                         #region 出版信息
@@ -148,38 +178,55 @@ namespace LibraryLink.Views.Admin
                             };
                         }
                         db.Publication.Add(publication);
-                        // 这里没有立刻产生自增ID的需求，所以暂时不用SaveChanges()
                         #endregion 出版信息
 
                         #region 标签
-                        var newTags = new List<Tags>();
-                        foreach (string tag in tags)
-                        {
-                            var tagName = tag.Trim();
-                            // 检查标签是否已经存在
-                            var tagRecord = db.Tags.FirstOrDefault(t => t.TagName == tagName);
-                            if (tagRecord == null)
+                        { // 进入局部作用域
+
+                            //去重
+                            var tagProcessed = TagPreprocess(tags);
+                            List<Tags> newTags = new List<Tags>();
+                            foreach (string tag in tagProcessed)
                             {
-                                tagRecord = new Tags
+                                var trimedTag = tag.Trim();
+                                // 检查标签是否已经存在
+                                var tagRecord = db.Tags.FirstOrDefault(t => t.TagName == trimedTag);
+                                if (tagRecord == null)
                                 {
-                                    TagName = tagName,
-                                };
-                                newTags.Add(tagRecord); // 添加到待插入的列表中
+                                    tagRecord = new Tags
+                                    {
+                                        TagName = trimedTag,
+                                    };
+                                    newTags.Add(tagRecord); // 添加到待插入的列表中
+                                }
+                                else
+                                {
+                                    book.Tags.Add(tagRecord); // 已存在的标签直接关联
+                                }
                             }
-                            else
-                            {
-                                book.Tags.Add(tagRecord); // 已存在的标签直接关联
-                            }
+                            db.Tags.AddRange(newTags);
+
                         }
-                        db.Tags.AddRange(newTags);
                         #endregion 标签      
-                        
+
+                        // 保存文件
+                        CoverImageUploader.SaveAs(coverImagePath);
+                        BookFileUploader.SaveAs(bookFilePath);
+
                         db.SaveChanges();
                         trans.Commit();
                         Response.Write("<script>alert('上传成功！')</script>");
                     }
                     catch (Exception)
                     {
+                        if (File.Exists(coverImagePath))
+                        {
+                            File.Delete(coverImagePath);
+                        }
+                        if (File.Exists(bookFilePath))
+                        {
+                            File.Delete(bookFilePath);
+                        }
                         trans.Rollback();
                         Response.Write("<script>alert('上传失败')</script>");
                     }
@@ -188,12 +235,64 @@ namespace LibraryLink.Views.Admin
         }
         #endregion 按钮事件处理
 
+        // 作者信息提取，去重等预处理
+        private List<(string name, string nation)> AuthorsInfoPreprocess(string authorInfoList)
+        {
+            List<(string name, string nation)> result = new List<(string name, string nation)> { };
+            HashSet<string> authorCheckSet = new HashSet<string>();
+            var authorInfoArr = authorInfoList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var authorInfo in authorInfoArr)
+            {
+                var trimedInfo = authorInfo.Trim();
+
+                if (authorCheckSet.Contains(trimedInfo))
+                {
+                    continue;
+                }
+                else
+                {
+                    authorCheckSet.Add(trimedInfo);
+                }
+
+                int startIndex = trimedInfo.IndexOf('[');
+                int endIndex = trimedInfo.IndexOf(']');
+                var authorName = trimedInfo.Substring(0, startIndex).Trim();
+                var authorNationality = trimedInfo.Substring(startIndex + 1, endIndex - startIndex - 1).Trim();
+
+                result.Add((name:authorName, nation:authorNationality));
+            }
+            return result;
+        }
+
+        // 标签去重
+        private List<string> TagPreprocess(string tagList)
+        {
+            HashSet<string> tagSet = new HashSet<string>();
+            var tagArr = tagList.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            List<string> result = new List<string>();
+            foreach (var tag in tagArr)
+            {
+                var trimedTag = tag.Trim();
+                if (tagSet.Contains(trimedTag))
+                {
+                    continue;
+                }
+                else
+                {
+                    tagSet.Add(trimedTag);
+                    result.Add(trimedTag);
+                }
+            }
+            return result;
+        }
+
         #region 验证信息
         private bool IsValidInfo()
         {
             bool hasError = false;
 
-            if (!Regex.IsMatch(txtBookName.Text.Trim(), @"^[a-zA-Z\u4e00-\u9fa5\(\)][\sa-zA-Z0-9\u4e00-\u9fa5]+$") ||
+            if (!Regex.IsMatch(txtBookName.Text.Trim(), @"^[a-zA-Z\u4e00-\u9fa5\(\)\s]+$") ||
                 txtBookName.Text.Trim() == string.Empty
             )
             {
@@ -210,29 +309,18 @@ namespace LibraryLink.Views.Admin
                 hasError = true;
             }
 
-
-
             //if (!IsValidISBN(txtISBN.Text.Trim()))
             //{
             //    ISBNTip.InnerText += " ISBN校验码不正确";
             //    hasError = true;
             //}
 
-            // 验证姓名 - 允许中英文，且非空
-            if (!Regex.IsMatch(txtAuthor.Text.Trim(), @"^[a-zA-Z\u4e00-\u9fa5][a-zA-Z\u4e00-\u9fa5\s]+$") ||
+            // 验证姓名国籍，名[国]，人名含中英文字符和空格。国籍是方括号[]内的纯汉字，不含空格。多个作者分号;分隔
+            if (!Regex.IsMatch(txtAuthor.Text.Trim(), @"^(?:[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5]+\]\s*;\s*)+[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5\s]+\]\s*") ||
                 txtAuthor.Text.Trim() == string.Empty
             )
             {
                 AuthorTip.InnerText = "汉字、字母开头，英文以空格分割";
-                hasError = true;
-            }
-
-            // 国名，允许汉字
-            if (!Regex.IsMatch(txtAuthorNationality.Text.Trim(), @"^[\u4e00-\u9fa5]+$") ||
-                txtAuthorNationality.Text.Trim() == string.Empty
-            )
-            {
-                NationalityTip.InnerHtml = "国籍仅允许中文译名";
                 hasError = true;
             }
 
@@ -241,7 +329,7 @@ namespace LibraryLink.Views.Admin
                 txtPublisher.Text.Trim() == string.Empty
             )
             {
-                PublisherTip.InnerText = "汉字、英文字母开头，单词以空格分割";
+                PublisherTip.InnerText = "汉字、英文字母开头，空格分割单词";
                 hasError = true;
             }
 
@@ -294,26 +382,75 @@ namespace LibraryLink.Views.Admin
             {
                 if(i % 2 == 0)
                 {
-                    sum += (isbn[i] - '0') * 3;
+                    sum += (isbn[i] - '0');
                 }
                 else
                 {
-                    sum += isbn[i] - '0';
+                    sum += isbn[i] - '0' * 3;
                 }
             }
-            return (10 - (sum % 10)) == (isbn[12] - '0');
+            int res;
+            if(sum % 10 == 0)
+            {
+                res = 0;
+            }
+            else {
+                res = 10 - (sum % 10);
+            }
+            return res == (isbn[12] - '0');
         }
 
-        private string SaveFile(FileUpload fileUpload, string folderPath)
+
+
+        private bool FileCheck(FileUpload fileUploader,ValidFileInfo ValidInfo, string fullPath, out string errorMsg)
         {
-            if (fileUpload.HasFile)
+            errorMsg = string.Empty;
+
+            if (!fileUploader.HasFile)
             {
-                string fileName = Path.GetFileName(fileUpload.FileName);
-                string filePath = Path.Combine(Server.MapPath(folderPath), fileName);
-                fileUpload.SaveAs(filePath);
-                return filePath;
+                errorMsg = "未选择文件";
+                return false;
             }
-            return null;
+
+            var extention = Path.GetExtension(fileUploader.FileName).ToLower();
+
+            // 获取文件后缀
+            if (!ValidInfo.FileExtensions.Contains(extention))
+            {
+                errorMsg = "文件格式不正确";
+                return false;
+            }
+            // MimeType校验
+            if (!ValidMimeTypes.ContainsKey(extention))
+            {
+                errorMsg = "文件格式不正确";
+                return false;
+            }
+
+            // 大小
+            if (fileUploader.PostedFile.ContentLength > ValidInfo.MaxSize)
+            {
+                errorMsg = "文件大小超出限制";
+                return false;
+            }
+
+            if (File.Exists(fullPath))
+            {
+                errorMsg = "文件重名";
+                return false;
+            }
+            return true;
         }
+            
+
+        // 计算文件完整路径
+        private string GetFullPath(string folder, string fileName)
+        {
+            string fullPath = Path.Combine(Server.MapPath(folder), fileName);
+            return fullPath;
+        }
+        
+
+
     }
 }

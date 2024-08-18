@@ -93,7 +93,7 @@
                         用户
                     </a>
                     <div class="collapse" id="userSubmenu">
-                        <a class="nav-link" href="/UsersManagement" style="font-size: 13px">控制面板</a>
+                        <a class="nav-link" href="/Admin-UsersManagement/" style="font-size: 13px">控制面板</a>
                         <a class="nav-link" href="#" style="font-size: 13px"></a>
                     </div>
                 </div>
@@ -102,8 +102,8 @@
                         书籍
                     </a>
                     <div class="collapse" id="bookSubmenu">
-                        <a class="nav-link" href="BookAdd.aspx" style="font-size: 13px">新增书籍</a>
-                        <a class="nav-link" href="BookSearch.aspx" style="font-size: 13px">检索书籍</a>
+                        <a class="nav-link" href="/Admin-BookUpload/" style="font-size: 13px">新增书籍</a>
+                        <a class="nav-link" href="/Admin-BookSearch" style="font-size: 13px">检索书籍</a>
                     </div>
                 </div>
                 <div class="nav-item">
@@ -111,7 +111,7 @@
                         标签
                     </a>
                     <div class="collapse" id="tagSubmenu">
-                        <a class="nav-link" href="/TagsManagement/" style="font-size: 13px">标签管理</a>
+                        <a class="nav-link" href="/Admin-TagsManagement/" style="font-size: 13px">标签管理</a>
                     </div>
                 </div>
                 <div class="nav-item">

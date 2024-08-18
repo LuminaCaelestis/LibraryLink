@@ -37,14 +37,26 @@ namespace LibraryLink
 
             routes.MapPageRoute(
                 "UsersManagement",
-                "UsersManagement",
+                "Admin-UsersManagement",
                 "~/Views/Admin/UserManagement.aspx"
             );
 
             routes.MapPageRoute(
                 "TagsManagement",
-                "TagsManagement",
+                "Admin-TagsManagement",
                 "~/Views/Admin/TagsManagement.aspx"
+            );
+
+            routes.MapPageRoute(
+                "BookUpload",
+                "Admin-BookUpload",
+                "~/Views/Admin/BookUpload.aspx"
+            );
+
+            routes.MapPageRoute(
+                "BookSearch",
+                "Admin-BookSearch",
+                "~/Views/Admin/BookSearch.aspx"
             );
 
         }

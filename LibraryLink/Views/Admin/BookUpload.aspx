@@ -25,14 +25,10 @@
                             </div>
                         </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-3">
-                                <label for="txtAuthor" class="form-label">作者 <span id="AuthorTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
-                                <asp:TextBox ID="txtAuthor" runat="server" CssClass="form-control"></asp:TextBox>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="txtAuthorNationality" class="form-label">作者国籍 <span id="NationalityTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
-                                <asp:TextBox ID="txtAuthorNationality" runat="server" CssClass="form-control"></asp:TextBox>
+                        <div class="row mb-6">
+                            <div class="col-md-6">
+                                <label for="txtAuthor" class="form-label">作者名[国籍] <span id="AuthorTip" class="text-danger" style="font-size: smaller;" runat="server">人名含中英文字符和空格。国籍是方括号[]内的纯汉字，不含空格</span></label>
+                                <asp:TextBox ID="txtAuthor" runat="server" CssClass="form-control" placeholder="多个作者之间以英文分号‘;’分隔"></asp:TextBox>
                             </div>
                             <div class="col-md-3">
                                 <label for="txtPublisher" class="form-label">出版社 <span id="PublisherTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
@@ -46,19 +42,19 @@
 
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="fuCoverImage" class="form-label">封面图片 <span id="CoverImageTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
-                                <asp:FileUpload ID="fuCoverImage" runat="server" CssClass="form-control"></asp:FileUpload>
+                                <label for="CoverImageUploader" class="form-label">封面图片 <span id="CoverImageTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
+                                <asp:FileUpload ID="CoverImageUploader" runat="server" CssClass="form-control"></asp:FileUpload>
                             </div>
                             <div class="col-md-6">
-                                <label for="fuBookFile" class="form-label">书籍文件 (PDF) <span id="BookFileTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
-                                <asp:FileUpload ID="fuBookFile" runat="server" CssClass="form-control"></asp:FileUpload>
+                                <label for="BookFileUploader" class="form-label">书籍文件 (PDF) <span id="BookFileTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
+                                <asp:FileUpload ID="BookFileUploader" runat="server" CssClass="form-control"></asp:FileUpload>
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <label for="txtTags" class="form-label">标签 <span id="TagTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
-                                <asp:TextBox ID="txtTags" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="1"></asp:TextBox>
+                                <asp:TextBox ID="txtTags" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="1" placeholder="example : 标签A 标签B"></asp:TextBox>
                             </div>
                         </div>
 
@@ -83,8 +79,8 @@
 
         // 书籍名称验证
         const bookName = document.getElementById('<%= txtBookName.ClientID %>').value.trim();
-        if (!/^[a-zA-Z\u4e00-\u9fa5][\sa-zA-Z0-9\u4e00-\u9fa5]+$/.test(bookName) || bookName === '') {
-            document.getElementById('<%= BookNameTip.ClientID %>').innerText = "中英文开头，包含字母、阿拉伯数字、汉字、空格";
+        if (!/^[\sa-zA-Z0-9\u4e00-\u9fa5\(\)]+$/.test(bookName) || bookName === '') {
+            document.getElementById('<%= BookNameTip.ClientID %>').innerText = "中英文开头，包含字母、数字、汉字、空格、括号";
             hasError = true;
         } else {
             document.getElementById('<%= BookNameTip.ClientID %>').innerText = "";
@@ -101,26 +97,19 @@
 
         // 作者姓名验证
         const author = document.getElementById('<%= txtAuthor.ClientID %>').value.trim();
-        if (!/^[a-zA-Z\u4e00-\u9fa5][a-zA-Z\u4e00-\u9fa5\s]+$/.test(author) || author === '') {
-            document.getElementById('<%= AuthorTip.ClientID %>').innerText = "汉字、英文字母开头，英文空格分割";
+        if (!/^(?:[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5]+\]\s*;\s*)+[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5\s]+\]\s*$/.test(author) || author === '') {
+            document.getElementById('<%= AuthorTip.ClientID %>').innerText = "人名含中英文字符和空格。国籍是方括号[]内的纯汉字，不含空格";
             hasError = true;
         } else {
             document.getElementById('<%= AuthorTip.ClientID %>').innerText = "";
         }
 
-        // 国籍验证
-        const nationality = document.getElementById('<%= txtAuthorNationality.ClientID %>').value.trim();
-        if (!/^[\u4e00-\u9fa5]+$/.test(nationality) || nationality === '') {
-            document.getElementById('<%= NationalityTip.ClientID %>').innerText = "国籍仅允许汉字";
-            hasError = true;
-        } else {
-            document.getElementById('<%= NationalityTip.ClientID %>').innerText = "";
-        }
+        
 
         // 出版社验证
         const publisher = document.getElementById('<%= txtPublisher.ClientID %>').value.trim();
         if (!/^[a-zA-Z\u4e00-\u9fa5][a-zA-Z\u4e00-\u9fa5\s]+$/.test(publisher) || publisher === '') {
-            document.getElementById('<%= PublisherTip.ClientID %>').innerText = "汉字、英文字母开头，单词以空格分割";
+            document.getElementById('<%= PublisherTip.ClientID %>').innerText = "汉字、英文字母开头，空格分割单词"
             hasError = true;
         } else {
             document.getElementById('<%= PublisherTip.ClientID %>').innerText = "";
@@ -139,7 +128,7 @@
         const tags = document.getElementById('<%= txtTags.ClientID %>').value.trim().split(/\s+/);
         for (let tag of tags) {
             if (!/^[a-zA-Z0-9\u4e00-\u9fa5]+$/.test(tag)) {
-                document.getElementById('<%= TagTip.ClientID %>').innerText = "标签只能包含中文、英文";
+                document.getElementById('<%= TagTip.ClientID %>').innerText = "标签只能包含中文、英文，以空格分割";
                 hasError = true;
                 break;
             } else {
