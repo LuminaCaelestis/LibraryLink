@@ -51,12 +51,12 @@ namespace LibraryLink.Views.Admin
         {
             var connectionString = Models.DatabaseConfig.ConnectionString;
 
-            var query = "SELECT BookID, BookName, ISBN, STRING_AGG(a.AuthorName, ', ') AS AuthorName, PublisherName, Price " +
-                        "FROM Books b " +
-                        "INNER JOIN Writes w ON b.BookID = w.BookID " +
-                        "INNER JOIN Authors a ON w.AuthorID = a.AuthorID " +
-                        "INNER JOIN Publication p ON b.BookID = p.BookID " +
-                        "INNER JOIN Publisher per ON p.PublisherID = per.PublisherID " +
+            var query = "SELECT b.BookID, b.BookName, b.ISBN, STRING_AGG(a.AuthorName, ', ') AS AuthorName, per.PublisherName, b.Price " +
+                        "FROM Books b  " +
+                        "INNER JOIN Writes w ON b.BookID = w.BookID  " +
+                        "INNER JOIN Authors a ON w.AuthorID = a.AuthorID  " +
+                        "INNER JOIN Publication p ON b.BookID = p.BookID  " +
+                        "INNER JOIN Publisher per ON p.PublisherID = per.PublisherID  " +
                         "WHERE 1=1 ";
 
             List<SqlParameter> parameters = new List<SqlParameter>();
@@ -97,7 +97,7 @@ namespace LibraryLink.Views.Admin
                 parameters.Add(new SqlParameter("@PublisherName", $"%{txtPublisher.Text.Trim()}%"));
             }
 
-            query += "GROUP BY BookName, ISBN, PublisherName, Price";
+            query += "GROUP BY b.BookID, b.BookName, b.ISBN, per.PublisherName, b.Price";
 
             DataTable dt = new DataTable();
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -121,23 +121,22 @@ namespace LibraryLink.Views.Admin
         {
             if (e.CommandName == "Details")
             {
-                long bookId = Convert.ToInt32(e.CommandArgument);  // 获取 BookID
-                Response.Redirect($"BookDetails.aspx?BookID={bookId}");  // 重定向到详细信息页面
-            }
-            else if (e.CommandName == "Delete")
-            {
-                DeleteBook(Convert.ToInt32(e.CommandArgument));
+                long bookID = Convert.ToInt32(e.CommandArgument);  // 获取 BookID
+                Response.Redirect($"BookDetails.aspx?BookID={bookID}");  // 重定向到详细信息页面
             }
 
         }
 
-        protected void DeleteBook(long bookID)
+        protected void BookSearchView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
-            using(var context = new LibraryLinkDBContext())
-            {
-
-            }
+            long bookID = Convert.ToInt32(e.Keys[0]);  // 获取 BookID
+            Response.Write("<script>alert('删除图书的方法已被执行，目标：" + bookID + "')</script>");
         }
+
+        //protected void DeleteBook(long bookID)
+        //{
+        //    Response.Write("删除图书的方法已被执行，目标：" + bookID);
+        //}
 
         // 翻页
         protected void BooksSearchView_PageIndexChanging(object sender, GridViewPageEventArgs e)

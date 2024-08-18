@@ -13,7 +13,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="txtBookName" class="form-label">书籍名称 <span id="BookNameTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
-                                <asp:TextBox ID="txtBookName" runat="server" CssClass="form-control"></asp:TextBox>
+                                <asp:TextBox ID="txtBookName" MaxLength="100" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
                             <div class="col-md-3">
                                 <label for="txtISBN" class="form-label">ISBN <span id="ISBNTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
@@ -27,8 +27,8 @@
 
                         <div class="row mb-6">
                             <div class="col-md-6">
-                                <label for="txtAuthor" class="form-label">作者名[国籍] <span id="AuthorTip" class="text-danger" style="font-size: smaller;" runat="server">人名含中英文字符和空格。国籍是方括号[]内的纯汉字，不含空格</span></label>
-                                <asp:TextBox ID="txtAuthor" runat="server" CssClass="form-control" placeholder="多个作者之间以英文分号‘;’分隔"></asp:TextBox>
+                                <label for="txtAuthor" class="form-label">作者名[国籍] <span id="AuthorTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
+                                <asp:TextBox ID="txtAuthor" runat="server" CssClass="form-control" placeholder="作者名[纯汉字国籍],多个作者之间以英文分号‘;’分隔"></asp:TextBox>
                             </div>
                             <div class="col-md-3">
                                 <label for="txtPublisher" class="form-label">出版社 <span id="PublisherTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
@@ -88,7 +88,7 @@
 
         // ISBN验证
         const isbn = document.getElementById('<%= txtISBN.ClientID %>').value.trim();
-        if (!/^(97(8|9))?\d{9}(\d|X)$/.test(isbn) || isbn === '') {
+        if (!/^\d{13}$/.test(isbn) || isbn === '') {
             document.getElementById('<%= ISBNTip.ClientID %>').innerText = "ISBN必须为13位纯数字";
             hasError = true;
         } else {
@@ -127,7 +127,7 @@
         // 标签验证
         const tags = document.getElementById('<%= txtTags.ClientID %>').value.trim().split(/\s+/);
         for (let tag of tags) {
-            if (!/^[a-zA-Z0-9\u4e00-\u9fa5]+$/.test(tag)) {
+            if (!/^((?:[a-zA-Z\u4e00-\u9fa5]+)(?:\s*))+$/.test(tag)) {
                 document.getElementById('<%= TagTip.ClientID %>').innerText = "标签只能包含中文、英文，以空格分割";
                 hasError = true;
                 break;

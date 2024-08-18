@@ -56,10 +56,11 @@ namespace LibraryLink.Views.Admin
         {
             if (!IsValidInfo())
             {
+                Response.Write("<script>alert('请检查输入信息是否正确！')</script>");
                 return;
             }
 
-            string coverImagePath = GetFullPath(CoverImageFolder, BookFileUploader.FileName);
+            string coverImagePath = GetFullPath(CoverImageFolder, CoverImageUploader.FileName);
             string bookFilePath = GetFullPath(BookFolder, BookFileUploader.FileName);
             ValidFileInfo validInfo = new ValidFileInfo
             {
@@ -67,18 +68,30 @@ namespace LibraryLink.Views.Admin
                 MaxSize = MaxBookSize,
             };
 
+            // 文件检查
             string errorMsg = string.Empty;
             if (!FileCheck(BookFileUploader, validInfo, bookFilePath,out errorMsg))
             {
                 BookFileTip.InnerText = errorMsg;
-                return;
+            }
+            else
+            {
+                BookFileTip.InnerHtml = string.Empty;
             }
             validInfo.FileExtensions = ValidImageExtensions;
             validInfo.MaxSize = MaxImageSize;
             if (!FileCheck(CoverImageUploader, validInfo, coverImagePath, out errorMsg))
             {
                 CoverImageTip.InnerText = errorMsg;
-                return;
+            }
+            else
+            {
+                CoverImageTip.InnerHtml = string.Empty;
+            }
+            if(errorMsg!= string.Empty)
+            { 
+                Response.Write("<script>alert('请检查文件大小或格式是否正确！')</script>");
+                return; 
             }
             
 
@@ -123,27 +136,25 @@ namespace LibraryLink.Views.Admin
                         #region 作者信息    
                         { // 进入局部作用域
 
-                            // 提取，去重
-                            var authInfoProcessed = AuthorsInfoPreprocess(authorInfoList);
-
-                            var existingAuth = db.Authors
-                                .Where
-                                (a => authInfoProcessed
-                                    .Any(auth => auth.name == a.AuthorName && auth.nation == a.Nationality)
-                                )
-                                .ToList();
+                            // 去重
+                            var processedAuthInfo = AuthorsInfoPreprocess(authorInfoList);
+                            
                             // DB操作
                             List<Authors> newAuthors = new List<Authors>();
 
-                            foreach (var (name, nation) in authInfoProcessed)
+                            foreach (var (name, nation) in processedAuthInfo)
                             {
-                                var author = existingAuth.FirstOrDefault(a => a.AuthorName == name && a.Nationality == nation);
+                                var author = db.Authors.FirstOrDefault(a => a.AuthorName == name && a.Nationality == nation);
                                 if (author == null)
                                 {
-                                    author = new Authors { AuthorName = name, Nationality = nation };
+                                    author = new Authors
+                                    {
+                                        AuthorName = name,
+                                        Nationality = nation,
+                                    };
                                     newAuthors.Add(author);
                                 }
-                                if (!book.Authors.Contains(author)) 
+                                if (!book.Authors.Contains(author))
                                 {
                                     book.Authors.Add(author);
                                 }
@@ -217,10 +228,11 @@ namespace LibraryLink.Views.Admin
                         trans.Commit();
                         Response.Write("<script>alert('上传成功！')</script>");
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         if (File.Exists(coverImagePath))
                         {
+
                             File.Delete(coverImagePath);
                         }
                         if (File.Exists(bookFilePath))
@@ -228,7 +240,8 @@ namespace LibraryLink.Views.Admin
                             File.Delete(bookFilePath);
                         }
                         trans.Rollback();
-                        Response.Write("<script>alert('上传失败')</script>");
+
+                        Response.Write($"<script>alert('上传失败!')</script>");
                     }
                 }
             }
@@ -260,7 +273,7 @@ namespace LibraryLink.Views.Admin
                 var authorName = trimedInfo.Substring(0, startIndex).Trim();
                 var authorNationality = trimedInfo.Substring(startIndex + 1, endIndex - startIndex - 1).Trim();
 
-                result.Add((name:authorName, nation:authorNationality));
+                result.Add((authorName, authorNationality));
             }
             return result;
         }
@@ -292,7 +305,7 @@ namespace LibraryLink.Views.Admin
         {
             bool hasError = false;
 
-            if (!Regex.IsMatch(txtBookName.Text.Trim(), @"^[a-zA-Z\u4e00-\u9fa5\(\)\s]+$") ||
+            if (!Regex.IsMatch(txtBookName.Text.Trim(), @"^[\sa-zA-Z0-9\u4e00-\u9fa5\(\)]+$") ||
                 txtBookName.Text.Trim() == string.Empty
             )
             {
@@ -301,7 +314,7 @@ namespace LibraryLink.Views.Admin
             }
 
             // 验证ISBN - 假设ISBN为13位数字或带有连接符的格式
-            if (!Regex.IsMatch(txtISBN.Text.Trim(), @"^(97(8|9))?\d{9}(\d|X)$") ||
+            if (!Regex.IsMatch(txtISBN.Text.Trim(), @"^\d{13}$") ||
                 txtISBN.Text.Trim() == string.Empty
             )
             {
@@ -361,7 +374,7 @@ namespace LibraryLink.Views.Admin
             string[] tags = txtTags.Text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string tag in tags)
             {
-                if (!Regex.IsMatch(tag.Trim(), @"^[a-zA-Z0-9\u4e00-\u9fa5]+$"))
+                if (!Regex.IsMatch(tag.Trim(), @"^((?:[a-zA-Z\u4e00-\u9fa5]+)(?:\s*))+$"))
                 {
                     TagTip.InnerText = "标签只能包含中文、英文";
                     hasError = true;

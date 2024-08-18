@@ -58,7 +58,8 @@
         <div class="col-12">
             <asp:GridView ID="BookSearchView" runat="server" AllowPaging="True" PageSize="6" 
                 CssClass="table table-bordered table-hover" DataKeyNames="BookID" OnRowCommand="BookSearchView_RowCommand"
-                AutoGenerateColumns="False" OnPageIndexChanging="BooksSearchView_PageIndexChanging">
+                AutoGenerateColumns="False" OnPageIndexChanging="BooksSearchView_PageIndexChanging"
+                OnRowDeleting="BookSearchView_RowDeleting">
 
                 <Columns>
                     <asp:BoundField DataField="BookName" HeaderText="书名"/>
@@ -76,7 +77,10 @@
                     <asp:TemplateField>
                         <ItemTemplate>
                             <div class="text-center">
-                                <asp:Button ID="DeleteButton" runat="server" Text="删除" CommandName="Delete" OnClientClick="return confirm('警告！此操作无法撤销，确定删除书籍吗？')" CssClass="btn btn-danger btn-sm" />
+                                <asp:Button ID="DeleteButton" runat="server" CommandName="Delete"
+                                    CommandArgument='<%# Eval("BookID") %>' Text="删除" 
+                                    OnClientClick="return confirm('警告！此操作无法撤销，确定删除书籍吗？')" 
+                                    CssClass="btn btn-danger btn-sm"/>
                             </div>
                         </ItemTemplate>
                     </asp:TemplateField>
