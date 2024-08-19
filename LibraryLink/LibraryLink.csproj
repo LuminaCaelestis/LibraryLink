@@ -113,6 +113,7 @@
     <Content Include="Views\Admin\BookUpload.aspx" />
     <Content Include="Views\Admin\UserManagement.aspx" />
     <Content Include="Views\Admin\TagsManagement.aspx" />
+    <Content Include="Views\Admin\BookEdit.aspx" />
     <Content Include="Views\Login.aspx" />
     <Content Include="Views\Register.aspx" />
     <Content Include="Views\ViewBook.aspx" />
@@ -204,11 +205,11 @@
     </Compile>
     <Compile Include="Views\Admin\BookUpload.aspx.cs">
       <DependentUpon>BookUpload.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Views\Admin\BookUpload.aspx.designer.cs">
       <DependentUpon>BookUpload.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Admin\FileInfomation.cs" />
     <Compile Include="Views\Admin\UserManagement.aspx.cs">
       <DependentUpon>UserManagement.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -222,6 +223,13 @@
     </Compile>
     <Compile Include="Views\Admin\TagsManagement.aspx.designer.cs">
       <DependentUpon>TagsManagement.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Admin\BookEdit.aspx.cs">
+      <DependentUpon>BookEdit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Admin\BookEdit.aspx.designer.cs">
+      <DependentUpon>BookEdit.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>

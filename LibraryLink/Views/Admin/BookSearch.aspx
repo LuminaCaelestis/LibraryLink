@@ -80,7 +80,7 @@
                     <asp:TemplateField>
                         <ItemTemplate>
                             <div class="text-center">
-                                <asp:Button ID="SelectButton" runat="server" CommandArgument='<%# Eval("BookID") %>' Text="前往" CommandName="Details" CssClass="btn btn-primary btn-sm" />
+                                <asp:Button ID="EditButton" runat="server" PostBackUrl='<%# "BookEdit.aspx?BookID=" + Eval("BookID") %>' CssClass="btn btn-primary btn-sm" />
                             </div>
                         </ItemTemplate>
                     </asp:TemplateField>

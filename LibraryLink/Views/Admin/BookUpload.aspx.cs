@@ -14,22 +14,7 @@ namespace LibraryLink.Views.Admin
 {
     public partial class BookUpload : System.Web.UI.Page
     {
-        private string CoverImageFolder { get; } = "~/Assets/Resource/CoverImages/";
-        private string BookFolder { get; } = "~/Assets/Resource/BookFiles/";
-        private string CoverImageFullPath { get; set; } = string.Empty;
-        private string BookFullPath { get; set; } = string.Empty;
-        private int MaxImageSize { get; } = 1024 * 1024 * 2;
-        private int MaxBookSize { get; } = 1024 * 1024 * 400; // 400mb
-        private string[] ValidImageExtensions { get; } = { ".jpg", ".jpeg", ".png" };
-        private string[] ValidBookExtensions { get; } = { ".pdf"};
-
-        Dictionary<string, string[]> ValidMimeTypes { get; } = new Dictionary<string, string[]>
-        {
-            { ".jpg", new[] { "image/jpeg", "image/jpg" } },
-            { ".jpeg", new[] { "image/jpeg", "image/jpg" } },
-            { ".png", new[] { "image/png" } },
-            { ".pdf", new[] { "application/pdf" } }
-        };
+        FileInfoStruct fileInfo = new FileInfoStruct();
 
         struct ValidFileInfo
         {
@@ -60,14 +45,14 @@ namespace LibraryLink.Views.Admin
                 return;
             }
 
-            string coverImagePath = GetFullPath(CoverImageFolder, CoverImageUploader.FileName);
-            string bookFilePath = GetFullPath(BookFolder, BookFileUploader.FileName);
+            string coverImagePath = GetFullPath(fileInfo.CoverImageFolder, CoverImageUploader.FileName);
+            string bookFilePath = GetFullPath(fileInfo.BookFolder, BookFileUploader.FileName);
             ValidFileInfo validInfo = new ValidFileInfo
             {
-                FileExtensions = ValidBookExtensions,
-                MaxSize = MaxBookSize,
+                FileExtensions = fileInfo.ValidBookExtensions,
+                MaxSize = fileInfo.MaxBookSize,
             };
-
+            
             // 文件检查
             string errorMsg = string.Empty;
             if (!FileCheck(BookFileUploader, validInfo, bookFilePath,out errorMsg))
@@ -78,8 +63,8 @@ namespace LibraryLink.Views.Admin
             {
                 BookFileTip.InnerHtml = string.Empty;
             }
-            validInfo.FileExtensions = ValidImageExtensions;
-            validInfo.MaxSize = MaxImageSize;
+            validInfo.FileExtensions = fileInfo.ValidImageExtensions;
+            validInfo.MaxSize = fileInfo.MaxImageSize;
             if (!FileCheck(CoverImageUploader, validInfo, coverImagePath, out errorMsg))
             {
                 CoverImageTip.InnerText = errorMsg;
@@ -425,7 +410,7 @@ namespace LibraryLink.Views.Admin
                 return false;
             }
             // MimeType校验
-            if (!ValidMimeTypes.ContainsKey(extention))
+            if (!fileInfo.ValidMimeTypes.ContainsKey(extention))
             {
                 errorMsg = "文件格式不正确";
                 return false;
