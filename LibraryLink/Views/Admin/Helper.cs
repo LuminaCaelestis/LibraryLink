@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Web;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 namespace LibraryLink.Views.Admin
@@ -67,7 +69,6 @@ namespace LibraryLink.Views.Admin
             }
             return result;
         }
-
 
         public static bool FileCheck(FileUpload fileUploader, ValidFileInfo ValidInfo, string fullPath, out string errorMsg)
         {
@@ -135,6 +136,91 @@ namespace LibraryLink.Views.Admin
             }
             return res == (isbn[12] - '0');
         }
+
+
+        public static bool ValidateBookInfo(
+            TextBox txtBookName, HtmlGenericControl bookNameTip,
+            TextBox txtISBN, HtmlGenericControl isbnTip,
+            TextBox txtAuthor, HtmlGenericControl authorTip,
+            TextBox txtPublisher, HtmlGenericControl publisherTip,
+            TextBox calPublicationDate, HtmlGenericControl publicationDateTip,
+            TextBox txtPrice, HtmlGenericControl priceTip,
+            TextBox txtDescription, HtmlGenericControl descriptionTip,
+            TextBox txtTags, HtmlGenericControl tagTip)
+        {
+            bool hasError = false;
+            bookNameTip.InnerHtml = string.Empty;
+            isbnTip.InnerHtml = string.Empty;
+            authorTip.InnerHtml = string.Empty;
+            publisherTip.InnerHtml = string.Empty;
+            publicationDateTip.InnerHtml = string.Empty;
+            priceTip.InnerHtml = string.Empty;
+            descriptionTip.InnerHtml = string.Empty;
+            tagTip.InnerHtml = string.Empty;
+
+
+            if (!Regex.IsMatch(txtBookName.Text.Trim(), @"^[\sa-zA-Z0-9\u4e00-\u9fa5\(\)]+$") ||
+                txtBookName.Text.Trim() == string.Empty)
+            {
+                bookNameTip.InnerHtml = "中英文开头，包含字母、数字、汉字、空格、括号";
+                hasError = true;
+            }
+
+            if (!Regex.IsMatch(txtISBN.Text.Trim(), @"^\d{13}$") ||
+                txtISBN.Text.Trim() == string.Empty)
+            {
+                isbnTip.InnerHtml = "ISBN必须为13位纯数字";
+                hasError = true;
+            }
+
+            if (!Regex.IsMatch(txtAuthor.Text.Trim(), @"^(?:[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5]+\]\s*;\s*)*[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5\s]+\]\s*") ||
+                txtAuthor.Text.Trim() == string.Empty)
+            {
+                authorTip.InnerHtml = "汉字、字母开头，英文以空格分割";
+                hasError = true;
+            }
+
+            if (!Regex.IsMatch(txtPublisher.Text.Trim(), @"^[a-zA-Z\u4e00-\u9fa5][a-zA-Z\u4e00-\u9fa5\s]+$") ||
+                txtPublisher.Text.Trim() == string.Empty)
+            {
+                publisherTip.InnerHtml = "汉字、英文字母开头，空格分割单词";
+                hasError = true;
+            }
+
+            if (string.IsNullOrEmpty(calPublicationDate.Text.Trim()))
+            {
+                publicationDateTip.InnerHtml = "请选择出版日期";
+                hasError = true;
+            }
+
+            if (txtPrice.Text.Trim() == string.Empty ||
+                !decimal.TryParse(txtPrice.Text.Trim(), out decimal price) ||
+                price < 0m || price > 99999999.99m)
+            {
+                priceTip.InnerHtml = "介于0~99999999.99间的阿拉伯数字";
+                hasError = true;
+            }
+
+            if (txtDescription.Text.Trim().Length > 2000)
+            {
+                descriptionTip.InnerHtml = "书籍描述不能超过2000字符";
+                hasError = true;
+            }
+
+            string[] tags = txtTags.Text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string tag in tags)
+            {
+                if (!Regex.IsMatch(tag.Trim(), @"^((?:[a-zA-Z\u4e00-\u9fa5]+)(?:\s*))+$"))
+                {
+                    tagTip.InnerHtml = "标签只能包含中文、英文";
+                    hasError = true;
+                    break;
+                }
+            }
+
+            return !hasError;
+        }
+
     }
 
 }

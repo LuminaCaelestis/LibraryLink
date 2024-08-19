@@ -205,11 +205,12 @@
     </Compile>
     <Compile Include="Views\Admin\BookUpload.aspx.cs">
       <DependentUpon>BookUpload.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Views\Admin\BookUpload.aspx.designer.cs">
       <DependentUpon>BookUpload.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Views\Admin\FileInfomation.cs" />
+    <Compile Include="Views\Admin\Helper.cs" />
     <Compile Include="Views\Admin\UserManagement.aspx.cs">
       <DependentUpon>UserManagement.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

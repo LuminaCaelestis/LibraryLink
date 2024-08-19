@@ -9,18 +9,14 @@ using System.Web.UI.WebControls;
 using LibraryLink.Models;
 using LibraryLink.Models.DatabaseModel;
 using System.Text.RegularExpressions;
+using System.ComponentModel.DataAnnotations;
 
 namespace LibraryLink.Views.Admin
 {
+
     public partial class BookUpload : System.Web.UI.Page
     {
         FileInfoStruct fileInfo = new FileInfoStruct();
-
-        struct ValidFileInfo
-        {
-            public string[] FileExtensions { get; set; }
-            public int MaxSize { get; set; }
-        }
         
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -39,7 +35,17 @@ namespace LibraryLink.Views.Admin
         #region 按钮事件处理
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
-            if (!IsValidInfo())
+            bool isValid = Algo.ValidateBookInfo(
+                txtBookName, BookNameTip,
+                txtISBN, ISBNTip,
+                txtAuthor, AuthorTip,
+                txtPublisher, PublisherTip,
+                calPublicationDate, PublicationDateTip,
+                txtPrice, PriceTip,
+                txtDescription, DescriptionTip,
+                txtTags, TagTip);
+
+            if (!isValid)
             {
                 Response.Write("<script>alert('请检查输入信息是否正确！')</script>");
                 return;
@@ -52,32 +58,35 @@ namespace LibraryLink.Views.Admin
                 FileExtensions = fileInfo.ValidBookExtensions,
                 MaxSize = fileInfo.MaxBookSize,
             };
-            
-            // 文件检查
-            string errorMsg = string.Empty;
-            if (!FileCheck(BookFileUploader, validInfo, bookFilePath,out errorMsg))
-            {
-                BookFileTip.InnerText = errorMsg;
-            }
-            else
-            {
+
+            { // 进入局部作用域
+
+                // 文件检查
+                string errorMsg = string.Empty;
                 BookFileTip.InnerHtml = string.Empty;
-            }
-            validInfo.FileExtensions = fileInfo.ValidImageExtensions;
-            validInfo.MaxSize = fileInfo.MaxImageSize;
-            if (!FileCheck(CoverImageUploader, validInfo, coverImagePath, out errorMsg))
-            {
-                CoverImageTip.InnerText = errorMsg;
-            }
-            else
-            {
                 CoverImageTip.InnerHtml = string.Empty;
-            }
-            if(errorMsg!= string.Empty)
-            { 
-                Response.Write("<script>alert('请检查文件大小或格式是否正确！')</script>");
-                return; 
-            }
+
+                if (!Algo.FileCheck(BookFileUploader, validInfo, bookFilePath, out errorMsg))
+                {
+                    BookFileTip.InnerText = errorMsg;
+                }
+
+                validInfo.FileExtensions = fileInfo.ValidImageExtensions;
+                validInfo.MaxSize = fileInfo.MaxImageSize;
+
+                if (!Algo.FileCheck(CoverImageUploader, validInfo, coverImagePath, out errorMsg))
+                {
+                    CoverImageTip.InnerText = errorMsg;
+                }
+
+                if (errorMsg != string.Empty)
+                {
+                    Response.Write("<script>alert('请检查文件大小或格式是否正确！')</script>");
+                    return;
+                }
+            } // 离开局部作用域
+
+
             string bookName = txtBookName.Text.Trim();
             string isbn = txtISBN.Text.Trim();
             string authorInfoList = txtAuthor.Text.Trim();
@@ -120,7 +129,7 @@ namespace LibraryLink.Views.Admin
                         { // 进入局部作用域
 
                             // 去重
-                            var processedAuthInfo = AuthorsInfoPreprocess(authorInfoList);
+                            var processedAuthInfo = Algo.AuthorsInfoPreprocess(authorInfoList);
                             
                             // DB操作
                             List<Authors> newAuthors = new List<Authors>();
@@ -229,35 +238,6 @@ namespace LibraryLink.Views.Admin
         }
         #endregion 按钮事件处理
 
-        // 作者信息提取，去重等预处理
-        private List<(string name, string nation)> AuthorsInfoPreprocess(string authorInfoList)
-        {
-            List<(string name, string nation)> result = new List<(string name, string nation)> { };
-            HashSet<string> authorCheckSet = new HashSet<string>();
-            var authorInfoArr = authorInfoList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (var authorInfo in authorInfoArr)
-            {
-                var trimedInfo = authorInfo.Trim();
-
-                if (authorCheckSet.Contains(trimedInfo))
-                {
-                    continue;
-                }
-                else
-                {
-                    authorCheckSet.Add(trimedInfo);
-                }
-
-                int startIndex = trimedInfo.IndexOf('[');
-                int endIndex = trimedInfo.IndexOf(']');
-                var authorName = trimedInfo.Substring(0, startIndex).Trim();
-                var authorNationality = trimedInfo.Substring(startIndex + 1, endIndex - startIndex - 1).Trim();
-
-                result.Add((authorName, authorNationality));
-            }
-            return result;
-        }
 
         // 标签去重
         private List<string> TagPreprocess(string tagList)
@@ -281,153 +261,11 @@ namespace LibraryLink.Views.Admin
             return result;
         }
 
-        #region 验证信息
-        private bool IsValidInfo()
+        public struct InputInfo
         {
-            bool hasError = false;
 
-            if (!Regex.IsMatch(txtBookName.Text.Trim(), @"^[\sa-zA-Z0-9\u4e00-\u9fa5\(\)]+$") ||
-                txtBookName.Text.Trim() == string.Empty
-            )
-            {
-                BookNameTip.InnerText = "中英文开头，包含字母、数字、汉字、空格、括号";
-                hasError = true;
-            }
-
-            // 验证ISBN - 假设ISBN为13位数字或带有连接符的格式
-            if (!Regex.IsMatch(txtISBN.Text.Trim(), @"^\d{13}$") ||
-                txtISBN.Text.Trim() == string.Empty
-            )
-            {
-                ISBNTip.InnerText = "ISBN必须为13位纯数字";
-                hasError = true;
-            }
-
-            //if (!IsValidISBN(txtISBN.Text.Trim()))
-            //{
-            //    ISBNTip.InnerText += " ISBN校验码不正确";
-            //    hasError = true;
-            //}
-
-            // 验证姓名国籍，名[国]，人名含中英文字符和空格。国籍是方括号[]内的纯汉字，不含空格。多个作者分号;分隔
-            if (!Regex.IsMatch(txtAuthor.Text.Trim(), @"^(?:[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5]+\]\s*;\s*)+[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5\s]+\]\s*") ||
-                txtAuthor.Text.Trim() == string.Empty
-            )
-            {
-                AuthorTip.InnerText = "汉字、字母开头，英文以空格分割";
-                hasError = true;
-            }
-
-            // 验证出版社名称 - 允许中文、英文，且非空
-            if (!Regex.IsMatch(txtPublisher.Text.Trim(), @"^[a-zA-Z\u4e00-\u9fa5][a-zA-Z\u4e00-\u9fa5\s]+$") ||
-                txtPublisher.Text.Trim() == string.Empty
-            )
-            {
-                PublisherTip.InnerText = "汉字、英文字母开头，空格分割单词";
-                hasError = true;
-            }
-
-            // 如果没有选择出版日期，则显示提示信息
-            if (string.IsNullOrEmpty(calPublicationDate.Text.Trim()))
-            {
-                PublicationDateTip.InnerText = "请选择出版日期";
-                hasError = true;
-            }
-
-            // 验证价格 - 检查是否是正数
-            if (txtPrice.Text.Trim() == string.Empty ||
-                !decimal.TryParse(txtPrice.Text.Trim(), out decimal price) || 
-                price < 0m || price > 99999999.99m)
-            {
-                PriceTip.InnerText = "介于0~99999999.99间的阿拉伯数字";
-                hasError = true;
-            }
-
-            // 验证书籍描述 - 最多2000字符
-            if (txtDescription.Text.Trim().Length > 2000)
-            {
-                DescriptionTip.InnerText = "书籍描述不能超过2000字符";
-                hasError = true;
-            }
-
-            // 验证标签 - 中英文
-            string[] tags = txtTags.Text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string tag in tags)
-            {
-                if (!Regex.IsMatch(tag.Trim(), @"^((?:[a-zA-Z\u4e00-\u9fa5]+)(?:\s*))+$"))
-                {
-                    TagTip.InnerText = "标签只能包含中文、英文";
-                    hasError = true;
-                    break;
-                }
-            }
-            return !hasError;
-        }
-        #endregion 验证信息
-
-        private static bool IsValidISBN(string isbn)
-        {
-            // 验证ISBN的末尾校验码，假设ISBN为13位数字
-            // 根据ISBN13的规则
-            // ISBN的末尾校验码是通过取前12位，偶数位乘3，然后求和，最后取余10，用10减去余数，结果应该等于最后一位数字
-            int sum = 0;
-            for (int i = 0; i != 12; ++i)
-            {
-                if(i % 2 == 0)
-                {
-                    sum += (isbn[i] - '0');
-                }
-                else
-                {
-                    sum += isbn[i] - '0' * 3;
-                }
-            }
-            int res;
-            if(sum % 10 == 0)
-            {
-                res = 0;
-            }
-            else {
-                res = 10 - (sum % 10);
-            }
-            return res == (isbn[12] - '0');
         }
 
-        private bool FileCheck(FileUpload fileUploader,ValidFileInfo ValidInfo, string fullPath, out string errorMsg)
-        {
-            errorMsg = string.Empty;
-
-            if (!fileUploader.HasFile)
-            {
-                errorMsg = "未选择文件";
-                return false;
-            }
-            var extention = Path.GetExtension(fileUploader.FileName).ToLower();
-            // 获取文件后缀
-            if (!ValidInfo.FileExtensions.Contains(extention))
-            {
-                errorMsg = "文件格式不正确";
-                return false;
-            }
-            // MimeType校验
-            if (!fileInfo.ValidMimeTypes.ContainsKey(extention))
-            {
-                errorMsg = "文件格式不正确";
-                return false;
-            }
-            // 大小
-            if (fileUploader.PostedFile.ContentLength > ValidInfo.MaxSize)
-            {
-                errorMsg = "文件大小超出限制";
-                return false;
-            }
-            if (File.Exists(fullPath))
-            {
-                errorMsg = "文件重名";
-                return false;
-            }
-            return true;
-        }
         // 计算文件完整路径
         private string GetFullPath(string folder, string fileName)
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -19,98 +20,68 @@ namespace LibraryLink.Views.Admin
 
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
-            if (!IsValidInfo())
+            bool isValid = Algo.ValidateBookInfo(
+                txtBookName, BookNameTip,
+                txtISBN, ISBNTip,
+                txtAuthor, AuthorTip,
+                txtPublisher, PublisherTip,
+                calPublicationDate, PublicationDateTip,
+                txtPrice, PriceTip,
+                txtDescription, DescriptionTip,
+                txtTags, TagTip);
+
+            if (!isValid)
             {
+                Response.Write("<script>alert('请检查输入信息是否正确！')</script>");
                 return;
             }
 
-
-
-        }
-
-        #region 验证信息
-        private bool IsValidInfo()
-        {
-            bool hasError = false;
-
-            if (!Regex.IsMatch(txtBookName.Text.Trim(), @"^[\sa-zA-Z0-9\u4e00-\u9fa5\(\)]+$") ||
-                txtBookName.Text.Trim() == string.Empty
-            )
+            string coverImagePath = GetFullPath(fileInfo.CoverImageFolder, CoverImageUploader.FileName);
+            string bookFilePath = GetFullPath(fileInfo.BookFolder, BookFileUploader.FileName);
+            ValidFileInfo validInfo = new ValidFileInfo
             {
-                BookNameTip.InnerText = "中英文开头，包含字母、数字、汉字、空格、括号";
-                hasError = true;
-            }
+                FileExtensions = fileInfo.ValidBookExtensions,
+                MaxSize = fileInfo.MaxBookSize,
+            };
 
-            // 验证ISBN - 假设ISBN为13位数字或带有连接符的格式
-            if (!Regex.IsMatch(txtISBN.Text.Trim(), @"^\d{13}$") ||
-                txtISBN.Text.Trim() == string.Empty
-            )
-            {
-                ISBNTip.InnerText = "ISBN必须为13位纯数字";
-                hasError = true;
-            }
+            { // 进入局部作用域
 
-            //if (!IsValidISBN(txtISBN.Text.Trim()))
-            //{
-            //    ISBNTip.InnerText += " ISBN校验码不正确";
-            //    hasError = true;
-            //}
+                // 文件检查
+                string errorMsg = string.Empty;
+                BookFileTip.InnerHtml = string.Empty;
+                CoverImageTip.InnerHtml = string.Empty;
 
-            // 验证姓名国籍，名[国]，人名含中英文字符和空格。国籍是方括号[]内的纯汉字，不含空格。多个作者分号;分隔
-            if (!Regex.IsMatch(txtAuthor.Text.Trim(), @"^(?:[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5]+\]\s*;\s*)+[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5\s]+\]\s*") ||
-                txtAuthor.Text.Trim() == string.Empty
-            )
-            {
-                AuthorTip.InnerText = "汉字、字母开头，英文以空格分割";
-                hasError = true;
-            }
-
-            // 验证出版社名称 - 允许中文、英文，且非空
-            if (!Regex.IsMatch(txtPublisher.Text.Trim(), @"^[a-zA-Z\u4e00-\u9fa5][a-zA-Z\u4e00-\u9fa5\s]+$") ||
-                txtPublisher.Text.Trim() == string.Empty
-            )
-            {
-                PublisherTip.InnerText = "汉字、英文字母开头，空格分割单词";
-                hasError = true;
-            }
-
-            // 如果没有选择出版日期，则显示提示信息
-            if (string.IsNullOrEmpty(calPublicationDate.Text.Trim()))
-            {
-                PublicationDateTip.InnerText = "请选择出版日期";
-                hasError = true;
-            }
-
-            // 验证价格 - 检查是否是正数
-            if (txtPrice.Text.Trim() == string.Empty ||
-                !decimal.TryParse(txtPrice.Text.Trim(), out decimal price) ||
-                price < 0m || price > 99999999.99m)
-            {
-                PriceTip.InnerText = "介于0~99999999.99间的阿拉伯数字";
-                hasError = true;
-            }
-
-            // 验证书籍描述 - 最多2000字符
-            if (txtDescription.Text.Trim().Length > 2000)
-            {
-                DescriptionTip.InnerText = "书籍描述不能超过2000字符";
-                hasError = true;
-            }
-
-            // 验证标签 - 中英文
-            string[] tags = txtTags.Text.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string tag in tags)
-            {
-                if (!Regex.IsMatch(tag.Trim(), @"^((?:[a-zA-Z\u4e00-\u9fa5]+)(?:\s*))+$"))
+                if (!Algo.FileCheck(BookFileUploader, validInfo, bookFilePath, out errorMsg))
                 {
-                    TagTip.InnerText = "标签只能包含中文、英文";
-                    hasError = true;
-                    break;
+                    BookFileTip.InnerText = errorMsg;
                 }
-            }
-            return !hasError;
+
+                validInfo.FileExtensions = fileInfo.ValidImageExtensions;
+                validInfo.MaxSize = fileInfo.MaxImageSize;
+
+                if (!Algo.FileCheck(CoverImageUploader, validInfo, coverImagePath, out errorMsg))
+                {
+                    CoverImageTip.InnerText = errorMsg;
+                }
+
+                if (errorMsg != string.Empty)
+                {
+                    Response.Write("<script>alert('请检查文件大小或格式是否正确！')</script>");
+                    return;
+                }
+            } // 离开局部作用域
+
+
+
         }
-        #endregion 验证信息
+
+
+        // 计算文件完整路径
+        private string GetFullPath(string folder, string fileName)
+        {
+            string fullPath = Path.Combine(Server.MapPath(folder), fileName);
+            return fullPath;
+        }
 
     }
 }
