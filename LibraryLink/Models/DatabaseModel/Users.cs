@@ -17,6 +17,7 @@ namespace LibraryLink.Models.DatabaseModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Users()
         {
+            this.Freezed = false;
             this.Purchase = new HashSet<Purchase>();
             this.Rate = new HashSet<Rate>();
             this.Books = new HashSet<Books>();
@@ -29,7 +30,8 @@ namespace LibraryLink.Models.DatabaseModel
         public string Email { get; set; }
         public byte[] Password { get; set; }
         public decimal Balance { get; set; }
-        public Nullable<int> PrivilegeID { get; set; }
+        public int PrivilegeID { get; set; }
+        public bool Freezed { get; set; }
     
         public virtual Privileges Privileges { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

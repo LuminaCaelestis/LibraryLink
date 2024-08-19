@@ -57,7 +57,7 @@ namespace LibraryLink.Views.Admin
                 newPageIndex = TagsGridView.PageCount - 1;
             }
             TagsGridView.PageIndex = newPageIndex;
-            BindTagsGridView();
+            ApplyFilters();
         }
 
         protected void btnJumpToPage_Click(object sender, EventArgs e)
@@ -81,7 +81,7 @@ namespace LibraryLink.Views.Admin
                         pageNumber = TagsGridView.PageCount - 1;
                     }
                     TagsGridView.PageIndex = pageNumber;
-                    BindTagsGridView();
+                    ApplyFilters();
                 }
             }
         }
@@ -117,7 +117,7 @@ namespace LibraryLink.Views.Admin
                 return;
             }
 
-            using (var dbContext = new LibraryLinkDBContext())
+            using (var dbContext = new Entities())
             {
                 if (dbContext.Tags.Any(t => t.TagName == tagName))
                 {
@@ -141,6 +141,7 @@ namespace LibraryLink.Views.Admin
                         trans.Rollback();
                     }
                 }
+                ApplyFilters();
             }
         }
 
@@ -154,7 +155,7 @@ namespace LibraryLink.Views.Admin
                 return;
             }
 
-            using (var dbContext = new LibraryLinkDBContext())
+            using (var dbContext = new Entities())
             {
                 var existingTag = dbContext.Tags.FirstOrDefault(t => t.TagID == tagId);
                 if (existingTag == null)
@@ -179,7 +180,7 @@ namespace LibraryLink.Views.Admin
                     }
                 }
                 ClearForm();
-                BindTagsGridView();
+                ApplyFilters();
             }
         }
 
@@ -187,7 +188,7 @@ namespace LibraryLink.Views.Admin
         {
             int tagId = int.Parse(txtTagID.Text.Trim());
 
-            using (var context = new LibraryLinkDBContext())
+            using (var context = new Entities())
             {
                 var tagToDelete = context.Tags
                                          .Include(t => t.Books)  // 加载关联的书籍
@@ -218,24 +219,32 @@ namespace LibraryLink.Views.Admin
                 }
             }
             ClearForm();
-            BindTagsGridView();
+            ApplyFilters();
         }
 
         protected void FilterButton_Click(object sender, EventArgs e)
         {
-            using (var context = new LibraryLinkDBContext())
+            // 存储筛选条件
+            ViewState["FilterTagId"] = FilterTagId.Text.Trim();
+            ViewState["FilterTagName"] = FilterTagName.Text.Trim();
+            ApplyFilters();
+        }
+
+        private void ApplyFilters()
+        {
+            using (var context = new Entities())
             {
                 var query = context.Tags.AsQueryable();
 
-                if (!string.IsNullOrEmpty(FilterTagId.Text))
+                if (ViewState["FilterTagId"] != null && !string.IsNullOrEmpty(ViewState["FilterTagId"].ToString()))
                 {
-                    int filterTagId = int.Parse(FilterTagId.Text.Trim());
+                    int filterTagId = int.Parse(ViewState["FilterTagId"].ToString());
                     query = query.Where(t => t.TagID == filterTagId);
                 }
 
-                if (!string.IsNullOrEmpty(FilterTagName.Text))
+                if (ViewState["FilterTagName"] != null && !string.IsNullOrEmpty(ViewState["FilterTagName"].ToString()))
                 {
-                    string filterTagName = FilterTagName.Text.Trim();
+                    string filterTagName = ViewState["FilterTagName"].ToString();
                     query = query.Where(t => t.TagName.Contains(filterTagName));
                 }
 
@@ -243,6 +252,7 @@ namespace LibraryLink.Views.Admin
                 TagsGridView.DataBind();
             }
         }
+
 
 
     }

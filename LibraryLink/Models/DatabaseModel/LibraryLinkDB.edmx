@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="LibraryLinkDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="LibraryLinkDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Authors">
           <Key>
             <PropertyRef Name="AuthorID" />
@@ -25,6 +25,7 @@
           <Property Name="Price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="FilePath" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="ISBN" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Available" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Favorite">
           <Key>
@@ -113,7 +114,8 @@
           <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="varbinary" MaxLength="32" Nullable="false" />
           <Property Name="Balance" Type="decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="PrivilegeID" Type="int" />
+          <Property Name="PrivilegeID" Type="int" Nullable="false" />
+          <Property Name="Freezed" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Writes">
           <Key>
@@ -124,7 +126,20 @@
           <Property Name="BookID" Type="bigint" Nullable="false" />
         </EntityType>
         <!--生成过程中发现错误:
-警告 6002: 表/视图“LibraryLinkDB.dbo.BookManagementView”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+警告 6002: 表/视图“LibraryLinkDB.dbo.View_BookDetails”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+        <EntityType Name="View_BookDetails">
+          <Key>
+            <PropertyRef Name="BookName" />
+            <PropertyRef Name="ISBN" />
+            <PropertyRef Name="PublisherName" />
+            <PropertyRef Name="Price" />
+          </Key>
+          <Property Name="BookName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ISBN" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="AuthorName" Type="nvarchar" MaxLength="4000" />
+          <Property Name="PublisherName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+        </EntityType>
         <Association Name="FK__Favorite__BookID__693CA210">
           <End Role="Books" Type="Self.Books" Multiplicity="1" />
           <End Role="Favorite" Type="Self.Favorite" Multiplicity="*" />
@@ -246,7 +261,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__Users__Privilege__59FA5E80">
-          <End Role="Privileges" Type="Self.Privileges" Multiplicity="0..1" />
+          <End Role="Privileges" Type="Self.Privileges" Multiplicity="1" />
           <End Role="Users" Type="Self.Users" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Privileges">
@@ -295,6 +310,15 @@
           <EntitySet Name="Tags" EntityType="Self.Tags" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Writes" EntityType="Self.Writes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="View_BookDetails" EntityType="Self.View_BookDetails" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [View_BookDetails].[BookName] AS [BookName], 
+    [View_BookDetails].[ISBN] AS [ISBN], 
+    [View_BookDetails].[AuthorName] AS [AuthorName], 
+    [View_BookDetails].[PublisherName] AS [PublisherName], 
+    [View_BookDetails].[Price] AS [Price]
+    FROM [dbo].[View_BookDetails] AS [View_BookDetails]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK__Favorite__BookID__693CA210" Association="Self.FK__Favorite__BookID__693CA210">
             <End Role="Books" EntitySet="Books" />
             <End Role="Favorite" EntitySet="Favorite" />
@@ -348,8 +372,7 @@
             <End Role="Writes" EntitySet="Writes" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="LibraryLinkDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -374,6 +397,7 @@
           <Property Name="Price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="FilePath" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ISBN" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Available" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Publication" Relationship="Self.FK__Publishes__BookI__70DDC3D8" FromRole="Books" ToRole="Publication" />
           <NavigationProperty Name="Purchase" Relationship="Self.FK__Purchase__BookID__656C112C" FromRole="Books" ToRole="Purchase" />
           <NavigationProperty Name="Rate" Relationship="Self.FK__Rate__BookID__5FB337D6" FromRole="Books" ToRole="Rate" />
@@ -461,11 +485,25 @@
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Password" Type="Binary" MaxLength="32" FixedLength="false" Nullable="false" />
           <Property Name="Balance" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="PrivilegeID" Type="Int32" />
+          <Property Name="PrivilegeID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Privileges" Relationship="Self.FK__Users__Privilege__59FA5E80" FromRole="Users" ToRole="Privileges" />
           <NavigationProperty Name="Purchase" Relationship="Self.FK__Purchase__UserID__6477ECF3" FromRole="Users" ToRole="Purchase" />
           <NavigationProperty Name="Rate" Relationship="Self.FK__Rate__UserID__5EBF139D" FromRole="Users" ToRole="Rate" />
           <NavigationProperty Name="Books" Relationship="Self.Favorite" FromRole="Users" ToRole="Books" />
+          <Property Name="Freezed" Type="Boolean" Nullable="false" DefaultValue="False" />
+        </EntityType>
+        <EntityType Name="View_BookDetails">
+          <Key>
+            <PropertyRef Name="BookName" />
+            <PropertyRef Name="ISBN" />
+            <PropertyRef Name="PublisherName" />
+            <PropertyRef Name="Price" />
+          </Key>
+          <Property Name="BookName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ISBN" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AuthorName" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Name="PublisherName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
         </EntityType>
         <Association Name="FK__Publishes__BookI__70DDC3D8">
           <End Role="Books" Type="Self.Books" Multiplicity="1" />
@@ -504,7 +542,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__Users__Privilege__59FA5E80">
-          <End Role="Privileges" Type="Self.Privileges" Multiplicity="0..1" />
+          <End Role="Privileges" Type="Self.Privileges" Multiplicity="1" />
           <End Role="Users" Type="Self.Users" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Privileges">
@@ -574,6 +612,7 @@
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
           <EntitySet Name="Tags" EntityType="Self.Tags" />
           <EntitySet Name="Users" EntityType="Self.Users" />
+          <EntitySet Name="View_BookDetails" EntityType="Self.View_BookDetails" />
           <AssociationSet Name="FK__Publishes__BookI__70DDC3D8" Association="Self.FK__Publishes__BookI__70DDC3D8">
             <End Role="Books" EntitySet="Books" />
             <End Role="Publication" EntitySet="Publication" />
@@ -641,6 +680,7 @@
                 <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="FilePath" ColumnName="FilePath" />
                 <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+                <ScalarProperty Name="Available" ColumnName="Available" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -711,6 +751,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="LibraryLinkDBModel.Users">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Freezed" ColumnName="Freezed" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="DateJoined" ColumnName="DateJoined" />
@@ -719,6 +760,17 @@
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Balance" ColumnName="Balance" />
                 <ScalarProperty Name="PrivilegeID" ColumnName="PrivilegeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="View_BookDetails">
+            <EntityTypeMapping TypeName="LibraryLinkDBModel.View_BookDetails">
+              <MappingFragment StoreEntitySet="View_BookDetails">
+                <ScalarProperty Name="BookName" ColumnName="BookName" />
+                <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+                <ScalarProperty Name="AuthorName" ColumnName="AuthorName" />
+                <ScalarProperty Name="PublisherName" ColumnName="PublisherName" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -28,7 +28,7 @@ namespace LibraryLink.Views.Admin
         {
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = "SELECT UserID, Username, Email, Balance, PrivilegeID AS UserGroup, DateJoined FROM Users";
+                string query = "SELECT UserID, Username, Email, Balance, PrivilegeID AS UserGroup, DateJoined, Freezed FROM Users";
                 SqlDataAdapter da = new SqlDataAdapter(query, conn);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
@@ -87,7 +87,7 @@ namespace LibraryLink.Views.Admin
                 return;
             }
 
-            using (var context = new LibraryLinkDBContext())
+            using (var context = new Entities())
             {
                 var user = context.Users.FirstOrDefault(u => u.UserID == userId);
                 if (user == null)
@@ -115,7 +115,7 @@ namespace LibraryLink.Views.Admin
                     }
                 }
             }
-            BindUserGridView();
+            ApplyFilters();
         }
 
         // 需要重构
@@ -126,19 +126,19 @@ namespace LibraryLink.Views.Admin
                 Response.Write("<script>alert('未选择用户');</script>");
                 return;
             }
-            using (SqlConnection conn = new SqlConnection(connStr))
+            using (var context = new Entities())
             {
-                string query = "DELETE FROM Users WHERE UserID=@UserID";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@UserID", Convert.ToInt32(UserId.Text));
-
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                conn.Close();
-
-                BindUserGridView();
-                ClearForm();
+                var user = context.Users.Find(long.Parse(UserId.Text));
+                if (user == null)
+                {
+                    Response.Write("<script>alert('用户不存在！');</script>");
+                    return;
+                }
+                user.Freezed = !user.Freezed;
+                context.SaveChanges();
+                Response.Write("<script>alert('账户状态更新成功！');</script>");
             }
+            ApplyFilters();
         }
 
         private void ClearForm()
@@ -153,50 +153,67 @@ namespace LibraryLink.Views.Admin
 
         protected void FilterButton_Click(object sender, EventArgs e)
         {
-            using (var context = new LibraryLinkDBContext())
+            // 存储筛选条件
+            ViewState["FilterUserId"] = FilterUserId.Text;
+            ViewState["FilterUsername"] = FilterUsername.Text;
+            ViewState["FilterEmail"] = FilterEmail.Text;
+            ViewState["FilterFreezed"] = FilterFreezed.SelectedValue;
+            ViewState["FilterUserGroup"] = FilterUserGroup.SelectedValue;
+
+            ApplyFilters();
+        }
+
+        private void ApplyFilters()
+        {
+            using (var context = new Entities())
             {
                 var query = context.Users.AsQueryable();
 
-                if (!string.IsNullOrEmpty(FilterUserId.Text) && Regex.IsMatch(FilterUserId.Text, @"^\d+$"))
+                if (ViewState["FilterFreezed"] != null && !string.IsNullOrEmpty(ViewState["FilterFreezed"].ToString()))
                 {
-                    int userId = int.Parse(FilterUserId.Text);
-                    query = query.Where(u => u.UserID == userId);
+                    bool parsedStatus = bool.Parse(ViewState["FilterFreezed"].ToString());
+                    query = query.Where(u => u.Freezed == parsedStatus);
                 }
 
-                if (!string.IsNullOrEmpty(FilterUsername.Text))
+                if (ViewState["FilterUserGroup"] != null && !string.IsNullOrEmpty(ViewState["FilterUserGroup"].ToString()))
                 {
-                    string username = FilterUsername.Text.Trim();
-                    query = query.Where(u => u.Username.Contains(username));
-                }
-
-                if (!string.IsNullOrEmpty(FilterEmail.Text))
-                {
-                    string email = FilterEmail.Text.Trim();
-                    query = query.Where(u => u.Email.Contains(email));
-                }
-
-                if (!string.IsNullOrEmpty(FilterUserGroup.SelectedValue))
-                {
-                    int userGroupId = int.Parse(FilterUserGroup.SelectedValue);
+                    int userGroupId = int.Parse(ViewState["FilterUserGroup"].ToString());
                     query = query.Where(u => u.PrivilegeID == userGroupId);
                 }
 
-                // 执行查询并绑定到GridView
+                if (ViewState["FilterUserId"] != null && !string.IsNullOrEmpty(ViewState["FilterUserId"].ToString()) && Regex.IsMatch(ViewState["FilterUserId"].ToString(), @"^\d+$"))
+                {
+                    int userId = int.Parse(ViewState["FilterUserId"].ToString());
+                    query = query.Where(u => u.UserID == userId);
+                }
+
+                if (ViewState["FilterUsername"] != null && !string.IsNullOrEmpty(ViewState["FilterUsername"].ToString()))
+                {
+                    string username = ViewState["FilterUsername"].ToString().Trim();
+                    query = query.Where(u => u.Username.Contains(username));
+                }
+
+                if (ViewState["FilterEmail"] != null && !string.IsNullOrEmpty(ViewState["FilterEmail"].ToString()))
+                {
+                    string email = ViewState["FilterEmail"].ToString().Trim();
+                    query = query.Where(u => u.Email.Contains(email));
+                }
+
                 var users = query.Select(u => new
                 {
                     u.UserID,
                     u.Username,
                     u.Email,
                     u.Balance,
-                    UserGroup = u.PrivilegeID,  // 按照要求的名字映射
-                    u.DateJoined
+                    UserGroup = u.PrivilegeID,
+                    u.DateJoined,
+                    u.Freezed
                 }).ToList();
 
                 UserGridView.DataSource = users;
                 UserGridView.DataBind();
             }
         }
-
 
         // 翻页
         protected void UserGridView_PageIndexChanging(object sender, GridViewPageEventArgs e)
@@ -211,7 +228,7 @@ namespace LibraryLink.Views.Admin
                 newPageIndex = UserGridView.PageCount - 1;
             }
             UserGridView.PageIndex = newPageIndex;
-            BindUserGridView();
+            ApplyFilters();
         }
 
         protected void btnJumpToPage_Click(object sender, EventArgs e)
@@ -236,7 +253,8 @@ namespace LibraryLink.Views.Admin
                         pageNumber = UserGridView.PageCount - 1;
                     }
                     UserGridView.PageIndex = pageNumber;
-                    BindUserGridView();
+                    ApplyFilters();
+
                 }
             }
         }

@@ -8,10 +8,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using LibraryLink.Models.DatabaseModel;
 using System.Data.Entity;
-using System.Security.Policy;
-using System.Text;
-using System.Reflection;
-using System.Security.Cryptography;
+
 
 namespace LibraryLink.Views.Admin
 {
@@ -21,19 +18,19 @@ namespace LibraryLink.Views.Admin
         {
             if (!IsPostBack)
             {
-                BindBooksSearchView();
+
             }
         }
 
         protected void BindBooksSearchView()
         {
-            var query = "SELECT b.BookID, BookName, ISBN, STRING_AGG(a.AuthorName, ', ') AS AuthorName, PublisherName, Price " +
+            var query = "SELECT b.BookID, BookName, ISBN, STRING_AGG(a.AuthorName, ', ') AS AuthorName, PublisherName, Price, b.Available " +
                         "FROM Books b " +
                         "INNER JOIN Writes w ON b.BookID = w.BookID " +
                         "INNER JOIN Authors a ON w.AuthorID = a.AuthorID " +
                         "INNER JOIN Publication p ON b.BookID = p.BookID " +
                         "INNER JOIN Publisher per ON p.PublisherID = per.PublisherID " +
-                        "GROUP BY b.BookID, BookName, ISBN, PublisherName, Price;";
+                        "GROUP BY b.BookID, BookName, ISBN, PublisherName, Price, Available;";
 
             using (SqlConnection conn = new SqlConnection(Models.DatabaseConfig.ConnectionString))
             {
@@ -45,13 +42,22 @@ namespace LibraryLink.Views.Admin
             }
         }
 
-
-
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            var connectionString = Models.DatabaseConfig.ConnectionString;
+            ViewState["BookName"] = txtBookName.Text.Trim();
+            ViewState["ISBN"] = txtISBN.Text.Trim();
+            ViewState["MinPrice"] = txtMinPrice.Text.Trim();
+            ViewState["MaxPrice"] = txtMaxPrice.Text.Trim();
+            ViewState["AuthorName"] = txtAuthorName.Text.Trim();
+            ViewState["Publisher"] = txtPublisher.Text.Trim();
+            ViewState["Available"] = txtFilterAvailiable.SelectedValue;
+            ApplyFilters();
+        }
 
-            var query = "SELECT b.BookID, b.BookName, b.ISBN, STRING_AGG(a.AuthorName, ', ') AS AuthorName, per.PublisherName, b.Price " +
+        private void ApplyFilters()
+        {
+            var connectionString = Models.DatabaseConfig.ConnectionString;
+            var query = "SELECT b.BookID, b.BookName, b.ISBN, STRING_AGG(a.AuthorName, ', ') AS AuthorName, per.PublisherName, b.Price, b.Available " +
                         "FROM Books b  " +
                         "INNER JOIN Writes w ON b.BookID = w.BookID  " +
                         "INNER JOIN Authors a ON w.AuthorID = a.AuthorID  " +
@@ -61,43 +67,49 @@ namespace LibraryLink.Views.Admin
 
             List<SqlParameter> parameters = new List<SqlParameter>();
 
-            if (!string.IsNullOrEmpty(txtBookName.Text.Trim()))
+            if (ViewState["BookName"] != null && !string.IsNullOrEmpty(ViewState["BookName"].ToString()))
             {
                 query += "AND BookName LIKE @BookName ";
-                parameters.Add(new SqlParameter("@BookName", $"%{txtBookName.Text.Trim()}%"));
+                parameters.Add(new SqlParameter("@BookName", $"%{ViewState["BookName"].ToString()}%"));
             }
 
-            if (!string.IsNullOrEmpty(txtISBN.Text.Trim()))
+            if (ViewState["ISBN"] != null && !string.IsNullOrEmpty(ViewState["ISBN"].ToString()))
             {
                 query += "AND ISBN = @ISBN ";
-                parameters.Add(new SqlParameter("@ISBN", txtISBN.Text.Trim()));
+                parameters.Add(new SqlParameter("@ISBN", ViewState["ISBN"].ToString()));
             }
 
-            if (decimal.TryParse(txtMinPrice.Text.Trim(), out decimal minPrice))
+            if (ViewState["MinPrice"] != null && decimal.TryParse(ViewState["MinPrice"].ToString(), out decimal minPrice))
             {
                 query += "AND Price >= @MinPrice ";
                 parameters.Add(new SqlParameter("@MinPrice", minPrice));
             }
 
-            if (decimal.TryParse(txtMaxPrice.Text.Trim(), out decimal maxPrice))
+            if (ViewState["MaxPrice"] != null && decimal.TryParse(ViewState["MaxPrice"].ToString(), out decimal maxPrice))
             {
                 query += "AND Price <= @MaxPrice ";
                 parameters.Add(new SqlParameter("@MaxPrice", maxPrice));
             }
 
-            if (!string.IsNullOrEmpty(txtAuthorName.Text.Trim()))
+            if (ViewState["AuthorName"] != null && !string.IsNullOrEmpty(ViewState["AuthorName"].ToString()))
             {
                 query += "AND AuthorName LIKE @AuthorName ";
-                parameters.Add(new SqlParameter("@AuthorName", $"%{txtAuthorName.Text.Trim()}%"));
+                parameters.Add(new SqlParameter("@AuthorName", $"%{ViewState["AuthorName"].ToString()}%"));
             }
 
-            if (!string.IsNullOrEmpty(txtPublisher.Text.Trim()))
+            if (ViewState["Publisher"] != null && !string.IsNullOrEmpty(ViewState["Publisher"].ToString()))
             {
                 query += "AND PublisherName LIKE @PublisherName ";
-                parameters.Add(new SqlParameter("@PublisherName", $"%{txtPublisher.Text.Trim()}%"));
+                parameters.Add(new SqlParameter("@PublisherName", $"%{ViewState["Publisher"].ToString()}%"));
             }
 
-            query += "GROUP BY b.BookID, b.BookName, b.ISBN, per.PublisherName, b.Price";
+            if (ViewState["Available"] != null && !string.IsNullOrEmpty(ViewState["Available"].ToString()))
+            {
+                query += "AND Available = @Available ";
+                parameters.Add(new SqlParameter("@Available", ViewState["Available"].ToString()));
+            }
+
+            query += "GROUP BY b.BookID, b.BookName, b.ISBN, per.PublisherName, b.Price, b.Available";
 
             DataTable dt = new DataTable();
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -117,6 +129,7 @@ namespace LibraryLink.Views.Admin
         }
 
 
+
         protected void BookSearchView_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "Details")
@@ -130,7 +143,20 @@ namespace LibraryLink.Views.Admin
         protected void BookSearchView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             long bookID = Convert.ToInt32(e.Keys[0]);  // 获取 BookID
-            Response.Write("<script>alert('删除图书的方法已被执行，目标：" + bookID + "')</script>");
+            using(var Context = new Entities())
+            {
+                var book = Context.Books.Find(bookID);
+                if(book == null)
+                {
+                    Response.Write("<script>alert('状态切换失败')</script>");
+                    return;
+                }
+                book.Available = !book.Available;
+               
+                Context.SaveChanges();
+                Response.Write("<script>alert('状态切换成功')</script>");
+            }
+            ApplyFilters();
         }
 
         //protected void DeleteBook(long bookID)
@@ -151,7 +177,7 @@ namespace LibraryLink.Views.Admin
                 newPageIndex = BookSearchView.PageCount - 1;
             }
             BookSearchView.PageIndex = newPageIndex;
-            BindBooksSearchView();
+            ApplyFilters();
         }
 
         protected void btnJumpToPage_Click(object sender, EventArgs e)
@@ -174,7 +200,7 @@ namespace LibraryLink.Views.Admin
                         pageNumber = BookSearchView.PageCount - 1;
                     }
                     BookSearchView.PageIndex = pageNumber;
-                    BindBooksSearchView();
+                    ApplyFilters();
                 }
             }
         }

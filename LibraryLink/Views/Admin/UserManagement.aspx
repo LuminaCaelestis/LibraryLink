@@ -45,7 +45,7 @@
                             </div>
                             <div class="d-grid gap-2" style="margin-top: 40px">
                                 <asp:Button ID="UpdateUser" runat="server" CssClass="btn btn-primary" Text="确认修改" OnClick="UpdateUser_Click" />
-                                <asp:Button ID="DeleteUser" runat="server" CssClass="btn btn-danger" Text="删除用户" OnClick="DeleteUser_Click" />
+                                <asp:Button ID="DeleteUser" runat="server" CssClass="btn btn-danger" Text="冻结/解冻" OnClick="DeleteUser_Click" />
                             </div>
                         </div>
                     </div>
@@ -70,13 +70,23 @@
                                 <label for="FilterEmail" class="form-label">Email</label>
                                 <asp:TextBox ID="FilterEmail" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
-                            <div class="mb-3">
-                                <label for="FilterUserGroup" class="form-label">用户组</label>
-                                <asp:DropDownList ID="FilterUserGroup" runat="server" CssClass="form-control">
-                                    <asp:ListItem Text="All" Value=""></asp:ListItem>
-                                    <asp:ListItem Text="Reader" Value="0"></asp:ListItem>
-                                    <asp:ListItem Text="Admin" Value="1"></asp:ListItem>
-                                </asp:DropDownList>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="FilterFreezed" class="form-label">被冻结</label>
+                                    <asp:DropDownList ID="FilterFreezed" runat="server" CssClass="form-control">
+                                        <asp:ListItem Text="All" Value=""></asp:ListItem>
+                                        <asp:ListItem Text="正常" Value="False"></asp:ListItem>
+                                        <asp:ListItem Text="冻结" Value="True"></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                                <div class="col">
+                                    <label for="FilterUserGroup" class="form-label">用户组</label>
+                                    <asp:DropDownList ID="FilterUserGroup" runat="server" CssClass="form-control">
+                                        <asp:ListItem Text="All" Value=""></asp:ListItem>
+                                        <asp:ListItem Text="Reader" Value="0"></asp:ListItem>
+                                        <asp:ListItem Text="Admin" Value="1"></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
                             </div>
                             <div class="d-grid gap-2">
                                 <asp:Button ID="FilterButton" runat="server" CssClass="btn btn-secondary" Text="筛选" OnClick="FilterButton_Click" />
@@ -101,6 +111,7 @@
                         <asp:BoundField DataField="Balance" HeaderText="余额" />
                         <asp:BoundField DataField="UserGroup" HeaderText="用户组" />
                         <asp:BoundField DataField="DateJoined" HeaderText="注册日期" />
+                        <asp:BoundField DataField="Freezed" HeaderText="账户状态" />
                         <asp:TemplateField>
                             <ItemTemplate>
                                 <div class="text-center">

@@ -19,13 +19,21 @@
                             <label for="txtBookName" class="form-label">书名 <span id="BookNameTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
                             <asp:TextBox ID="txtBookName" runat="server" CssClass="form-control"></asp:TextBox>
                         </div>
-                        <div class="col-md-3">
-                            <label for="txtISBN" class="form-label">ISBN <span id="ISBNTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
-                            <asp:TextBox ID="txtISBN" runat="server" CssClass="form-control"></asp:TextBox>
+                        <div class="col-md-2">
+                            <label for="txtMaxPrice" class="form-label">最高价格 <span id="MaxPriceTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
+                            <asp:TextBox ID="txtMaxPrice" runat="server" MaxLength="10" CssClass="form-control"></asp:TextBox>
                         </div>
-                        <div class="col-md-3">
-                            <label for="txtPublisher" class="form-label">出版社 <span id="PublisherTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
-                            <asp:TextBox ID="txtPublisher" runat="server" CssClass="form-control"></asp:TextBox>
+                        <div class="col-md-2">
+                            <label for="txtMinPrice" class="form-label">最低价格 <span id="MinPriceTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
+                            <asp:TextBox ID="txtMinPrice" runat="server" MaxLength="10" CssClass="form-control"></asp:TextBox>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="txtFilterAvailiable" class="form-label">有效性</label>
+                            <asp:DropDownList ID="txtFilterAvailiable" runat="server" CssClass="form-control">
+                                <asp:ListItem Text="All" Value=""></asp:ListItem>
+                                <asp:ListItem Text="0" Value="0"></asp:ListItem>
+                                <asp:ListItem Text="1" Value="1"></asp:ListItem>
+                            </asp:DropDownList>
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -33,13 +41,14 @@
                            <label for="txtAuthorName" class="form-label">作者 <span id="Span1" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
                            <asp:TextBox ID="txtAuthorName" runat="server" CssClass="form-control"></asp:TextBox>
                        </div>
+
                         <div class="col-md-3">
-                            <label for="txtMaxPrice" class="form-label">最高价格 <span id="MaxPriceTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
-                            <asp:TextBox ID="txtMaxPrice" runat="server" MaxLength="10" CssClass="form-control"></asp:TextBox>
+                            <label for="txtISBN" class="form-label">ISBN <span id="ISBNTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
+                            <asp:TextBox ID="txtISBN" runat="server" CssClass="form-control"></asp:TextBox>
                         </div>
                         <div class="col-md-3">
-                            <label for="txtMinPrice" class="form-label">最低价格 <span id="MinPriceTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
-                            <asp:TextBox ID="txtMinPrice" runat="server" MaxLength="10" CssClass="form-control"></asp:TextBox>
+                            <label for="txtPublisher" class="form-label">出版社 <span id="PublisherTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
+                            <asp:TextBox ID="txtPublisher" runat="server" CssClass="form-control"></asp:TextBox>
                         </div>
                     </div>
                  </div>
@@ -67,10 +76,11 @@
                     <asp:BoundField DataField="AuthorName" HeaderText="作者" />
                     <asp:BoundField DataField="PublisherName" HeaderText="出版社" />
                     <asp:BoundField DataField="Price" HeaderText="价格" />
+                    <asp:BoundField DataField="Available" HeaderText="有效性" />
                     <asp:TemplateField>
                         <ItemTemplate>
                             <div class="text-center">
-                                <asp:Button ID="SelectButton" runat="server" CommandArgument='<%# Eval("BookID") %>' Text="详情" CommandName="Details" CssClass="btn btn-primary btn-sm" />
+                                <asp:Button ID="SelectButton" runat="server" CommandArgument='<%# Eval("BookID") %>' Text="前往" CommandName="Details" CssClass="btn btn-primary btn-sm" />
                             </div>
                         </ItemTemplate>
                     </asp:TemplateField>
@@ -78,8 +88,8 @@
                         <ItemTemplate>
                             <div class="text-center">
                                 <asp:Button ID="DeleteButton" runat="server" CommandName="Delete"
-                                    CommandArgument='<%# Eval("BookID") %>' Text="删除" 
-                                    OnClientClick="return confirm('警告！此操作无法撤销，确定删除书籍吗？')" 
+                                    CommandArgument='<%# Eval("BookID") %>' Text="切换下架" 
+                                    OnClientClick="return confirm('警告！此操作将下架书籍，确定执行吗？')" 
                                     CssClass="btn btn-danger btn-sm"/>
                             </div>
                         </ItemTemplate>

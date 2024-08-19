@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,7 +14,6 @@ namespace LibraryLink.Views.Admin
 {
     public partial class BookUpload : System.Web.UI.Page
     {
-
         private string CoverImageFolder { get; } = "~/Assets/Resource/CoverImages/";
         private string BookFolder { get; } = "~/Assets/Resource/BookFiles/";
         private string CoverImageFullPath { get; set; } = string.Empty;
@@ -93,8 +93,6 @@ namespace LibraryLink.Views.Admin
                 Response.Write("<script>alert('请检查文件大小或格式是否正确！')</script>");
                 return; 
             }
-            
-
             string bookName = txtBookName.Text.Trim();
             string isbn = txtISBN.Text.Trim();
             string authorInfoList = txtAuthor.Text.Trim();
@@ -104,7 +102,7 @@ namespace LibraryLink.Views.Admin
             string description = txtDescription.Text.Trim();
             string tags = txtTags.Text.Trim();
 
-            using (var db = new LibraryLinkDBContext())
+            using (var db = new Entities())
             {
                 using (var trans = db.Database.BeginTransaction())
                 {
@@ -173,7 +171,7 @@ namespace LibraryLink.Views.Admin
                             db.Publisher.Add(publisher);
                         }
                         #endregion 出版社
-
+                        db.SaveChanges();
                         #region 出版信息
                         var publication = db.Publication.FirstOrDefault
                         (
@@ -192,15 +190,12 @@ namespace LibraryLink.Views.Admin
                         #endregion 出版信息
 
                         #region 标签
-                        { // 进入局部作用域
-
-                            //去重
+                        {
                             var tagProcessed = TagPreprocess(tags);
                             List<Tags> newTags = new List<Tags>();
                             foreach (string tag in tagProcessed)
                             {
                                 var trimedTag = tag.Trim();
-                                // 检查标签是否已经存在
                                 var tagRecord = db.Tags.FirstOrDefault(t => t.TagName == trimedTag);
                                 if (tagRecord == null)
                                 {
@@ -208,22 +203,23 @@ namespace LibraryLink.Views.Admin
                                     {
                                         TagName = trimedTag,
                                     };
-                                    newTags.Add(tagRecord); // 添加到待插入的列表中
+                                    newTags.Add(tagRecord);
                                 }
                                 else
                                 {
-                                    book.Tags.Add(tagRecord); // 已存在的标签直接关联
+                                    book.Tags.Add(tagRecord);
                                 }
                             }
                             db.Tags.AddRange(newTags);
-
+                            foreach (var tag in newTags)
+                            {
+                                book.Tags.Add(tag);
+                            }
                         }
                         #endregion 标签      
-
                         // 保存文件
                         CoverImageUploader.SaveAs(coverImagePath);
                         BookFileUploader.SaveAs(bookFilePath);
-
                         db.SaveChanges();
                         trans.Commit();
                         Response.Write("<script>alert('上传成功！')</script>");
@@ -353,7 +349,6 @@ namespace LibraryLink.Views.Admin
                 hasError = true;
             }
 
-
             // 验证价格 - 检查是否是正数
             if (txtPrice.Text.Trim() == string.Empty ||
                 !decimal.TryParse(txtPrice.Text.Trim(), out decimal price) || 
@@ -413,8 +408,6 @@ namespace LibraryLink.Views.Admin
             return res == (isbn[12] - '0');
         }
 
-
-
         private bool FileCheck(FileUpload fileUploader,ValidFileInfo ValidInfo, string fullPath, out string errorMsg)
         {
             errorMsg = string.Empty;
@@ -424,9 +417,7 @@ namespace LibraryLink.Views.Admin
                 errorMsg = "未选择文件";
                 return false;
             }
-
             var extention = Path.GetExtension(fileUploader.FileName).ToLower();
-
             // 获取文件后缀
             if (!ValidInfo.FileExtensions.Contains(extention))
             {
@@ -439,14 +430,12 @@ namespace LibraryLink.Views.Admin
                 errorMsg = "文件格式不正确";
                 return false;
             }
-
             // 大小
             if (fileUploader.PostedFile.ContentLength > ValidInfo.MaxSize)
             {
                 errorMsg = "文件大小超出限制";
                 return false;
             }
-
             if (File.Exists(fullPath))
             {
                 errorMsg = "文件重名";
@@ -454,16 +443,11 @@ namespace LibraryLink.Views.Admin
             }
             return true;
         }
-            
-
         // 计算文件完整路径
         private string GetFullPath(string folder, string fileName)
         {
             string fullPath = Path.Combine(Server.MapPath(folder), fileName);
             return fullPath;
         }
-        
-
-
     }
 }

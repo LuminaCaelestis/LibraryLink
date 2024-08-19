@@ -37,11 +37,12 @@ namespace LibraryLink.Models
         /// <param name="password">密码</param>
         /// <param name="connStr">数据库连接字符串</param>
         /// <returns>如果用户名和密码的组合存在，返回true；否则返回false。</returns>
-        public static bool Login_Check(string username, string password, string connStr)
+        public static bool Login_Check(string username, string password, string connStr, out string Msg)
         {
+            Msg = string.Empty;
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = "SELECT Salt, Password FROM Users WHERE Username = @Username";
+                string query = "SELECT Salt, Password, Freezed FROM Users WHERE Username = @Username";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@Username", username);
 
@@ -50,17 +51,41 @@ namespace LibraryLink.Models
 
                 if (reader.Read())
                 {
+                    bool Freezed = (bool)reader["Freezed"];
+
+                    if (Freezed)
+                    {
+                        Msg = "该账户已被冻结";
+                        return false;
+                    }
+
                     string salt = (string)reader["Salt"];
                     byte[] storedHashedPassword = (byte[])reader["Password"];
                     byte[] inputHashedPassword = Hash.HashPassword(password, salt);
                     // 比较计算出的哈希值和数据库中的哈希值
                     if (inputHashedPassword.SequenceEqual(storedHashedPassword))
                     {
+                        Msg = "登录成功";
                         return true;
                     }
                 }
                 conn.Close();
+                Msg = "用户名或密码错误";
                 return false;
+            }
+        }
+
+        public static bool IsAccountFreezed(string username, string connStr)
+        {
+            string query = "SELECT Freezed FROM Users WHERE Username = @Username";
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Username", username);
+                conn.Open();
+                int count = (int)cmd.ExecuteScalar();
+                conn.Close();
+                return count > 0;
             }
         }
 

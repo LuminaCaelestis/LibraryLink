@@ -12,7 +12,7 @@ namespace LibraryLink.Views
         protected void Page_Load(object sender, EventArgs e)
         {
             // 测试
-            pdfViewer.Attributes["src"] = "~/Assets/Books/托马斯微积分第十版中文版.pdf";
+            pdfViewer.Attributes["src"] = "~/Assets/Resource/BookFiles/普林斯顿微积分读本(修订版).pdf";
         }
 
     }
