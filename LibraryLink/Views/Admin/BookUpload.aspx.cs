@@ -162,30 +162,20 @@ namespace LibraryLink.Views.Admin
                             {
                                 PublisherName = publisherName,
                             };
-                            db.Publisher.Add(publisher);
                         }
+                        db.Publisher.Add(publisher);
                         #endregion 出版社
-                        db.SaveChanges();
+
                         #region 出版信息
-                        var publication = db.Publication.FirstOrDefault
-                        (
-                            p => p.BookID == book.BookID && p.PublisherID == publisher.PublisherID
-                        );
-                        if (publication == null)
-                        {
-                            publication = new Publication
-                            {
-                                PublicationDate = publicationDate,
-                                PublisherID = publisher.PublisherID,
-                                BookID = book.BookID,
-                            };
-                        }
-                        db.Publication.Add(publication);
+                        
+                        book.PublicationDate = publicationDate;
+                        book.PublisherID = publisher.PublisherID;
+
                         #endregion 出版信息
 
                         #region 标签
                         {
-                            var tagProcessed = TagPreprocess(tags);
+                            var tagProcessed = Algo.TagPreprocess(tags);
                             List<Tags> newTags = new List<Tags>();
                             foreach (string tag in tagProcessed)
                             {
@@ -218,7 +208,7 @@ namespace LibraryLink.Views.Admin
                         trans.Commit();
                         Response.Write("<script>alert('上传成功！')</script>");
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         if (File.Exists(coverImagePath))
                         {
@@ -237,34 +227,6 @@ namespace LibraryLink.Views.Admin
             }
         }
         #endregion 按钮事件处理
-
-
-        // 标签去重
-        private List<string> TagPreprocess(string tagList)
-        {
-            HashSet<string> tagSet = new HashSet<string>();
-            var tagArr = tagList.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            List<string> result = new List<string>();
-            foreach (var tag in tagArr)
-            {
-                var trimedTag = tag.Trim();
-                if (tagSet.Contains(trimedTag))
-                {
-                    continue;
-                }
-                else
-                {
-                    tagSet.Add(trimedTag);
-                    result.Add(trimedTag);
-                }
-            }
-            return result;
-        }
-
-        public struct InputInfo
-        {
-
-        }
 
         // 计算文件完整路径
         private string GetFullPath(string folder, string fileName)

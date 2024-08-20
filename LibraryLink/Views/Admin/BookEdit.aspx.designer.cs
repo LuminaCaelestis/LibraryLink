@@ -11,7 +11,7 @@ namespace LibraryLink.Views.Admin
 {
 
 
-    public partial class WebForm1
+    public partial class BookEdit
     {
 
         /// <summary>

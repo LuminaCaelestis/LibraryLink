@@ -26,6 +26,8 @@
           <Property Name="FilePath" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="ISBN" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="Available" Type="bit" Nullable="false" />
+          <Property Name="PublisherID" Type="int" Nullable="false" />
+          <Property Name="PublicationDate" Type="date" Nullable="false" />
         </EntityType>
         <EntityType Name="Favorite">
           <Key>
@@ -49,15 +51,6 @@
           </Key>
           <Property Name="PrivilegeID" Type="int" Nullable="false" />
           <Property Name="PrivilegeType" Type="nvarchar" MaxLength="30" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Publication">
-          <Key>
-            <PropertyRef Name="PublisherID" />
-            <PropertyRef Name="BookID" />
-          </Key>
-          <Property Name="PublisherID" Type="int" Nullable="false" />
-          <Property Name="BookID" Type="bigint" Nullable="false" />
-          <Property Name="PublicationDate" Type="date" Nullable="false" />
         </EntityType>
         <EntityType Name="Publisher">
           <Key>
@@ -188,30 +181,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Publishes__BookI__70DDC3D8">
-          <End Role="Books" Type="Self.Books" Multiplicity="1" />
-          <End Role="Publication" Type="Self.Publication" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Books">
-              <PropertyRef Name="BookID" />
-            </Principal>
-            <Dependent Role="Publication">
-              <PropertyRef Name="BookID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Publishes__Publi__6FE99F9F">
-          <End Role="Publisher" Type="Self.Publisher" Multiplicity="1" />
-          <End Role="Publication" Type="Self.Publication" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Publisher">
-              <PropertyRef Name="PublisherID" />
-            </Principal>
-            <Dependent Role="Publication">
-              <PropertyRef Name="PublisherID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__Purchase__BookID__656C112C">
           <End Role="Books" Type="Self.Books" Multiplicity="1" />
           <End Role="Purchase" Type="Self.Purchase" Multiplicity="*" />
@@ -296,13 +265,24 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Books_Publisher">
+          <End Role="Publisher" Type="Self.Publisher" Multiplicity="1" />
+          <End Role="Books" Type="Self.Books" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Publisher">
+              <PropertyRef Name="PublisherID" />
+            </Principal>
+            <Dependent Role="Books">
+              <PropertyRef Name="PublisherID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="LibraryLinkDBModelStoreContainer">
           <EntitySet Name="Authors" EntityType="Self.Authors" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Books" EntityType="Self.Books" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Favorite" EntityType="Self.Favorite" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HasTag" EntityType="Self.HasTag" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Privileges" EntityType="Self.Privileges" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Publication" EntityType="Self.Publication" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Publisher" EntityType="Self.Publisher" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Purchase" EntityType="Self.Purchase" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Rate" EntityType="Self.Rate" Schema="dbo" store:Type="Tables" />
@@ -335,14 +315,6 @@
             <End Role="Tags" EntitySet="Tags" />
             <End Role="HasTag" EntitySet="HasTag" />
           </AssociationSet>
-          <AssociationSet Name="FK__Publishes__BookI__70DDC3D8" Association="Self.FK__Publishes__BookI__70DDC3D8">
-            <End Role="Books" EntitySet="Books" />
-            <End Role="Publication" EntitySet="Publication" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Publishes__Publi__6FE99F9F" Association="Self.FK__Publishes__Publi__6FE99F9F">
-            <End Role="Publisher" EntitySet="Publisher" />
-            <End Role="Publication" EntitySet="Publication" />
-          </AssociationSet>
           <AssociationSet Name="FK__Purchase__BookID__656C112C" Association="Self.FK__Purchase__BookID__656C112C">
             <End Role="Books" EntitySet="Books" />
             <End Role="Purchase" EntitySet="Purchase" />
@@ -371,6 +343,10 @@
             <End Role="Books" EntitySet="Books" />
             <End Role="Writes" EntitySet="Writes" />
           </AssociationSet>
+          <AssociationSet Name="FK_Books_Publisher" Association="Self.FK_Books_Publisher">
+            <End Role="Publisher" EntitySet="Publisher" />
+            <End Role="Books" EntitySet="Books" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -398,12 +374,14 @@
           <Property Name="FilePath" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ISBN" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Available" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Publication" Relationship="Self.FK__Publishes__BookI__70DDC3D8" FromRole="Books" ToRole="Publication" />
           <NavigationProperty Name="Purchase" Relationship="Self.FK__Purchase__BookID__656C112C" FromRole="Books" ToRole="Purchase" />
           <NavigationProperty Name="Rate" Relationship="Self.FK__Rate__BookID__5FB337D6" FromRole="Books" ToRole="Rate" />
           <NavigationProperty Name="Users" Relationship="Self.Favorite" FromRole="Books" ToRole="Users" />
           <NavigationProperty Name="Tags" Relationship="Self.HasTag" FromRole="Books" ToRole="Tags" />
           <NavigationProperty Name="Authors" Relationship="Self.Writes" FromRole="Books" ToRole="Authors" />
+          <Property Name="PublisherID" Type="Int32" Nullable="false" />
+          <Property Name="PublicationDate" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Publisher" Relationship="LibraryLinkDBModel.FK_Books_Publisher" FromRole="Books" ToRole="Publisher" />
         </EntityType>
         <EntityType Name="Privileges">
           <Key>
@@ -413,24 +391,13 @@
           <Property Name="PrivilegeType" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Users" Relationship="Self.FK__Users__Privilege__59FA5E80" FromRole="Privileges" ToRole="Users" />
         </EntityType>
-        <EntityType Name="Publication">
-          <Key>
-            <PropertyRef Name="PublisherID" />
-            <PropertyRef Name="BookID" />
-          </Key>
-          <Property Name="PublisherID" Type="Int32" Nullable="false" />
-          <Property Name="BookID" Type="Int64" Nullable="false" />
-          <Property Name="PublicationDate" Type="DateTime" Nullable="false" Precision="0" />
-          <NavigationProperty Name="Books" Relationship="Self.FK__Publishes__BookI__70DDC3D8" FromRole="Publication" ToRole="Books" />
-          <NavigationProperty Name="Publisher" Relationship="Self.FK__Publishes__Publi__6FE99F9F" FromRole="Publication" ToRole="Publisher" />
-        </EntityType>
         <EntityType Name="Publisher">
           <Key>
             <PropertyRef Name="PublisherID" />
           </Key>
           <Property Name="PublisherID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="PublisherName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Publication" Relationship="Self.FK__Publishes__Publi__6FE99F9F" FromRole="Publisher" ToRole="Publication" />
+          <NavigationProperty Name="Books" Relationship="LibraryLinkDBModel.FK_Books_Publisher" FromRole="Publisher" ToRole="Books" />
         </EntityType>
         <EntityType Name="Purchase">
           <Key>
@@ -505,18 +472,6 @@
           <Property Name="PublisherName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
         </EntityType>
-        <Association Name="FK__Publishes__BookI__70DDC3D8">
-          <End Role="Books" Type="Self.Books" Multiplicity="1" />
-          <End Role="Publication" Type="Self.Publication" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Books">
-              <PropertyRef Name="BookID" />
-            </Principal>
-            <Dependent Role="Publication">
-              <PropertyRef Name="BookID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__Purchase__BookID__656C112C">
           <End Role="Books" Type="Self.Books" Multiplicity="1" />
           <End Role="Purchase" Type="Self.Purchase" Multiplicity="*" />
@@ -550,18 +505,6 @@
             </Principal>
             <Dependent Role="Users">
               <PropertyRef Name="PrivilegeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Publishes__Publi__6FE99F9F">
-          <End Role="Publisher" Type="Self.Publisher" Multiplicity="1" />
-          <End Role="Publication" Type="Self.Publication" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Publisher">
-              <PropertyRef Name="PublisherID" />
-            </Principal>
-            <Dependent Role="Publication">
-              <PropertyRef Name="PublisherID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -605,7 +548,6 @@
           <EntitySet Name="Authors" EntityType="Self.Authors" />
           <EntitySet Name="Books" EntityType="Self.Books" />
           <EntitySet Name="Privileges" EntityType="Self.Privileges" />
-          <EntitySet Name="Publication" EntityType="Self.Publication" />
           <EntitySet Name="Publisher" EntityType="Self.Publisher" />
           <EntitySet Name="Purchase" EntityType="Self.Purchase" />
           <EntitySet Name="Rate" EntityType="Self.Rate" />
@@ -613,10 +555,6 @@
           <EntitySet Name="Tags" EntityType="Self.Tags" />
           <EntitySet Name="Users" EntityType="Self.Users" />
           <EntitySet Name="View_BookDetails" EntityType="Self.View_BookDetails" />
-          <AssociationSet Name="FK__Publishes__BookI__70DDC3D8" Association="Self.FK__Publishes__BookI__70DDC3D8">
-            <End Role="Books" EntitySet="Books" />
-            <End Role="Publication" EntitySet="Publication" />
-          </AssociationSet>
           <AssociationSet Name="FK__Purchase__BookID__656C112C" Association="Self.FK__Purchase__BookID__656C112C">
             <End Role="Books" EntitySet="Books" />
             <End Role="Purchase" EntitySet="Purchase" />
@@ -628,10 +566,6 @@
           <AssociationSet Name="FK__Users__Privilege__59FA5E80" Association="Self.FK__Users__Privilege__59FA5E80">
             <End Role="Privileges" EntitySet="Privileges" />
             <End Role="Users" EntitySet="Users" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Publishes__Publi__6FE99F9F" Association="Self.FK__Publishes__Publi__6FE99F9F">
-            <End Role="Publisher" EntitySet="Publisher" />
-            <End Role="Publication" EntitySet="Publication" />
           </AssociationSet>
           <AssociationSet Name="FK__Purchase__UserID__6477ECF3" Association="Self.FK__Purchase__UserID__6477ECF3">
             <End Role="Users" EntitySet="Users" />
@@ -653,7 +587,23 @@
             <End Role="Authors" EntitySet="Authors" />
             <End Role="Books" EntitySet="Books" />
           </AssociationSet>
+          <AssociationSet Name="FK_Books_Publisher" Association="LibraryLinkDBModel.FK_Books_Publisher">
+            <End Role="Publisher" EntitySet="Publisher" />
+            <End Role="Books" EntitySet="Books" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="FK_Books_Publisher">
+          <End Type="LibraryLinkDBModel.Publisher" Role="Publisher" Multiplicity="1" />
+          <End Type="LibraryLinkDBModel.Books" Role="Books" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Publisher">
+              <PropertyRef Name="PublisherID" />
+            </Principal>
+            <Dependent Role="Books">
+              <PropertyRef Name="PublisherID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -672,6 +622,8 @@
           <EntitySetMapping Name="Books">
             <EntityTypeMapping TypeName="LibraryLinkDBModel.Books">
               <MappingFragment StoreEntitySet="Books">
+                <ScalarProperty Name="PublicationDate" ColumnName="PublicationDate" />
+                <ScalarProperty Name="PublisherID" ColumnName="PublisherID" />
                 <ScalarProperty Name="BookID" ColumnName="BookID" />
                 <ScalarProperty Name="CoverImagePath" ColumnName="CoverImagePath" />
                 <ScalarProperty Name="BookName" ColumnName="BookName" />
@@ -689,15 +641,6 @@
               <MappingFragment StoreEntitySet="Privileges">
                 <ScalarProperty Name="PrivilegeID" ColumnName="PrivilegeID" />
                 <ScalarProperty Name="PrivilegeType" ColumnName="PrivilegeType" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Publication">
-            <EntityTypeMapping TypeName="LibraryLinkDBModel.Publication">
-              <MappingFragment StoreEntitySet="Publication">
-                <ScalarProperty Name="PublisherID" ColumnName="PublisherID" />
-                <ScalarProperty Name="BookID" ColumnName="BookID" />
-                <ScalarProperty Name="PublicationDate" ColumnName="PublicationDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

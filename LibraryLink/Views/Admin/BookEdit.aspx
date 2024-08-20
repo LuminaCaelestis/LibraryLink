@@ -1,15 +1,14 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Admin/AdminMaster.Master" AutoEventWireup="true" CodeBehind="BookEdit.aspx.cs" Inherits="LibraryLink.Views.Admin.WebForm1" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Admin/AdminMaster.Master" AutoEventWireup="true" CodeBehind="BookEdit.aspx.cs" Inherits="LibraryLink.Views.Admin.BookEdit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="SidebarContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
-    <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container mt-5">
         <div class="row mb-4">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        书籍上传
+                        编辑信息
                     </div>
                     <div class="card-body">
    
@@ -43,7 +42,7 @@
                             </div>
                         </div>
 
-                        <div class="row mb-3">
+                        <div class="row mb-3 mt-3">
                             <div class="col-md-6">
                                 <label for="CoverImageUploader" class="form-label">封面图片 <span id="CoverImageTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
                                 <asp:FileUpload ID="CoverImageUploader" runat="server" CssClass="form-control"></asp:FileUpload>
@@ -68,7 +67,7 @@
                             </div>
                         </div>
 
-                        <asp:Button ID="btnSubmit" runat="server" Text="提交修改" CssClass="btn btn-primary btn-block" OnClick="btnSubmit_Click" />
+                        <asp:Button ID="btnSubmit" runat="server" Text="提交修改" CssClass="btn btn-success btn-block" OnClick="btnSubmit_Click" />
                     </div>
                 </div>
             </div>

@@ -159,12 +159,6 @@ namespace LibraryLink.Views.Admin
             ApplyFilters();
         }
 
-        //protected void DeleteBook(long bookID)
-        //{
-        //    Response.Write("删除图书的方法已被执行，目标：" + bookID);
-        //}
-
-        // 翻页
         protected void BooksSearchView_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
             int newPageIndex = e.NewPageIndex;

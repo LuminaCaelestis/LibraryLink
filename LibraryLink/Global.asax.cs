@@ -59,6 +59,12 @@ namespace LibraryLink
                 "~/Views/Admin/BookSearch.aspx"
             );
 
+            routes.MapPageRoute(
+                "BookEdit",
+                "Admin-BookEdit",
+                "~/Views/Admin/BookEdit.aspx"
+            );
+
         }
 
     }

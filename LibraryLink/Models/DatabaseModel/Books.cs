@@ -17,7 +17,6 @@ namespace LibraryLink.Models.DatabaseModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Books()
         {
-            this.Publication = new HashSet<Publication>();
             this.Purchase = new HashSet<Purchase>();
             this.Rate = new HashSet<Rate>();
             this.Users = new HashSet<Users>();
@@ -34,9 +33,9 @@ namespace LibraryLink.Models.DatabaseModel
         public string FilePath { get; set; }
         public string ISBN { get; set; }
         public bool Available { get; set; }
+        public int PublisherID { get; set; }
+        public System.DateTime PublicationDate { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Publication> Publication { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Purchase> Purchase { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -47,5 +46,6 @@ namespace LibraryLink.Models.DatabaseModel
         public virtual ICollection<Tags> Tags { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Authors> Authors { get; set; }
+        public virtual Publisher Publisher { get; set; }
     }
 }

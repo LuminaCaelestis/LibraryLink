@@ -39,6 +39,27 @@ namespace LibraryLink.Views.Admin
 
     public class Algo
     {
+        // 标签去重
+        public static List<string> TagPreprocess(string tagList)
+        {
+            HashSet<string> tagSet = new HashSet<string>();
+            var tagArr = tagList.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            List<string> result = new List<string>();
+            foreach (var tag in tagArr)
+            {
+                var trimedTag = tag.Trim();
+                if (tagSet.Contains(trimedTag))
+                {
+                    continue;
+                }
+                else
+                {
+                    tagSet.Add(trimedTag);
+                    result.Add(trimedTag);
+                }
+            }
+            return result;
+        }
 
         // 作者信息提取，去重等预处理
         public static List<(string name, string nation)> AuthorsInfoPreprocess(string authorInfoList)
@@ -69,6 +90,17 @@ namespace LibraryLink.Views.Admin
             }
             return result;
         }
+
+        // 作者信息格式回滚
+        public static string AuthorsInfoFormat(List<(string name, string nation)> authorsInfoList)
+        {
+            var formattedAuthors = authorsInfoList
+                .Select(author => $"{author.name}[{author.nation}]")
+                .ToList();
+
+            return string.Join("; ", formattedAuthors) + ";";
+        }
+
 
         public static bool FileCheck(FileUpload fileUploader, ValidFileInfo ValidInfo, string fullPath, out string errorMsg)
         {

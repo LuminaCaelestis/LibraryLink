@@ -17,13 +17,13 @@ namespace LibraryLink.Models.DatabaseModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Publisher()
         {
-            this.Publication = new HashSet<Publication>();
+            this.Books = new HashSet<Books>();
         }
     
         public int PublisherID { get; set; }
         public string PublisherName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Publication> Publication { get; set; }
+        public virtual ICollection<Books> Books { get; set; }
     }
 }

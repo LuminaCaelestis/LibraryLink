@@ -44,6 +44,5 @@ namespace LibraryLink.Models
                 return sha256.ComputeHash(bytes);
             }
         }
-
     }
 }
