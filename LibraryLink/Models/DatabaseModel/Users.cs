@@ -32,8 +32,6 @@ namespace LibraryLink.Models.DatabaseModel
         public decimal Balance { get; set; }
         public int PrivilegeID { get; set; }
         public bool Freezed { get; set; }
-        public DateTime PublicationDate { get; set; }
-        public int PublisherID { get; set; }
     
         public virtual Privileges Privileges { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

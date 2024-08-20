@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting.Contexts;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using LibraryLink.Models.DatabaseModel;
 
 namespace LibraryLink.Views.Admin
 {
@@ -37,10 +39,180 @@ namespace LibraryLink.Views.Admin
         };
     }
 
+    public class DBService
+    {
+        public static void AuthorInfoInsert(Entities context, List<(string name, string nation)> procAuthors, Books book)
+        {
+            List<Authors> newAuthor = new List<Authors>();
+            foreach (var (name, nation) in procAuthors)
+            {
+                var author = context.Authors.FirstOrDefault(a => a.AuthorName == name && a.Nationality == nation);
+                if (author == null)
+                {
+                    author = new Authors
+                    {
+                        AuthorName = name,
+                        Nationality = nation,
+                    };
+                    newAuthor.Add(author);
+                }
+                if (!book.Authors.Contains(author))
+                {
+                    book.Authors.Add(author);
+                }
+            }
+        }
+
+        public static Publisher PublisherInsert(Entities context, string publisherName)
+        {
+            var publisher = context.Publisher.FirstOrDefault(p => p.PublisherName == publisherName);
+            if (publisher == null)
+            {
+                publisher = new Publisher
+                {
+                    PublisherName = publisherName,
+                };
+                context.Publisher.Add(publisher);
+            }
+            return publisher;
+        }
+
+        public static void TagsInsert(Entities context, List<string> tagProcessed, Books book)
+        {
+            List<Tags> newTags = new List<Tags>();
+            foreach (string tag in tagProcessed)
+            {
+                var trimedTag = tag.Trim();
+                var tagRecord = context.Tags.FirstOrDefault(t => t.TagName == trimedTag);
+                if (tagRecord == null)
+                {
+                    tagRecord = new Tags
+                    {
+                        TagName = trimedTag,
+                    };
+                    newTags.Add(tagRecord);
+                }
+                else
+                {
+                    book.Tags.Add(tagRecord);
+                }
+            }
+            context.Tags.AddRange(newTags);
+            foreach (var tag in newTags)
+            {
+                book.Tags.Add(tag);
+            }
+        }
+    }
+
+    public class FileService
+    {
+        private readonly string backupDirectory;
+        private readonly List<(string originalPath, string backupPath)> backupFilePaths;
+
+        public FileService()
+        {
+            // 获取应用的根目录
+            var appRoot = AppDomain.CurrentDomain.BaseDirectory;
+            // 构建备份目录路径
+            backupDirectory = Path.Combine(appRoot, "Assets", "backup");
+            Directory.CreateDirectory(backupDirectory);
+            backupFilePaths = new List<(string originalPath, string backupPath)>();
+        }
+
+        // 备份文件到临时目录
+        public void BackupFile(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                var fileName = Path.GetFileName(filePath);
+                var backupFilePath = Path.Combine(backupDirectory, fileName);
+                File.Copy(filePath, backupFilePath);
+                backupFilePaths.Add((filePath, backupFilePath));
+            }
+        }
+
+        // 恢复备份的文件到原始目录
+        public void RestoreFiles()
+        {
+            foreach (var (originalPath, backupPath) in backupFilePaths)
+            {
+                if (File.Exists(backupPath))
+                {
+                    File.Copy(backupPath, originalPath, true);
+                }
+            }
+        }
+
+        // 删除备份的文件
+        public void DeleteBackupFiles()
+        {
+            foreach (var (_, backupPath) in backupFilePaths)
+            {
+                if (File.Exists(backupPath))
+                {
+                    File.Delete(backupPath);
+                }
+            }
+        }
+
+        public void DeleteFile(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
+
+        public static bool IsFileUploaded(FileUpload fileUploader, out string errorMsg)
+        {
+            errorMsg = string.Empty;
+            if (!fileUploader.HasFile)
+            {
+                errorMsg = "未选择文件";
+                return false;
+            }
+            return true;
+        }
+
+        public static bool FileCheck(FileUpload fileUploader, ValidFileInfo ValidInfo, string fullPath, out string errorMsg)
+        {
+            errorMsg = string.Empty;
+
+            FileInfoStruct fileInfo = new FileInfoStruct();
+
+            if (File.Exists(fullPath))
+            {
+                errorMsg = "文件重名";
+                return false;
+            }
+
+            var extention = Path.GetExtension(fileUploader.FileName).ToLower();
+            // 获取文件后缀
+            if (!ValidInfo.FileExtensions.Contains(extention))
+            {
+                errorMsg = "文件格式不正确";
+                return false;
+            }
+            // MimeType校验
+            if (!fileInfo.ValidMimeTypes.ContainsKey(extention))
+            {
+                errorMsg = "文件格式不正确";
+                return false;
+            }
+            if (fileUploader.PostedFile.ContentLength > ValidInfo.MaxSize)
+            {
+                errorMsg = "文件大小超出限制";
+                return false;
+            }
+            return true;
+        }
+    }
+
     public class Algo
     {
         // 标签去重
-        public static List<string> TagPreprocess(string tagList)
+        public static List<string> TagsPreprocess(string tagList)
         {
             HashSet<string> tagSet = new HashSet<string>();
             var tagArr = tagList.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -80,7 +252,6 @@ namespace LibraryLink.Views.Admin
                 {
                     authorCheckSet.Add(trimedInfo);
                 }
-
                 int startIndex = trimedInfo.IndexOf('[');
                 int endIndex = trimedInfo.IndexOf(']');
                 var authorName = trimedInfo.Substring(0, startIndex).Trim();
@@ -91,54 +262,15 @@ namespace LibraryLink.Views.Admin
             return result;
         }
 
-        // 作者信息格式回滚
-        public static string AuthorsInfoFormat(List<(string name, string nation)> authorsInfoList)
-        {
-            var formattedAuthors = authorsInfoList
-                .Select(author => $"{author.name}[{author.nation}]")
-                .ToList();
+        //// 作者信息格式回滚
+        //public static string AuthorsInfoFormat(List<(string name, string nation)> authorsInfoList)
+        //{
+        //    var formattedAuthors = authorsInfoList
+        //        .Select(author => $"{author.name}[{author.nation}]")
+        //        .ToList();
 
-            return string.Join("; ", formattedAuthors) + ";";
-        }
-
-
-        public static bool FileCheck(FileUpload fileUploader, ValidFileInfo ValidInfo, string fullPath, out string errorMsg)
-        {
-            errorMsg = string.Empty;
-
-            FileInfoStruct fileInfo = new FileInfoStruct();
-
-            if (!fileUploader.HasFile)
-            {
-                errorMsg = "未选择文件";
-                return false;
-            }
-            var extention = Path.GetExtension(fileUploader.FileName).ToLower();
-            // 获取文件后缀
-            if (!ValidInfo.FileExtensions.Contains(extention))
-            {
-                errorMsg = "文件格式不正确";
-                return false;
-            }
-            // MimeType校验
-            if (!fileInfo.ValidMimeTypes.ContainsKey(extention))
-            {
-                errorMsg = "文件格式不正确";
-                return false;
-            }
-            // 大小
-            if (fileUploader.PostedFile.ContentLength > ValidInfo.MaxSize)
-            {
-                errorMsg = "文件大小超出限制";
-                return false;
-            }
-            if (File.Exists(fullPath))
-            {
-                errorMsg = "文件重名";
-                return false;
-            }
-            return true;
-        }
+        //    return string.Join("; ", formattedAuthors) + ";";
+        //}
 
         public static bool IsValidISBN(string isbn)
         {
@@ -205,7 +337,8 @@ namespace LibraryLink.Views.Admin
                 hasError = true;
             }
 
-            if (!Regex.IsMatch(txtAuthor.Text.Trim(), @"^(?:[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5]+\]\s*;\s*)*[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5\s]+\]\s*") ||
+            if (!Regex.IsMatch(txtAuthor.Text.Trim(),
+                @"^(?:[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5]+\]\s*;\s*)*[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5\s]+\]\s*") ||
                 txtAuthor.Text.Trim() == string.Empty)
             {
                 authorTip.InnerHtml = "汉字、字母开头，英文以空格分割";

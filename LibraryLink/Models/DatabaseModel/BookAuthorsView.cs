@@ -12,12 +12,10 @@ namespace LibraryLink.Models.DatabaseModel
     using System;
     using System.Collections.Generic;
     
-    public partial class View_BookDetails
+    public partial class BookAuthorsView
     {
-        public string BookName { get; set; }
-        public string ISBN { get; set; }
+        public long BookID { get; set; }
         public string AuthorName { get; set; }
-        public string PublisherName { get; set; }
-        public decimal Price { get; set; }
+        public string Nationality { get; set; }
     }
 }

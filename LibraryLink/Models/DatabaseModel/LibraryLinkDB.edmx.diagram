@@ -14,7 +14,6 @@
         <EntityTypeShape EntityType="LibraryLinkDBModel.sysdiagrams" Width="1.5" PointX="9.75" PointY="6.875" IsExpanded="true" />
         <EntityTypeShape EntityType="LibraryLinkDBModel.Tags" Width="1.5" PointX="1" PointY="9.25" IsExpanded="true" />
         <EntityTypeShape EntityType="LibraryLinkDBModel.Users" Width="1.5" PointX="7.75" PointY="6.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="LibraryLinkDBModel.View_BookDetails" Width="1.5" PointX="9.75" PointY="9.375" IsExpanded="true" />
         <AssociationConnector Association="LibraryLinkDBModel.FK__Purchase__BookID__656C112C" ManuallyRouted="false" />
         <AssociationConnector Association="LibraryLinkDBModel.FK__Rate__BookID__5FB337D6" ManuallyRouted="false" >
         </AssociationConnector>
@@ -27,6 +26,8 @@
         <AssociationConnector Association="LibraryLinkDBModel.HasTag" ManuallyRouted="false" />
         <AssociationConnector Association="LibraryLinkDBModel.Writes" ManuallyRouted="false" />
         <AssociationConnector Association="LibraryLinkDBModel.FK_Books_Publisher" />
+        <EntityTypeShape EntityType="LibraryLinkDBModel.BookAuthorsView" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="LibraryLinkDBModel.BookTagsView" Width="1.5" PointX="4.75" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

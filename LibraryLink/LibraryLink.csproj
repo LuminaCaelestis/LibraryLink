@@ -128,7 +128,13 @@
     <Compile Include="Models\DatabaseModel\Authors.cs">
       <DependentUpon>LibraryLinkDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DatabaseModel\BookAuthorsView.cs">
+      <DependentUpon>LibraryLinkDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DatabaseModel\Books.cs">
+      <DependentUpon>LibraryLinkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\BookTagsView.cs">
       <DependentUpon>LibraryLinkDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DatabaseModel\LibraryLinkDB.Context.cs">
@@ -149,9 +155,6 @@
     <Compile Include="Models\DatabaseModel\Privileges.cs">
       <DependentUpon>LibraryLinkDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DatabaseModel\Publication.cs">
-      <DependentUpon>LibraryLinkDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\DatabaseModel\Publisher.cs">
       <DependentUpon>LibraryLinkDB.tt</DependentUpon>
     </Compile>
@@ -168,9 +171,6 @@
       <DependentUpon>LibraryLinkDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DatabaseModel\Users.cs">
-      <DependentUpon>LibraryLinkDB.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatabaseModel\View_BookDetails.cs">
       <DependentUpon>LibraryLinkDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Hash.cs" />

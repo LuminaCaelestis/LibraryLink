@@ -15,7 +15,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="txtBookName" class="form-label">书籍名称 <span id="BookNameTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
-                                <asp:TextBox ID="txtBookName" MaxLength="100" runat="server" CssClass="form-control"></asp:TextBox>
+                                <asp:TextBox ID="txtEditBookName" MaxLength="100" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
                             <div class="col-md-3">
                                 <label for="txtISBN" class="form-label">ISBN <span id="ISBNTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
@@ -23,7 +23,7 @@
                             </div>
                             <div class="col-md-3">
                                 <label for="txtPrice" class="form-label">价格 <span id="PriceTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
-                                <asp:TextBox ID="txtPrice" runat="server" CssClass="form-control" TextMode="Number"></asp:TextBox>
+                                <asp:TextBox ID="txtPrice" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
                         </div>
 
@@ -80,7 +80,7 @@
             let hasError = false;
 
             // 书籍名称验证
-            const bookName = document.getElementById('<%= txtBookName.ClientID %>').value.trim();
+            const bookName = document.getElementById('<%= txtEditBookName.ClientID %>').value.trim();
             if (!/^[\sa-zA-Z0-9\u4e00-\u9fa5\(\)]+$/.test(bookName) || bookName === '') {
                 document.getElementById('<%= BookNameTip.ClientID %>').innerText = "中英文开头，包含字母、数字、汉字、空格、括号";
                 hasError = true;

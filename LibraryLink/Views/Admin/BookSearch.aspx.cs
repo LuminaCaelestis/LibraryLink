@@ -8,6 +8,9 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using LibraryLink.Models.DatabaseModel;
 using System.Data.Entity;
+using System.Reflection;
+using System.Security.Policy;
+using System.Text.RegularExpressions;
 
 
 namespace LibraryLink.Views.Admin
@@ -18,7 +21,7 @@ namespace LibraryLink.Views.Admin
         {
             if (!IsPostBack)
             {
-
+                BindBooksSearchView();
             }
         }
 
@@ -28,8 +31,7 @@ namespace LibraryLink.Views.Admin
                         "FROM Books b " +
                         "INNER JOIN Writes w ON b.BookID = w.BookID " +
                         "INNER JOIN Authors a ON w.AuthorID = a.AuthorID " +
-                        "INNER JOIN Publication p ON b.BookID = p.BookID " +
-                        "INNER JOIN Publisher per ON p.PublisherID = per.PublisherID " +
+                        "INNER JOIN Publisher per ON b.PublisherID = per.PublisherID " +
                         "GROUP BY b.BookID, BookName, ISBN, PublisherName, Price, Available;";
 
             using (SqlConnection conn = new SqlConnection(Models.DatabaseConfig.ConnectionString))
@@ -57,13 +59,13 @@ namespace LibraryLink.Views.Admin
         private void ApplyFilters()
         {
             var connectionString = Models.DatabaseConfig.ConnectionString;
-            var query = "SELECT b.BookID, b.BookName, b.ISBN, STRING_AGG(a.AuthorName, ', ') AS AuthorName, per.PublisherName, b.Price, b.Available " +
-                        "FROM Books b  " +
-                        "INNER JOIN Writes w ON b.BookID = w.BookID  " +
-                        "INNER JOIN Authors a ON w.AuthorID = a.AuthorID  " +
-                        "INNER JOIN Publication p ON b.BookID = p.BookID  " +
-                        "INNER JOIN Publisher per ON p.PublisherID = per.PublisherID  " +
-                        "WHERE 1=1 ";
+            var query = "SELECT b.BookID, b.BookName, b.ISBN, STRING_AGG(a.AuthorName, ', ') " +
+                        "AS AuthorName, p.PublisherName, b.Price, b.Available " +
+                        "FROM Books b " +
+                        "INNER JOIN Writes w ON b.BookID = w.BookID " +
+                        "INNER JOIN Authors a ON w.AuthorID = a.AuthorID " +
+                        "INNER JOIN Publisher p ON p.PublisherID = b.PublisherID " +
+                        "WHERE 1 = 1 ";
 
             List<SqlParameter> parameters = new List<SqlParameter>();
 
@@ -109,7 +111,7 @@ namespace LibraryLink.Views.Admin
                 parameters.Add(new SqlParameter("@Available", ViewState["Available"].ToString()));
             }
 
-            query += "GROUP BY b.BookID, b.BookName, b.ISBN, per.PublisherName, b.Price, b.Available";
+            query += "GROUP BY b.BookID, b.BookName, b.ISBN, p.PublisherName, b.Price, b.Available ";
 
             DataTable dt = new DataTable();
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -123,7 +125,6 @@ namespace LibraryLink.Views.Admin
                     }
                 }
             }
-
             BookSearchView.DataSource = dt;
             BookSearchView.DataBind();
         }

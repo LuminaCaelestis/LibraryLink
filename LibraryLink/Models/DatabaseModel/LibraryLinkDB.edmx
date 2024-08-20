@@ -119,19 +119,28 @@
           <Property Name="BookID" Type="bigint" Nullable="false" />
         </EntityType>
         <!--生成过程中发现错误:
-警告 6002: 表/视图“LibraryLinkDB.dbo.View_BookDetails”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
-        <EntityType Name="View_BookDetails">
+警告 6002: 表/视图“LibraryLinkDB.dbo.BookAuthorsView”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+        <EntityType Name="BookAuthorsView">
           <Key>
-            <PropertyRef Name="BookName" />
-            <PropertyRef Name="ISBN" />
-            <PropertyRef Name="PublisherName" />
-            <PropertyRef Name="Price" />
+            <PropertyRef Name="BookID" />
+            <PropertyRef Name="AuthorName" />
+            <PropertyRef Name="Nationality" />
           </Key>
-          <Property Name="BookName" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="ISBN" Type="nvarchar" MaxLength="20" Nullable="false" />
-          <Property Name="AuthorName" Type="nvarchar" MaxLength="4000" />
-          <Property Name="PublisherName" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="BookID" Type="bigint" Nullable="false" />
+          <Property Name="AuthorName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Nationality" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--生成过程中发现错误:
+警告 6002: 表/视图“LibraryLinkDB.dbo.BookSearchView”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+        <!--生成过程中发现错误:
+警告 6002: 表/视图“LibraryLinkDB.dbo.BookTagsView”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+        <EntityType Name="BookTagsView">
+          <Key>
+            <PropertyRef Name="BookID" />
+            <PropertyRef Name="TagName" />
+          </Key>
+          <Property Name="BookID" Type="bigint" Nullable="false" />
+          <Property Name="TagName" Type="nvarchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <Association Name="FK__Favorite__BookID__693CA210">
           <End Role="Books" Type="Self.Books" Multiplicity="1" />
@@ -290,14 +299,18 @@
           <EntitySet Name="Tags" EntityType="Self.Tags" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Writes" EntityType="Self.Writes" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="View_BookDetails" EntityType="Self.View_BookDetails" store:Type="Views" store:Schema="dbo">
+          <EntitySet Name="BookAuthorsView" EntityType="Self.BookAuthorsView" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-    [View_BookDetails].[BookName] AS [BookName], 
-    [View_BookDetails].[ISBN] AS [ISBN], 
-    [View_BookDetails].[AuthorName] AS [AuthorName], 
-    [View_BookDetails].[PublisherName] AS [PublisherName], 
-    [View_BookDetails].[Price] AS [Price]
-    FROM [dbo].[View_BookDetails] AS [View_BookDetails]</DefiningQuery>
+    [BookAuthorsView].[BookID] AS [BookID], 
+    [BookAuthorsView].[AuthorName] AS [AuthorName], 
+    [BookAuthorsView].[Nationality] AS [Nationality]
+    FROM [dbo].[BookAuthorsView] AS [BookAuthorsView]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="BookTagsView" EntityType="Self.BookTagsView" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [BookTagsView].[BookID] AS [BookID], 
+    [BookTagsView].[TagName] AS [TagName]
+    FROM [dbo].[BookTagsView] AS [BookTagsView]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK__Favorite__BookID__693CA210" Association="Self.FK__Favorite__BookID__693CA210">
             <End Role="Books" EntitySet="Books" />
@@ -459,19 +472,6 @@
           <NavigationProperty Name="Books" Relationship="Self.Favorite" FromRole="Users" ToRole="Books" />
           <Property Name="Freezed" Type="Boolean" Nullable="false" DefaultValue="False" />
         </EntityType>
-        <EntityType Name="View_BookDetails">
-          <Key>
-            <PropertyRef Name="BookName" />
-            <PropertyRef Name="ISBN" />
-            <PropertyRef Name="PublisherName" />
-            <PropertyRef Name="Price" />
-          </Key>
-          <Property Name="BookName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ISBN" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="AuthorName" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
-          <Property Name="PublisherName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
-        </EntityType>
         <Association Name="FK__Purchase__BookID__656C112C">
           <End Role="Books" Type="Self.Books" Multiplicity="1" />
           <End Role="Purchase" Type="Self.Purchase" Multiplicity="*" />
@@ -554,7 +554,6 @@
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
           <EntitySet Name="Tags" EntityType="Self.Tags" />
           <EntitySet Name="Users" EntityType="Self.Users" />
-          <EntitySet Name="View_BookDetails" EntityType="Self.View_BookDetails" />
           <AssociationSet Name="FK__Purchase__BookID__656C112C" Association="Self.FK__Purchase__BookID__656C112C">
             <End Role="Books" EntitySet="Books" />
             <End Role="Purchase" EntitySet="Purchase" />
@@ -591,6 +590,8 @@
             <End Role="Publisher" EntitySet="Publisher" />
             <End Role="Books" EntitySet="Books" />
           </AssociationSet>
+          <EntitySet Name="BookAuthorsView" EntityType="LibraryLinkDBModel.BookAuthorsView" />
+          <EntitySet Name="BookTagsView" EntityType="LibraryLinkDBModel.BookTagsView" />
         </EntityContainer>
         <Association Name="FK_Books_Publisher">
           <End Type="LibraryLinkDBModel.Publisher" Role="Publisher" Multiplicity="1" />
@@ -604,6 +605,24 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="BookAuthorsView">
+          <Key>
+            <PropertyRef Name="BookID" />
+            <PropertyRef Name="AuthorName" />
+            <PropertyRef Name="Nationality" />
+          </Key>
+          <Property Name="BookID" Type="Int64" Nullable="false" />
+          <Property Name="AuthorName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Nationality" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="BookTagsView">
+          <Key>
+            <PropertyRef Name="BookID" />
+            <PropertyRef Name="TagName" />
+          </Key>
+          <Property Name="BookID" Type="Int64" Nullable="false" />
+          <Property Name="TagName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -706,17 +725,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="View_BookDetails">
-            <EntityTypeMapping TypeName="LibraryLinkDBModel.View_BookDetails">
-              <MappingFragment StoreEntitySet="View_BookDetails">
-                <ScalarProperty Name="BookName" ColumnName="BookName" />
-                <ScalarProperty Name="ISBN" ColumnName="ISBN" />
-                <ScalarProperty Name="AuthorName" ColumnName="AuthorName" />
-                <ScalarProperty Name="PublisherName" ColumnName="PublisherName" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <AssociationSetMapping Name="Favorite" TypeName="LibraryLinkDBModel.Favorite" StoreEntitySet="Favorite">
             <EndProperty Name="Books">
               <ScalarProperty Name="BookID" ColumnName="BookID" />
@@ -741,6 +749,23 @@
               <ScalarProperty Name="BookID" ColumnName="BookID" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="BookAuthorsView">
+            <EntityTypeMapping TypeName="LibraryLinkDBModel.BookAuthorsView">
+              <MappingFragment StoreEntitySet="BookAuthorsView">
+                <ScalarProperty Name="Nationality" ColumnName="Nationality" />
+                <ScalarProperty Name="AuthorName" ColumnName="AuthorName" />
+                <ScalarProperty Name="BookID" ColumnName="BookID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BookTagsView">
+            <EntityTypeMapping TypeName="LibraryLinkDBModel.BookTagsView">
+              <MappingFragment StoreEntitySet="BookTagsView">
+                <ScalarProperty Name="TagName" ColumnName="TagName" />
+                <ScalarProperty Name="BookID" ColumnName="BookID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

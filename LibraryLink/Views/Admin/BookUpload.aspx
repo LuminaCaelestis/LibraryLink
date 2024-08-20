@@ -15,10 +15,11 @@
                                 <label for="txtBookName" class="form-label">书籍名称 <span id="BookNameTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
                                 <asp:TextBox ID="txtBookName" MaxLength="100" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
-                            <div class="col-md-3">
+                            <div class ="col-md-3">
                                 <label for="txtISBN" class="form-label">ISBN <span id="ISBNTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
                                 <asp:TextBox ID="txtISBN" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
+
                             <div class="col-md-3">
                                 <label for="txtPrice" class="form-label">价格 <span id="PriceTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
                                 <asp:TextBox ID="txtPrice" runat="server" CssClass="form-control" TextMode="Number"></asp:TextBox>

@@ -63,10 +63,18 @@ namespace LibraryLink.Views.Admin
 
                 // 文件检查
                 string errorMsg = string.Empty;
+                string NameError = string.Empty;
                 BookFileTip.InnerHtml = string.Empty;
                 CoverImageTip.InnerHtml = string.Empty;
 
-                if (!Algo.FileCheck(BookFileUploader, validInfo, bookFilePath, out errorMsg))
+                if (!FileService.IsFileUploaded(BookFileUploader, out errorMsg)) {
+                    BookFileTip.InnerText = errorMsg;
+                }
+                if (!FileService.IsFileUploaded(CoverImageUploader, out errorMsg)){
+                    CoverImageTip.InnerText = errorMsg;
+                }
+
+                if (!FileService.FileCheck(BookFileUploader, validInfo, bookFilePath, out errorMsg))
                 {
                     BookFileTip.InnerText = errorMsg;
                 }
@@ -74,18 +82,17 @@ namespace LibraryLink.Views.Admin
                 validInfo.FileExtensions = fileInfo.ValidImageExtensions;
                 validInfo.MaxSize = fileInfo.MaxImageSize;
 
-                if (!Algo.FileCheck(CoverImageUploader, validInfo, coverImagePath, out errorMsg))
+                if (!FileService.FileCheck(CoverImageUploader, validInfo, coverImagePath, out errorMsg))
                 {
                     CoverImageTip.InnerText = errorMsg;
                 }
 
-                if (errorMsg != string.Empty)
+                if (errorMsg != string.Empty || NameError != string.Empty)
                 {
-                    Response.Write("<script>alert('请检查文件大小或格式是否正确！')</script>");
+                    Response.Write("<script>alert('检查文件大小或格式是否正确')</script>");
                     return;
                 }
             } // 离开局部作用域
-
 
             string bookName = txtBookName.Text.Trim();
             string isbn = txtISBN.Text.Trim();
@@ -96,115 +103,41 @@ namespace LibraryLink.Views.Admin
             string description = txtDescription.Text.Trim();
             string tags = txtTags.Text.Trim();
 
-            using (var db = new Entities())
+            using (var context = new Entities())
             {
-                using (var trans = db.Database.BeginTransaction())
+                using (var trans = context.Database.BeginTransaction())
                 {
                     try
-                    {
-                        #region 书信息   
-                        var book = db.Books.FirstOrDefault(b => b.ISBN == isbn);
-                        if (book == null)
-                        {
-                            book = new Books
-                            {
-                                BookName = bookName,
-                                ISBN = isbn,
-                                Description = description,
-                                BookRating = 0,  // 初始评分为0
-                                Price = price,
-                                CoverImagePath = coverImagePath,
-                                FilePath = bookFilePath,
-                            };
-                            db.Books.Add(book);
-                        }
-                        else
+                    { 
+                        var book = context.Books.FirstOrDefault(b => b.ISBN == isbn);
+                        if (book != null)
                         {
                             Response.Write("<script>alert('书籍已存在！')</script>");
                             return;
                         }
-                        #endregion 书信息
-
-                        #region 作者信息    
-                        { // 进入局部作用域
-
-                            // 去重
-                            var processedAuthInfo = Algo.AuthorsInfoPreprocess(authorInfoList);
-                            
-                            // DB操作
-                            List<Authors> newAuthors = new List<Authors>();
-
-                            foreach (var (name, nation) in processedAuthInfo)
-                            {
-                                var author = db.Authors.FirstOrDefault(a => a.AuthorName == name && a.Nationality == nation);
-                                if (author == null)
-                                {
-                                    author = new Authors
-                                    {
-                                        AuthorName = name,
-                                        Nationality = nation,
-                                    };
-                                    newAuthors.Add(author);
-                                }
-                                if (!book.Authors.Contains(author))
-                                {
-                                    book.Authors.Add(author);
-                                }
-                            }
-                        }
-                        #endregion 作者信息
-
-                        #region 出版社
-                        var publisher = db.Publisher.FirstOrDefault(p => p.PublisherName == publisherName);
-                        if (publisher == null)
+                        book = new Books
                         {
-                            publisher = new Publisher
-                            {
-                                PublisherName = publisherName,
-                            };
-                        }
-                        db.Publisher.Add(publisher);
-                        #endregion 出版社
-
-                        #region 出版信息
-                        
+                            BookName = bookName,
+                            ISBN = isbn,
+                            Description = description,
+                            BookRating = 0,  // 初始评分为0
+                            Price = price,
+                            CoverImagePath = coverImagePath,
+                            FilePath = bookFilePath,
+                        };
+                        context.Books.Add(book);
+                        // 作者信息
+                        DBService.AuthorInfoInsert(context, Algo.AuthorsInfoPreprocess(authorInfoList), book);
+                        // 出版社和出版信息
+                        var publisher = DBService.PublisherInsert(context, publisherName);
                         book.PublicationDate = publicationDate;
                         book.PublisherID = publisher.PublisherID;
-
-                        #endregion 出版信息
-
-                        #region 标签
-                        {
-                            var tagProcessed = Algo.TagPreprocess(tags);
-                            List<Tags> newTags = new List<Tags>();
-                            foreach (string tag in tagProcessed)
-                            {
-                                var trimedTag = tag.Trim();
-                                var tagRecord = db.Tags.FirstOrDefault(t => t.TagName == trimedTag);
-                                if (tagRecord == null)
-                                {
-                                    tagRecord = new Tags
-                                    {
-                                        TagName = trimedTag,
-                                    };
-                                    newTags.Add(tagRecord);
-                                }
-                                else
-                                {
-                                    book.Tags.Add(tagRecord);
-                                }
-                            }
-                            db.Tags.AddRange(newTags);
-                            foreach (var tag in newTags)
-                            {
-                                book.Tags.Add(tag);
-                            }
-                        }
-                        #endregion 标签      
+                        // 标签信息
+                        DBService.TagsInsert(context, Algo.TagsPreprocess(tags), book);
                         // 保存文件
                         CoverImageUploader.SaveAs(coverImagePath);
                         BookFileUploader.SaveAs(bookFilePath);
-                        db.SaveChanges();
+                        context.SaveChanges();
                         trans.Commit();
                         Response.Write("<script>alert('上传成功！')</script>");
                     }
@@ -212,7 +145,6 @@ namespace LibraryLink.Views.Admin
                     {
                         if (File.Exists(coverImagePath))
                         {
-
                             File.Delete(coverImagePath);
                         }
                         if (File.Exists(bookFilePath))
