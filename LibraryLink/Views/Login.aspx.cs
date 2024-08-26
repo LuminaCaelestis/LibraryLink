@@ -7,7 +7,6 @@ using System.Web.UI.WebControls;
 using Microsoft.Win32;
 using LibraryLink.Models;
 
-
 namespace LibraryLink.Views
 {
     public partial class Login : System.Web.UI.Page
@@ -31,6 +30,7 @@ namespace LibraryLink.Views
                 Session["username"] = username;
                 Session["privilege"] = 0;
                 Response.Write("<script>alert('" + Msg + "');</script>");
+                Response.Redirect("/HomePage/");
             }
         }
     }

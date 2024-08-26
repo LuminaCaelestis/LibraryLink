@@ -13,5 +13,11 @@ namespace LibraryLink.Views.Users
         {
 
         }
+
+        protected void ReaderLogout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Response.Redirect("/Reader-Login/");
+        }
     }
 }

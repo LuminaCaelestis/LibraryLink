@@ -29,7 +29,7 @@
                         <div class="row mb-6">
                             <div class="col-md-6">
                                 <label for="txtAuthor" class="form-label">作者名[国籍] <span id="AuthorTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
-                                <asp:TextBox ID="txtAuthor" runat="server" CssClass="form-control" placeholder="作者名[纯汉字国籍],多个作者之间以英文分号‘;’分隔"></asp:TextBox>
+                                <asp:TextBox ID="txtAuthor" runat="server" CssClass="form-control" placeholder="作者名[纯汉字国籍],多个作者之间以英文逗号‘,’分隔"></asp:TextBox>
                             </div>
                             <div class="col-md-3">
                                 <label for="txtPublisher" class="form-label">出版社 <span id="PublisherTip" class="text-danger" style="font-size: smaller;" runat="server"></span></label>
@@ -98,7 +98,7 @@
 
             // 作者姓名验证
             const author = document.getElementById('<%= txtAuthor.ClientID %>').value.trim();
-            if (!/^(?:[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5]+\]\s*;\s*)+[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5\s]+\]\s*$/.test(author) || author === '') {
+            if (!/^(?:[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5]+\]\s*,\s*)*[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5\s]+\]\s*$/.test(author) || author === '') {
                 document.getElementById('<%= AuthorTip.ClientID %>').innerText = "人名含中英文字符和空格。国籍是方括号[]内的纯汉字，不含空格";
                 hasError = true;
             } else {

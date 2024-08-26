@@ -131,8 +131,6 @@
           <Property Name="Nationality" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--生成过程中发现错误:
-警告 6002: 表/视图“LibraryLinkDB.dbo.BookSearchView”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
-        <!--生成过程中发现错误:
 警告 6002: 表/视图“LibraryLinkDB.dbo.BookTagsView”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
         <EntityType Name="BookTagsView">
           <Key>
@@ -141,6 +139,26 @@
           </Key>
           <Property Name="BookID" Type="bigint" Nullable="false" />
           <Property Name="TagName" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <!--生成过程中发现错误:
+警告 6002: 表/视图“LibraryLinkDB.dbo.DetailsView”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+        <EntityType Name="DetailsView">
+          <Key>
+            <PropertyRef Name="BookID" />
+            <PropertyRef Name="BookName" />
+            <PropertyRef Name="ISBN" />
+            <PropertyRef Name="PublisherName" />
+            <PropertyRef Name="Price" />
+            <PropertyRef Name="BookRating" />
+          </Key>
+          <Property Name="BookID" Type="bigint" Nullable="false" />
+          <Property Name="BookName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ISBN" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="AuthorList" Type="nvarchar" MaxLength="4000" />
+          <Property Name="PublisherName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="BookRating" Type="tinyint" Nullable="false" />
+          <Property Name="CoverImagePath" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <Association Name="FK__Favorite__BookID__693CA210">
           <End Role="Books" Type="Self.Books" Multiplicity="1" />
@@ -311,6 +329,18 @@
     [BookTagsView].[BookID] AS [BookID], 
     [BookTagsView].[TagName] AS [TagName]
     FROM [dbo].[BookTagsView] AS [BookTagsView]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="DetailsView" EntityType="Self.DetailsView" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [DetailsView].[BookID] AS [BookID], 
+    [DetailsView].[BookName] AS [BookName], 
+    [DetailsView].[ISBN] AS [ISBN], 
+    [DetailsView].[AuthorList] AS [AuthorList], 
+    [DetailsView].[PublisherName] AS [PublisherName], 
+    [DetailsView].[Price] AS [Price], 
+    [DetailsView].[BookRating] AS [BookRating], 
+    [DetailsView].[CoverImagePath] AS [CoverImagePath]
+    FROM [dbo].[DetailsView] AS [DetailsView]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK__Favorite__BookID__693CA210" Association="Self.FK__Favorite__BookID__693CA210">
             <End Role="Books" EntitySet="Books" />
@@ -592,6 +622,7 @@
           </AssociationSet>
           <EntitySet Name="BookAuthorsView" EntityType="LibraryLinkDBModel.BookAuthorsView" />
           <EntitySet Name="BookTagsView" EntityType="LibraryLinkDBModel.BookTagsView" />
+          <EntitySet Name="DetailsView" EntityType="LibraryLinkDBModel.DetailsView" />
         </EntityContainer>
         <Association Name="FK_Books_Publisher">
           <End Type="LibraryLinkDBModel.Publisher" Role="Publisher" Multiplicity="1" />
@@ -622,6 +653,24 @@
           </Key>
           <Property Name="BookID" Type="Int64" Nullable="false" />
           <Property Name="TagName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="DetailsView">
+          <Key>
+            <PropertyRef Name="BookID" />
+            <PropertyRef Name="BookName" />
+            <PropertyRef Name="ISBN" />
+            <PropertyRef Name="PublisherName" />
+            <PropertyRef Name="Price" />
+            <PropertyRef Name="BookRating" />
+          </Key>
+          <Property Name="BookID" Type="Int64" Nullable="false" />
+          <Property Name="BookName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ISBN" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="AuthorList" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Name="PublisherName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Price" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
+          <Property Name="BookRating" Type="Byte" Nullable="false" />
+          <Property Name="CoverImagePath" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -762,6 +811,20 @@
             <EntityTypeMapping TypeName="LibraryLinkDBModel.BookTagsView">
               <MappingFragment StoreEntitySet="BookTagsView">
                 <ScalarProperty Name="TagName" ColumnName="TagName" />
+                <ScalarProperty Name="BookID" ColumnName="BookID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DetailsView">
+            <EntityTypeMapping TypeName="LibraryLinkDBModel.DetailsView">
+              <MappingFragment StoreEntitySet="DetailsView">
+                <ScalarProperty Name="CoverImagePath" ColumnName="CoverImagePath" />
+                <ScalarProperty Name="BookRating" ColumnName="BookRating" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="PublisherName" ColumnName="PublisherName" />
+                <ScalarProperty Name="AuthorList" ColumnName="AuthorList" />
+                <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+                <ScalarProperty Name="BookName" ColumnName="BookName" />
                 <ScalarProperty Name="BookID" ColumnName="BookID" />
               </MappingFragment>
             </EntityTypeMapping>

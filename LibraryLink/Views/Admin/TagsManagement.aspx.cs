@@ -252,8 +252,5 @@ namespace LibraryLink.Views.Admin
                 TagsGridView.DataBind();
             }
         }
-
-
-
     }
 }

@@ -124,6 +124,7 @@ namespace LibraryLink.Views.Admin
                             Price = price,
                             CoverImagePath = coverImagePath,
                             FilePath = bookFilePath,
+                            Available = true,
                         };
                         context.Books.Add(book);
                         // 作者信息

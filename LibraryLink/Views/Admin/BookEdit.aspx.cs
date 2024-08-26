@@ -63,29 +63,53 @@ namespace LibraryLink.Views.Admin
                     return;
                 }
 
+                //var BookInfoResult = (from book in context.Books
+                //                     join publisher in context.Publisher
+                //                     on book.PublisherID equals publisher.PublisherID
+                //                     where book.BookID == targetBook.BookID
+                //                     select new
+                //                     {
+                //                         book.BookName,
+                //                         book.ISBN,
+                //                         book.Price,
+                //                         publisher.PublisherName,
+                //                         book.Description,
+                //                         book.PublicationDate,
+                //                         book.FilePath,
+                //                         book.CoverImagePath,
+                //                    }).FirstOrDefault();
+
+                //var authorTempList = context.BookAuthorsView
+                //    .Where(info => info.BookID == targetBook.BookID)
+                //    .Select(info => info.AuthorName + "[" + info.Nationality + "]").ToList();
+
+                //var tagsTempList = context.BookTagsView
+                //    .Where(info => info.BookID == targetBook.BookID)
+                //    .Select(info => info.TagName).ToList();
+
                 var BookInfoResult = (from book in context.Books
-                                     join publisher in context.Publisher
-                                     on book.PublisherID equals publisher.PublisherID
-                                     where book.BookID == targetBook.BookID
-                                     select new
-                                     {
-                                         book.BookName,
-                                         book.ISBN,
-                                         book.Price,
-                                         publisher.PublisherName,
-                                         book.Description,
-                                         book.PublicationDate,
-                                         book.FilePath,
-                                         book.CoverImagePath,
-                                     }).FirstOrDefault();
+                                      join publisher in context.Publisher on book.PublisherID equals publisher.PublisherID
+                                      join author in context.BookAuthorsView on book.BookID equals author.BookID into authors
+                                      join tag in context.BookTagsView on book.BookID equals tag.BookID into tags
+                                      where book.BookID == targetBook.BookID
+                                      select new
+                                      {
+                                          book.BookName,
+                                          book.ISBN,
+                                          book.Price,
+                                          publisher.PublisherName,
+                                          book.Description,
+                                          book.PublicationDate,
+                                          book.FilePath,
+                                          book.CoverImagePath,
+                                          Authors = authors.Select(a => a.AuthorName + "[" + a.Nationality + "]"),
+                                          Tags = tags.Select(t => t.TagName)
+                                      }).FirstOrDefault();
 
-                var authorTempList = context.BookAuthorsView
-                    .Where(info => info.BookID == targetBook.BookID)
-                    .Select(info => info.AuthorName + "[" + info.Nationality + "]").ToList();
+                // 生成作者信息和标签的字符串
+                var authorTempList = string.Join(", ", BookInfoResult.Authors);
+                var tagsTempList = string.Join(" ", BookInfoResult.Tags);
 
-                var tagsTempList = context.BookTagsView
-                    .Where(info => info.BookID == targetBook.BookID)
-                    .Select(info => info.TagName).ToList();
 
                 ViewState["BookName"] = BookInfoResult.BookName;
                 ViewState["ISBN"] = BookInfoResult.ISBN;
@@ -95,8 +119,8 @@ namespace LibraryLink.Views.Admin
                 ViewState["PublicationDate"] = BookInfoResult.PublicationDate;
                 ViewState["FilePath"] = BookInfoResult.FilePath;
                 ViewState["CoverImagePath"] = BookInfoResult.CoverImagePath;
-                ViewState["AuthorString"] = string.Join(" ; ", authorTempList);
-                ViewState["TagsString"] = string.Join(" ", tagsTempList);
+                ViewState["AuthorString"] = authorTempList;
+                ViewState["TagsString"] = tagsTempList;
             }
         }
 
@@ -218,22 +242,18 @@ namespace LibraryLink.Views.Admin
                         if (BookFileUploader.HasFile)
                         {
                             string currPath = ViewState["FilePath"].ToString();
-                            Response.Write("<script>console.log('书籍文件处理！');</script>");
                             FileController.BackupFile(currPath);
                             FileController.DeleteFile(currPath);
                             newBookEntity.FilePath = newBookInfo.FilePath;
                             BookFileUploader.SaveAs(newBookInfo.FilePath);
-                            Response.Write("<script>console.log('书籍文件处理成功！');</script>");
                         }
                         if (CoverImageUploader.HasFile)
                         {
                             string currPath = ViewState["CoverImagePath"].ToString();
-                            Response.Write("<script>console.log('封面文件处理！');</script>");
                             FileController.BackupFile(currPath);
                             FileController.DeleteFile(currPath);
                             newBookEntity.CoverImagePath = newBookInfo.CoverImagePath;
                             CoverImageUploader.SaveAs(newBookInfo.CoverImagePath);
-                            Response.Write("<script>console.log('封面文件处理成功！');</script>");
                         }
                         context.SaveChanges();
                         trans.Commit();

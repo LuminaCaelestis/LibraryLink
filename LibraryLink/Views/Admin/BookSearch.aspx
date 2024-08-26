@@ -89,7 +89,7 @@
                             <div class="text-center">
                                 <asp:Button ID="DeleteButton" runat="server" CommandName="Delete"
                                     CommandArgument='<%# Eval("BookID") %>' Text="切换下架" 
-                                    OnClientClick="return confirm('警告！此操作将下架书籍，确定执行吗？')" 
+                                    OnClientClick="return confirm('警告！此操作将切换下架状态，确定执行吗？')" 
                                     CssClass="btn btn-danger btn-sm"/>
                             </div>
                         </ItemTemplate>

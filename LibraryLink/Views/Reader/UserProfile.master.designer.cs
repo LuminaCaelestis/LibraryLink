@@ -7,29 +7,38 @@
 // </自动生成>
 //------------------------------------------------------------------------------
 
-namespace LibraryLink.Views.Users
+namespace LibraryLink.Views.Reader
 {
 
 
-    public partial class UserMaster
+    public partial class UserProfile
     {
 
         /// <summary>
-        /// HeadContent 控件。
+        /// Styles 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder HeadContent;
+        protected global::System.Web.UI.WebControls.ContentPlaceHolder Styles;
 
         /// <summary>
-        /// MainContent 控件。
+        /// SidebarContent 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
+        protected global::System.Web.UI.WebControls.ContentPlaceHolder SidebarContent;
+
+        /// <summary>
+        /// UserProfileContent 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ContentPlaceHolder UserProfileContent;
     }
 }

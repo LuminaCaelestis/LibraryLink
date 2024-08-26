@@ -1,0 +1,96 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/Views/Reader/ReaderMaster.Master" AutoEventWireup="true" CodeBehind="UserProfile.master.cs" Inherits="LibraryLink.Views.Reader.UserProfile" %>
+
+
+<asp:Content ID="HeadContentUser" ContentPlaceHolderID="HeadContent" runat="server">
+
+    <style>
+        .sidebar {
+/*            background-color: #f8f9fa;*/
+            background-color: #ffffff;
+            width: 120px;
+            height: 100%;
+            padding-top: 20px;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            overflow-y: auto;
+            border-right: 6px solid #e7e2eb;
+        }
+        .sidebar .nav-link {
+            color: #3d067c;
+            padding: 10px 15px;
+            text-decoration: none;
+            display: block;
+            font-size: 18px;
+        }
+
+        .sidebar .nav-item .nav-link {
+            padding-left: 30px;
+        }
+
+        .content {
+            /*margin-left: 125px;*/ /* 增加一个额外的空间以防止内容被覆盖 */
+            /*padding-left: 20px;*/ /* 确保内容有足够的内边距 */
+            /*margin-right: 90px;
+            padding-right: 20px;*/
+
+                margin: 0 auto; /* 自动居中 */
+    padding-left: 20px;
+    padding-right: 20px;
+    max-width: 1000px; /* 根据需要设置最大宽度 */
+        }
+
+    </style>
+
+    <asp:ContentPlaceHolder ID="Styles" runat="server">
+
+    </asp:ContentPlaceHolder>
+
+</asp:Content>
+
+<asp:Content ID="MainContentUser" ContentPlaceHolderID="MainContent" runat="server">
+        <!-- 左侧导航栏 -->
+        <div class="sidebar">
+            <nav class="nav flex-column" style="padding-top: 10px">
+                <div class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#userSubmenu" role="button">
+                        账户
+                    </a>
+                    <div class="collapse" id="userSubmenu">
+                        <a class="nav-link" href="#" style="font-size: 13px">账户信息</a>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#bookSubmenu" role="button" aria-expanded="false" aria-controls="bookSubmenu">
+                        订单
+                    </a>
+                    <div class="collapse" id="bookSubmenu">
+                        <a class="nav-link" href="/Admin-BookUpload/" style="font-size: 13px">订单记录</a>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#transactionSubmenu" role="button" aria-expanded="false" aria-controls="transactionSubmenu">
+                        书架
+                    </a>
+                    <div class="collapse" id="transactionSubmenu">
+                        <a class="nav-link" href="TransactionOverview.aspx" style="font-size: 13px">已购</a>
+                        <a class="nav-link" href="TransactionSearch.aspx" style="font-size: 13px">收藏</a>
+                    </div>
+                </div>
+                <asp:ContentPlaceHolder ID="SidebarContent" runat="server">
+                </asp:ContentPlaceHolder>
+            </nav>
+        </div>
+
+        
+
+        
+        <!-- 主内容区 -->
+        <div class="content">
+            <asp:ContentPlaceHolder ID="UserProfileContent" runat="server">
+                <!-- 用户信息页面的内容 -->
+            </asp:ContentPlaceHolder>
+
+        </div>
+
+</asp:Content>

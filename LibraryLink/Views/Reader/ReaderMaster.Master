@@ -4,51 +4,99 @@
 
 <html>
 <head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title></title>
-    <asp:ContentPlaceHolder ID="head" runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>管理后台-LibraryLink</title>
+        <link rel="stylesheet" type="text/css" href="../../Assets/Lib/css/bootstrap.min.css" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .header {
+            height: 70px;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #9942a7;
+            /*border-bottom: 8px solid #e0dfe0;*/ /* 添加分割线 */
+        }
+
+        .header .logo {
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        .header .logout {
+            margin-left: auto;
+            margin-right: 22px;
+        }
+
+        .header .btn {
+            margin-left: 20px; 
+        }
+
+    /*    .sidebar {
+            height: 100%;
+            background-color: #343a40;
+            padding-top: 20px;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 200px;
+            overflow-y: auto;
+        }*/
+
+
+        .btn-outline-danger.logout {
+        color: #ededed; 
+        border-color: #ededed;
+        }
+
+
+        .content {
+            padding-top: 80px;
+            margin-top: 0;
+            padding-left: 15px; 
+            padding-right: 15px;
+        }
+
+        .content h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+    </style>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    <!-- 第一个子页内容加载到这里 -->
     </asp:ContentPlaceHolder>
 </head>
 <body>
-    <form id="form1" runat="server">
+    <form runat="server">
+        <!-- 顶部标题栏 -->
+        <div class="header fixed-top">
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <!-- 左侧内容 -->
+                <div class="d-flex align-items-center ">
+                    <div class="logo">LibraryLink</div>
+                    <a class="nav-link" href="#" style="font-size: 18px; margin-left: 25px; font-family:'Microsoft YaHei'">首页</a>
+                    <a class="nav-link" href="#" style="font-size: 18px; margin-left: 20px; font-family:'Microsoft YaHei'">个人中心</a>
+                    <a class="nav-link" href="https://github.com/LuminaCaelestis/LibraryLink" style="font-size: 18px; margin-left: 20px; font-family:'Microsoft YaHei'">Github</a>
+                </div>
 
-        <div class="container-fluid">
-            <!-- 导航 -->
-            <div class="row">
-                <nav class="navbar navbar-expand-sm bg-body-tertiary navbar-s " data-bs-theme="dark">
-                    <div class="container-fluid">
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-
-                        <a class="navbar-brand fs-3" href="#" style="color:#9765e0">Library Link</a>
-
-                        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li class="nav-item" style="white-space: nowrap;">
-                                    <a class="nav-link active fs-5" href="#users" data-bs-toggle="tab">个人信息</a>
-                                </li>
-                                <li class="nav-item" style="white-space: nowrap;">
-                                    <a class="nav-link fs-5 " href="#books" data-bs-toggle="tab">书籍</a>
-                                </li>
-                                <li class="nav-item" style="white-space: nowrap;">
-                                    <a class="nav-link fs-5" href="#data" data-bs-toggle="tab">收藏夹</a>
-                                </li>
-                            </ul>
-                            <div class="btn btn-light ms-auto" style="white-space: nowrap;">
-                                    <a class="nav-link fs-5" style="color:#782a18" href="/User-Login/">退出</a>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
+                <!-- 右侧退出按钮 -->
+                <asp:Button OnClick="ReaderLogout_Click" runat="server" Text="退出" href="/Reader-Login/" Width="80" class="btn btn-outline-danger logout"></asp:Button>
             </div>
         </div>
 
-        <div>
-            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        <!-- 内容区 -->
+        <div class="content">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+                <!-- 子页内容加载到这里 -->
             </asp:ContentPlaceHolder>
         </div>
-
     </form>
+
+    <script src="../../Assets/Lib/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

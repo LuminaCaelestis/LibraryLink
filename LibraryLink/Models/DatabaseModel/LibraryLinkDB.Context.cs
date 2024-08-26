@@ -36,5 +36,6 @@ namespace LibraryLink.Models.DatabaseModel
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<BookAuthorsView> BookAuthorsView { get; set; }
         public virtual DbSet<BookTagsView> BookTagsView { get; set; }
+        public virtual DbSet<DetailsView> DetailsView { get; set; }
     }
 }

@@ -7,29 +7,38 @@
 // </自动生成>
 //------------------------------------------------------------------------------
 
-namespace LibraryLink.Views.Users
+namespace LibraryLink.Views.Reader
 {
 
 
-    public partial class UserMaster
+    public partial class BookDetails
     {
 
         /// <summary>
-        /// HeadContent 控件。
+        /// BookImage 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder HeadContent;
+        protected global::System.Web.UI.WebControls.Image BookImage;
 
         /// <summary>
-        /// MainContent 控件。
+        /// TagsBox 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl TagsBox;
+
+        /// <summary>
+        /// BookDescriptionLabel 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label BookDescriptionLabel;
     }
 }

@@ -115,6 +115,11 @@
     <Content Include="Views\Admin\TagsManagement.aspx" />
     <Content Include="Views\Admin\BookEdit.aspx" />
     <Content Include="Views\Login.aspx" />
+    <Content Include="Views\Reader\BookDetails.aspx" />
+    <Content Include="Views\Reader\UserInformation.aspx" />
+    <Content Include="Views\Reader\OrderRecord.aspx" />
+    <Content Include="Views\Reader\Favourite.aspx" />
+    <Content Include="Views\Reader\UserHomePage.aspx" />
     <Content Include="Views\Register.aspx" />
     <Content Include="Views\ViewBook.aspx" />
     <Content Include="Web.config" />
@@ -135,6 +140,9 @@
       <DependentUpon>LibraryLinkDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DatabaseModel\BookTagsView.cs">
+      <DependentUpon>LibraryLinkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DatabaseModel\DetailsView.cs">
       <DependentUpon>LibraryLinkDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DatabaseModel\LibraryLinkDB.Context.cs">
@@ -210,7 +218,7 @@
     <Compile Include="Views\Admin\BookUpload.aspx.designer.cs">
       <DependentUpon>BookUpload.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Views\Admin\Helper.cs" />
+    <Compile Include="Views\Admin\AdminService.cs" />
     <Compile Include="Views\Admin\UserManagement.aspx.cs">
       <DependentUpon>UserManagement.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -245,6 +253,48 @@
     </Compile>
     <Compile Include="Views\Reader\ReaderMaster.Master.designer.cs">
       <DependentUpon>ReaderMaster.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Reader\BookDetails.aspx.cs">
+      <DependentUpon>BookDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Reader\BookDetails.aspx.designer.cs">
+      <DependentUpon>BookDetails.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Reader\UserProfile.master.cs">
+      <DependentUpon>UserProfile.master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Reader\UserProfile.master.designer.cs">
+      <DependentUpon>UserProfile.master</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Reader\UserInformation.aspx.cs">
+      <DependentUpon>UserInformation.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Reader\UserInformation.aspx.designer.cs">
+      <DependentUpon>UserInformation.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Reader\OrderRecord.aspx.cs">
+      <DependentUpon>OrderRecord.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Reader\OrderRecord.aspx.designer.cs">
+      <DependentUpon>OrderRecord.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Reader\Favourite.aspx.cs">
+      <DependentUpon>Favourite.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Reader\Favourite.aspx.designer.cs">
+      <DependentUpon>Favourite.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Reader\UserHomePage.aspx.cs">
+      <DependentUpon>UserHomePage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\Reader\UserHomePage.aspx.designer.cs">
+      <DependentUpon>UserHomePage.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\Register.aspx.cs">
       <DependentUpon>Register.aspx</DependentUpon>
@@ -296,6 +346,7 @@
     <None Include="packages.config" />
     <Content Include="Views\Admin\AdminMaster.Master" />
     <Content Include="Views\Reader\ReaderMaster.Master" />
+    <Content Include="Views\Reader\UserProfile.master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

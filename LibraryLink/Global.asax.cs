@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Security;
 using System.Web.SessionState;
+using LibraryLink.Views.Reader;
 
 namespace LibraryLink
 {
@@ -64,6 +65,13 @@ namespace LibraryLink
                 "Admin-BookEdit",
                 "~/Views/Admin/BookEdit.aspx"
             );
+
+            routes.MapPageRoute(
+                "HomePage",
+                "HomePage",
+                "~/Views/Reader/UserHomePage.aspx"
+            );
+            
 
         }
 

@@ -12,7 +12,6 @@ using System.Reflection;
 using System.Security.Policy;
 using System.Text.RegularExpressions;
 
-
 namespace LibraryLink.Views.Admin
 {
     public partial class BookSearch : System.Web.UI.Page
@@ -199,7 +198,6 @@ namespace LibraryLink.Views.Admin
                 }
             }
         }
-
 
     }
 }

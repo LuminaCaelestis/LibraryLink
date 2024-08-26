@@ -18,7 +18,6 @@ namespace LibraryLink.Views.Admin
         public int MaxSize { get; set; }
     }
 
-
     public class FileInfoStruct
     {
         public string CoverImageFolder { get; } = "~/Assets/Resource/CoverImages/";
@@ -238,7 +237,7 @@ namespace LibraryLink.Views.Admin
         {
             List<(string name, string nation)> result = new List<(string name, string nation)> { };
             HashSet<string> authorCheckSet = new HashSet<string>();
-            var authorInfoArr = authorInfoList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            var authorInfoArr = authorInfoList.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var authorInfo in authorInfoArr)
             {
@@ -338,7 +337,7 @@ namespace LibraryLink.Views.Admin
             }
 
             if (!Regex.IsMatch(txtAuthor.Text.Trim(),
-                @"^(?:[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5]+\]\s*;\s*)*[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5\s]+\]\s*") ||
+                @"^(?:[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5]+\]\s*,\s*)*[\u4e00-\u9fa5A-Za-z\s]+\[[\u4e00-\u9fa5\s]+\]\s*") ||
                 txtAuthor.Text.Trim() == string.Empty)
             {
                 authorTip.InnerHtml = "汉字、字母开头，英文以空格分割";
